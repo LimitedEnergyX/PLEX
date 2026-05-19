@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<!--
+  THE ESTIMATOR v1.0 — Limited Energy Job Estimation
+  Compiled by Limited Energy eXperts · limitedenergy.net
+  Open reuse permitted with credit.
+  For preliminary estimation and proposal use only.
+  Final pricing decisions by qualified estimator.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Estimator v1.0 — Limited Energy Job Estimation | Limited Energy eXperts</title>
+<meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
+<meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
+<meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;600&family=Oswald:wght@300;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0A1628; --navy-mid:#122040; --navy-light:#1C3058;
+  --red:#C8102E; --red-dark:#9E0B23;
+  --white:#FFFFFF; --gray-light:#B8C5D3; --gray-mid:#6B7F95; --gray-dark:#3A4D62;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --green:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+  --blue:#3b82f6; --purple:#8b5cf6; --teal:#14b8a6;
+  --body:'Barlow',sans-serif; --display:'Oswald',sans-serif;
+  --label:'Barlow Condensed',sans-serif; --mono:'Space Mono',monospace;
+}
+body{background:var(--navy);color:var(--gray-light);font-family:var(--body);min-height:100vh;font-weight:400;}
+#header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-bottom:1px solid rgba(200,16,46,0.3);}
+.header-inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1200px;margin:0 auto;padding:14px 24px;}
+.header-brand{display:flex;align-items:center;gap:14px;flex:1;min-width:280px;}
+.header-mark{width:38px;height:38px;background:rgba(200,16,46,0.12);border:1.5px solid var(--red);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.header-title{font-family:var(--display);font-weight:700;font-size:22px;color:var(--white);letter-spacing:0.04em;line-height:1;}
+.header-sub{font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.2em;text-transform:uppercase;margin-top:4px;}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.saved-indicator{font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;padding:6px 12px;border:1px solid var(--border);border-radius:3px;}
+.saved-indicator.fresh{color:var(--green);border-color:rgba(34,197,94,0.3);}
+.hbtn{background:transparent;border:1px solid var(--border2);color:var(--gray-light);padding:8px 14px;font-family:var(--label);font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all 0.15s;}
+.hbtn:hover{border-color:var(--red);color:var(--white);background:rgba(200,16,46,0.08);}
+.hbtn.primary{background:var(--red);border-color:var(--red);color:var(--white);}
+.hbtn.primary:hover{background:var(--red-dark);}
+#tabs{border-bottom:1px solid var(--border);background:var(--navy);}
+.tabs-inner{display:flex;gap:2px;max-width:1200px;margin:0 auto;padding:0 24px;}
+.tab-btn{background:transparent;border:none;color:var(--gray-mid);padding:12px 22px;font-family:var(--label);font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);}
+.tab-btn:not(.active):hover{color:var(--white);}
+#main{padding:20px 24px 40px;max-width:1200px;margin:0 auto;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+.panel{background:var(--navy-mid);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
+.panel-label{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:0.2em;margin-bottom:10px;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:700;}
+.panel-label.teal{color:var(--teal);}
+.panel-label.blue{color:var(--blue);}
+.panel-header{background:none;border:none;width:100%;padding:0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--red);}
+.caret{transition:transform 0.2s;font-size:10px;}
+.collapsible.collapsed .caret{transform:rotate(-90deg);}
+.collapsible.collapsed .panel-body{display:none;}
+.panel-body input,.panel-body select,.panel-body textarea{margin-bottom:8px;}
+.panel-body textarea{resize:vertical;min-height:60px;}
+input[type=text],input[type=number],input[type=date],select,textarea{background:var(--navy);border:1px solid var(--border2);border-radius:3px;color:var(--white);padding:7px 10px;font-size:13px;font-family:var(--body);width:100%;outline:none;transition:border-color 0.15s;}
+input[type=number]{-moz-appearance:textfield;}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--red);}
+select option{background:var(--navy);}
+.field{margin-bottom:10px;}
+.field label,.field-label{font-family:var(--label);font-size:10px;color:var(--gray-mid);letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:4px;font-weight:600;}
+.btn-primary{background:var(--red);border:none;border-radius:3px;color:var(--white);padding:10px 14px;font-family:var(--label);font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;width:100%;transition:background 0.15s;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-secondary{background:transparent;border:1px solid var(--border2);color:var(--gray-light);padding:7px 12px;font-family:var(--label);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all 0.15s;}
+.btn-secondary:hover{border-color:var(--red);color:var(--white);}
+.btn-remove{background:transparent;border:1px solid var(--border2);color:var(--danger);border-radius:3px;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.btn-remove:hover{border-color:var(--danger);}
+.help-btn{background:transparent;border:1px solid var(--border2);color:var(--gray-mid);border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+.help-btn:hover{border-color:var(--red);color:var(--red);}
+.callout{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);border-radius:4px;padding:9px 11px;font-size:11px;color:var(--gray-light);margin:10px 0;line-height:1.5;}
+.callout strong{color:var(--blue);}
+.callout.warn{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.25);}
+.callout.warn strong{color:var(--warn);}
+.pill{border-radius:3px;padding:2px 8px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;}
+.pill-ok{background:rgba(34,197,94,0.15);border:1px solid var(--green);color:var(--green);}
+.pill-warn{background:rgba(245,158,11,0.15);border:1px solid var(--warn);color:var(--warn);}
+.pill-info{background:rgba(59,130,246,0.15);border:1px solid var(--blue);color:var(--blue);}
+.pill-teal{background:rgba(20,184,166,0.15);border:1px solid var(--teal);color:var(--teal);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
+.stat-row{display:grid;gap:10px;margin-top:10px;padding:10px 12px;background:var(--navy);border-radius:4px;font-family:var(--mono);font-size:12px;}
+.stat-row .stat-line{display:flex;justify-content:space-between;align-items:center;color:var(--gray-light);}
+.stat-row .stat-line .lbl{color:var(--gray-mid);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;}
+.stat-row .stat-line .val{color:var(--white);font-weight:700;}
+.stat-row .stat-line .val.red{color:var(--red);}
+.stat-row .stat-line .val.warn{color:var(--warn);}
+.stat-row .stat-line .val.green{color:var(--green);}
+.rate-row{display:grid;grid-template-columns:1fr 90px 28px;gap:8px;align-items:center;margin-bottom:6px;}
+.rate-row input[type=text]{font-size:12px;}
+.rate-row input[type=number]{text-align:right;font-family:var(--mono);}
+.rate-row .rate-prefix{font-family:var(--mono);font-size:11px;color:var(--gray-mid);text-align:right;padding-right:4px;}
+.wbs-section{background:var(--navy-mid);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+.wbs-section.collapsed .wbs-body{display:none;}
+.wbs-section-head{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;background:var(--navy-light);border-bottom:1px solid var(--border);user-select:none;}
+.wbs-section-head:hover{background:rgba(28,48,88,0.8);}
+.wbs-section-code{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:700;letter-spacing:0.1em;min-width:38px;}
+.wbs-section-name{font-family:var(--display);font-weight:600;font-size:14px;color:var(--white);letter-spacing:0.04em;flex:1;text-transform:uppercase;}
+.wbs-section-totals{font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.08em;display:flex;gap:14px;}
+.wbs-section-totals span{color:var(--gray-light);}
+.wbs-section-totals .hrs{color:var(--teal);}
+.wbs-section-totals .lbr{color:var(--white);}
+.wbs-section-totals .mat{color:var(--blue);}
+.wbs-section-totals .tot{color:var(--red);font-weight:700;}
+.wbs-body{padding:8px 12px 12px;}
+.wbs-item{display:grid;grid-template-columns:1fr 56px 60px 110px 60px 72px 28px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.wbs-item.hdr{font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;padding:6px 0 4px;}
+.wbs-item.hdr span{padding:0 2px;}
+.wbs-item input,.wbs-item select{font-size:12px;padding:5px 8px;margin-bottom:0;}
+.wbs-item input[type=number]{text-align:right;font-family:var(--mono);}
+.wbs-item .item-desc input{font-size:12px;}
+.wbs-item-row2{display:grid;grid-template-columns:1fr 60px 72px 28px;gap:6px;align-items:center;padding:2px 0 6px;}
+.wbs-item-row2 input{font-size:11px;padding:4px 8px;margin-bottom:0;}
+.wbs-item-row2 .row2-lbl{font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;text-align:right;padding-right:4px;}
+.wbs-add{margin-top:8px;}
+.wbs-empty{text-align:center;color:var(--gray-dark);font-style:italic;font-size:11px;padding:8px 0;}
+.section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 10px;}
+.section-divider span{font-family:var(--mono);font-size:10px;color:var(--teal);letter-spacing:0.2em;white-space:nowrap;font-weight:700;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border2);}
+.check-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--gray-light);margin-bottom:8px;cursor:pointer;font-family:var(--label);letter-spacing:0.05em;}
+input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:var(--red);}
+.radio-row{display:flex;gap:14px;margin-bottom:10px;}
+.radio-row label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-light);cursor:pointer;font-family:var(--label);letter-spacing:0.05em;font-weight:600;text-transform:uppercase;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--navy-mid);border:1px solid var(--red);border-radius:8px;padding:24px;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:var(--display);color:var(--red);font-size:15px;font-weight:600;letter-spacing:0.1em;margin-bottom:14px;text-transform:uppercase;}
+.modal-body{font-size:13px;color:var(--gray-light);line-height:1.8;}
+.modal-body strong{color:var(--white);}
+.modal-close{position:absolute;top:12px;right:14px;background:transparent;border:none;color:var(--gray-mid);font-size:20px;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--danger);}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.sum-key{color:var(--gray-mid);font-family:var(--label);letter-spacing:0.05em;}
+.sum-val{color:var(--white);font-weight:600;font-family:var(--mono);}
+.sum-val.red{color:var(--red);}
+.sum-val.green{color:var(--green);}
+.sum-val.warn{color:var(--warn);}
+.sum-val.big{font-size:18px;}
+.summary-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:14px;}
+.summary-header h1{font-family:var(--display);font-size:28px;color:var(--white);font-weight:700;letter-spacing:0.02em;}
+.sum-meta{font-family:var(--mono);font-size:11px;color:var(--gray-mid);margin-top:6px;}
+.headline-card{background:linear-gradient(135deg,var(--navy-mid) 0%,var(--navy-light) 100%);border:1px solid var(--red);border-radius:8px;padding:20px 24px;margin-bottom:18px;}
+.headline-card .lbl{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;}
+.headline-card .price{font-family:var(--display);font-size:42px;font-weight:700;color:var(--white);letter-spacing:0.02em;line-height:1;}
+.headline-card .breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+.headline-card .breakdown div{font-family:var(--mono);font-size:11px;color:var(--gray-mid);}
+.headline-card .breakdown div .v{color:var(--white);font-size:14px;font-weight:700;display:block;margin-top:3px;}
+.import-status{padding:10px;border-radius:4px;font-size:12px;margin-top:10px;font-family:var(--mono);}
+.import-status.ok{background:rgba(34,197,94,0.1);border:1px solid var(--green);color:var(--green);}
+.import-status.err{background:rgba(239,68,68,0.1);border:1px solid var(--danger);color:var(--danger);}
+#intro-block{max-width:1200px;margin:18px auto 8px;padding:0 24px;font-family:var(--body);font-size:13px;color:var(--gray-light);line-height:1.7;}
+#intro-block .intro-lead{color:var(--white);font-size:14px;margin-bottom:10px;}
+#intro-block .intro-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.intro-badge{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:4px 10px;border-radius:2px;background:transparent;cursor:pointer;transition:background 0.15s,color 0.15s;position:relative;}
+.intro-badge:hover{background:rgba(200,16,46,0.12);}
+.badge-popover{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--navy-mid);border:1px solid var(--border);border-radius:3px;padding:12px 14px;font-size:11px;font-family:var(--body);color:var(--gray-light);line-height:1.6;width:280px;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,0.5);text-transform:none;letter-spacing:0;}
+.badge-popover.right{left:auto;right:0;}
+.intro-badge.active .badge-popover{display:block;}
+.best-viewed{max-width:1200px;margin:0 auto 4px;padding:0 24px;}
+.best-viewed-inner{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--gray-mid);padding:5px 0;}
+.assumptions-panel{margin-top:14px;}
+.assumptions-panel ul{list-style:none;padding:0;margin:0;}
+.assumptions-panel li{padding:6px 0 6px 18px;border-bottom:1px dashed var(--border);position:relative;font-size:12px;line-height:1.6;color:var(--gray-light);}
+.assumptions-panel li::before{content:'▸';position:absolute;left:0;color:var(--red);font-size:10px;}
+.assumptions-panel li:last-child{border-bottom:none;}
+.assumptions-panel li strong{color:var(--white);font-weight:600;}
+#credit-line{max-width:1200px;margin:18px auto 8px;padding:14px 24px;font-family:var(--mono);font-size:11px;color:var(--gray-mid);letter-spacing:0.08em;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--navy-mid);}
+#credit-line strong{color:var(--red);letter-spacing:0.12em;text-transform:uppercase;}
+#credit-line a{color:var(--gray-light);text-decoration:none;border-bottom:1px dotted var(--gray-mid);}
+#credit-line a:hover{color:var(--red);border-bottom-color:var(--red);}
+.odc-row{display:grid;grid-template-columns:1fr 110px 1fr 28px;gap:8px;align-items:center;margin-bottom:6px;}
+.odc-row input{font-size:12px;margin-bottom:0;}
+.odc-row input[type=number]{text-align:right;font-family:var(--mono);}
+.odc-row.hdr{font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;}
+.odc-auto{background:rgba(20,184,166,0.06);border:1px dashed rgba(20,184,166,0.25);border-radius:4px;padding:8px 10px;margin-bottom:6px;}
+.odc-auto-label{font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px;}
+.odc-auto-line{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;}
+.odc-auto-line .k{color:var(--gray-mid);}
+.odc-auto-line .v{color:var(--white);font-family:var(--mono);font-weight:600;}
+@media(max-width:880px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.headline-card .breakdown{grid-template-columns:1fr 1fr;}.wbs-item{grid-template-columns:1fr;gap:4px;}.wbs-item.hdr{display:none;}}
+@media(max-width:600px){
+  .header-inner{flex-wrap:wrap;gap:6px;padding:10px 12px;}
+  .header-title{font-size:20px;}
+  .header-sub{font-size:8px;}
+  .hbtn{font-size:10px;padding:5px 8px;}
+  .saved-indicator{font-size:9px;}
+  #main{padding:0 8px 24px;}
+  #intro-block{padding:0 12px;}
+  .best-viewed{padding:0 12px;}
+  .badge-popover{width:230px;}
+  .panel{padding:10px 10px;}
+  .summary-header h1{font-size:22px;}
+  .headline-card .price{font-size:32px;}
+}
+@media print{
+  body{background:white !important;color:black !important;font-size:11pt;}
+  #header,#tabs,.tab-btn,.hbtn,.saved-indicator,.header-actions,#pane-build,#pane-method,#intro-block,#credit-line,.intro-badges,.best-viewed{display:none !important;}
+  #pane-summary,#sum-assumptions-panel{display:block !important;}
+  #sum-assumptions-panel.collapsed .panel-body{display:block !important;}
+  .panel{background:white !important;border:1px solid #999 !important;page-break-inside:avoid;margin-bottom:12pt;padding:10pt;}
+  .panel-label{color:#9E0B23 !important;font-weight:700;}
+  .sum-val,.summary-header h1,.sum-row,.headline-card .price{color:black !important;}
+  .sum-key,.sum-meta,.headline-card .breakdown div{color:#555 !important;}
+  .headline-card{background:white !important;border:1px solid #9E0B23 !important;}
+  .headline-card .breakdown div .v{color:black !important;}
+  .assumptions-panel li{color:#222 !important;}
+  .assumptions-panel li strong{color:black !important;}
+  .assumptions-panel li::before{color:#9E0B23 !important;}
+  #printBtn,.no-print{display:none !important;}
+  #print-credit{display:block !important;text-align:center;font-family:monospace;font-size:9pt;color:#666 !important;margin-top:16pt;padding-top:8pt;border-top:1px solid #ccc;}
+  @page{margin:0.5in;}
+}
+#print-credit{display:none;}
+</style>
+</head>
+<body>
+<div id="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-mark">🧮</div>
+      <div>
+        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.0</span></div>
+        <div class="header-sub">LIMITED ENERGY &nbsp;·&nbsp; JOB ESTIMATION</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="saved-indicator" id="savedInd">Unsaved</span>
+      <button class="hbtn" id="newBtn">🗒 New</button>
+      <button class="hbtn" id="importBtn">📥 Import</button>
+      <button class="hbtn primary" id="exportBtn">📤 Export</button>
+    </div>
+  </div>
+</div>
+<div class="best-viewed">
+  <div class="best-viewed-inner">&#9432; Best viewed on a PC or tablet.</div>
+</div>
+<div id="intro-block">
+  <div class="intro-lead">
+    The Estimator builds a complete labor + materials estimate for limited energy projects &mdash; schedule-driven crew sizing, BICSI-coded scope, federal or California overtime math, and local/remote cost variants. Enter scope, review the summary, export portable JSON or print to PDF.
+  </div>
+  <div class="intro-badges">
+    <button class="intro-badge" id="badge-scope" onclick="toggleBadge('badge-scope')">
+      SCOPE
+      <div class="badge-popover">For preliminary estimation and proposal use only. Final pricing decisions, contract terms, and sealed proposals are the responsibility of the estimator of record. Verify rates, productivity assumptions, and direct costs against current shop standards before issuing.</div>
+    </button>
+    <button class="intro-badge" id="badge-le" onclick="toggleBadge('badge-le')">
+      LIMITED ENERGY
+      <div class="badge-popover">NEC 2026 adopts &ldquo;limited energy&rdquo; as the standard terminology for systems previously called &ldquo;low voltage.&rdquo; This tool uses the modern vocabulary throughout &mdash; communications, security, AV, control, and other Division 27/28 work.</div>
+    </button>
+    <button class="intro-badge" id="badge-rcdd" onclick="toggleBadge('badge-rcdd')">
+      RCDD BUILT
+      <div class="badge-popover right">Designed and built by a BICSI Registered Communications Distribution Designer with active credentials and Division 27/28 estimation experience. BICSI WBS section codes (000&ndash;1000) used throughout.</div>
+    </button>
+  </div>
+</div>
+<div id="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="build">🔨 Builder</button>
+    <button class="tab-btn" data-tab="summary">📋 Summary &amp; Proposal</button>
+    <button class="tab-btn" data-tab="method">📐 Methodology</button>
+  </div>
+</div>
+<div id="main">
+
+<!-- BUILDER TAB -->
+<div id="pane-build" class="tab-pane active">
+
+  <!-- Project Info -->
+  <div class="panel collapsible" id="projPanel">
+    <button class="panel-header" id="projToggle">
+      <span class="panel-label" style="margin-bottom:0">PROJECT INFO</span>
+      <span class="caret">▼</span>
+    </button>
+    <div class="panel-body" style="margin-top:10px">
+      <div class="grid-2">
+        <div class="field"><div class="field-label">PROJECT NAME</div><input type="text" id="proj-name" placeholder="Project name"></div>
+        <div class="field"><div class="field-label">CLIENT</div><input type="text" id="proj-client" placeholder="Client name"></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><div class="field-label">LOCATION</div><input type="text" id="proj-location" placeholder="City, state"></div>
+        <div class="field"><div class="field-label">ESTIMATOR</div><input type="text" id="proj-estimator" placeholder="Estimator name / RCDD"></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><div class="field-label">PROPOSAL DATE</div><input type="date" id="proj-date"></div>
+        <div class="field"><div class="field-label">VALID UNTIL</div><input type="date" id="proj-valid"></div>
+      </div>
+      <div class="field"><div class="field-label">SCOPE SUMMARY</div><textarea id="proj-scope" placeholder="Brief scope of work" rows="3"></textarea></div>
+      <div class="field"><div class="field-label">EXCLUSIONS</div><textarea id="proj-exclusions" placeholder="What is NOT included" rows="2"></textarea></div>
+      <div class="field"><div class="field-label">NOTES</div><textarea id="proj-notes" placeholder="Internal notes" rows="2"></textarea></div>
+    </div>
+  </div>
+
+  <!-- Schedule & Crew -->
+  <div class="panel">
+    <div class="panel-label">SCHEDULE &amp; CREW <button class="help-btn" id="schedHelpBtn">?</button></div>
+    <div class="grid-3">
+      <div class="field"><div class="field-label">TARGET WORKING DAYS</div><input type="number" id="sched-days" min="1" value="30"></div>
+      <div class="field"><div class="field-label">WORKWEEK PATTERN</div>
+        <select id="sched-pattern">
+          <option value="5x8">5 × 8 (40 hrs / wk)</option>
+          <option value="5x10">5 × 10 (50 hrs / wk)</option>
+          <option value="4x10">4 × 10 (40 hrs / wk)</option>
+          <option value="6x8">6 × 8 (48 hrs / wk)</option>
+          <option value="6x10">6 × 10 (60 hrs / wk)</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label">BASELINE CREW (INFO)</div><input type="number" id="sched-baseline" min="1" value="4"></div>
+    </div>
+    <div class="grid-3" id="customPatternRow" style="display:none">
+      <div class="field"><div class="field-label">HOURS / DAY</div><input type="number" id="sched-hpd" min="1" max="16" value="8"></div>
+      <div class="field"><div class="field-label">DAYS / WEEK</div><input type="number" id="sched-dpw" min="1" max="7" value="5"></div>
+      <div></div>
+    </div>
+    <div class="grid-3">
+      <div class="field"><div class="field-label">OT MODE</div>
+        <select id="sched-otmode">
+          <option value="federal">Federal (40 hrs/wk)</option>
+          <option value="california">California (8 hrs/day or 40 hrs/wk)</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label">OT MULTIPLIER</div><input type="number" id="sched-otmult" min="1" step="0.05" value="1.5"></div>
+      <div class="field"><div class="field-label">DT MULTIPLIER (CA)</div><input type="number" id="sched-dtmult" min="1" step="0.05" value="2.0"></div>
+    </div>
+    <div class="stat-row" id="schedStats">
+      <div class="stat-line"><span class="lbl">Total scope hours</span><span class="val" id="ss-total">0</span></div>
+      <div class="stat-line"><span class="lbl">Required crew size</span><span class="val red" id="ss-crew">—</span></div>
+      <div class="stat-line"><span class="lbl">Weeks required</span><span class="val" id="ss-weeks">—</span></div>
+      <div class="stat-line"><span class="lbl">Regular hrs / tech / wk</span><span class="val" id="ss-reg">—</span></div>
+      <div class="stat-line"><span class="lbl">OT hrs / tech / wk</span><span class="val warn" id="ss-ot">—</span></div>
+      <div class="stat-line"><span class="lbl">DT hrs / tech / wk (CA)</span><span class="val warn" id="ss-dt">—</span></div>
+      <div class="stat-line"><span class="lbl">Schedule status</span><span class="val" id="ss-status">—</span></div>
+    </div>
+  </div>
+
+  <!-- Job Type -->
+  <div class="panel">
+    <div class="panel-label">JOB TYPE</div>
+    <div class="radio-row">
+      <label><input type="radio" name="jobtype" value="local" id="jt-local" checked> Local</label>
+      <label><input type="radio" name="jobtype" value="remote" id="jt-remote"> Remote</label>
+    </div>
+    <div id="remotePanel" style="display:none">
+      <div class="callout"><strong>Remote job:</strong> per diem, lodging, and travel costs are auto-computed from crew size and target days. Adjust the per-unit costs below; the auto-computed totals appear in ODC.</div>
+      <div class="grid-4">
+        <div class="field"><div class="field-label">TRAVEL DAYS EACH WAY</div><input type="number" id="rmt-travel-days" min="0" step="0.5" value="1"></div>
+        <div class="field"><div class="field-label">PER DIEM / TECH / DAY</div><input type="number" id="rmt-perdiem" min="0" value="75"></div>
+        <div class="field"><div class="field-label">HOTEL / TECH / NIGHT</div><input type="number" id="rmt-hotel" min="0" value="150"></div>
+        <div class="field"><div class="field-label">AIRFARE / TECH (RT)</div><input type="number" id="rmt-airfare" min="0" value="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rates -->
+  <div class="panel collapsible" id="ratesPanel">
+    <button class="panel-header" id="ratesToggle">
+      <span class="panel-label" style="margin-bottom:0">RATES &amp; ADDERS</span>
+      <span class="caret">▼</span>
+    </button>
+    <div class="panel-body" style="margin-top:10px">
+      <div class="callout"><strong>Defaults shown.</strong> Override role names and sell rates per your shop. WBS items reference roles by ID so renames don&rsquo;t break links.</div>
+      <div class="section-divider"><span>FIELD ROLES</span></div>
+      <div class="rate-row" style="grid-template-columns:1fr 90px 28px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase">Role name</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;text-align:right">Sell $/hr</div>
+        <div></div>
+      </div>
+      <div id="field-roles"></div>
+      <div class="section-divider"><span>MANAGEMENT ROLES</span></div>
+      <div id="mgmt-roles"></div>
+      <div class="section-divider"><span>VEHICLE / TOOLS ADDER</span></div>
+      <div class="grid-2">
+        <div class="field"><div class="field-label">DESCRIPTION</div><input type="text" id="vehicle-desc" value="Truck / tools"></div>
+        <div class="field"><div class="field-label">$ / FIELD HOUR</div><input type="number" id="vehicle-rate" min="0" step="0.5" value="10"></div>
+      </div>
+      <div class="callout"><strong>Vehicle adder</strong> multiplies total field labor hours (sum of WBS labor hours across all sections). Represents truck, fuel, tools, and rolling-stock costs amortized per field hour.</div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="panel">
+    <div class="panel-label">OVERHEAD &amp; MARGIN <button class="help-btn" id="marginHelpBtn">?</button></div>
+    <div class="grid-2">
+      <div class="field"><div class="field-label">OVERHEAD %</div><input type="number" id="set-overhead" min="0" max="100" step="0.5" value="15"></div>
+      <div class="field"><div class="field-label">MARGIN % (FORM, NOT MARKUP)</div><input type="number" id="set-margin" min="0" max="90" step="0.5" value="20"></div>
+    </div>
+  </div>
+
+  <!-- WBS -->
+  <div class="panel">
+    <div class="panel-label">WORK BREAKDOWN STRUCTURE (BICSI 000&ndash;1000)
+      <label class="check-row" style="margin-left:auto;margin-bottom:0;text-transform:none;letter-spacing:0;font-size:11px">
+        <input type="checkbox" id="hideEmpty"> Hide empty sections
+      </label>
+    </div>
+    <div id="wbs-sections"></div>
+  </div>
+
+  <!-- ODC -->
+  <div class="panel">
+    <div class="panel-label teal">OTHER DIRECT COSTS (ODC)</div>
+    <div id="odc-auto-block"></div>
+    <div class="section-divider"><span>RENTALS</span></div>
+    <div class="odc-row hdr"><span>Description</span><span style="text-align:right">Cost</span><span>Notes</span><span></span></div>
+    <div id="odc-rentals"></div>
+    <button class="btn-secondary" id="addRentalBtn" style="margin-top:6px">+ ADD RENTAL</button>
+    <div class="section-divider"><span>SUBCONTRACTORS</span></div>
+    <div class="odc-row hdr"><span>Description</span><span style="text-align:right">Cost</span><span>Notes</span><span></span></div>
+    <div id="odc-subs"></div>
+    <button class="btn-secondary" id="addSubBtn" style="margin-top:6px">+ ADD SUBCONTRACTOR</button>
+  </div>
+
+</div>
+
+<!-- SUMMARY TAB -->
+<div id="pane-summary" class="tab-pane">
+  <div class="summary-header">
+    <div><h1 id="sum-title">Limited Energy Job Estimate</h1><div class="sum-meta" id="sum-subtitle">No project loaded</div></div>
+    <button class="hbtn primary no-print" id="printBtn">🖨 Print / Save PDF</button>
+  </div>
+
+  <div class="headline-card">
+    <div class="lbl">FINAL PROPOSAL PRICE</div>
+    <div class="price" id="hdl-price">$0</div>
+    <div class="breakdown">
+      <div>DIRECT COSTS<span class="v" id="hdl-direct">$0</span></div>
+      <div>OVERHEAD<span class="v" id="hdl-oh">$0</span></div>
+      <div>MARGIN<span class="v" id="hdl-margin">$0</span></div>
+      <div>TOTAL HOURS / DAYS<span class="v" id="hdl-hours">0 hrs / 0 days</span></div>
+    </div>
+  </div>
+
+  <div class="panel"><div class="panel-label">PROJECT INFORMATION</div><div id="sum-project"></div></div>
+  <div class="panel"><div class="panel-label">SCHEDULE &amp; CREW</div><div id="sum-sched"></div></div>
+  <div class="panel"><div class="panel-label">LABOR ROLL-UP</div><div id="sum-labor"></div></div>
+  <div class="panel"><div class="panel-label">MATERIALS ROLL-UP</div><div id="sum-mat"></div></div>
+  <div class="panel"><div class="panel-label">PER-SECTION BREAKDOWN <span style="font-family:var(--body);color:var(--gray-mid);font-size:11px;letter-spacing:normal;text-transform:none;">BICSI WBS</span></div><div id="sum-sections"></div></div>
+  <div class="panel"><div class="panel-label teal">OTHER DIRECT COSTS</div><div id="sum-odc"></div></div>
+  <div class="panel"><div class="panel-label">FINANCIAL ROLL-UP</div><div id="sum-financial"></div></div>
+
+  <div class="panel collapsible assumptions-panel" id="sum-assumptions-panel">
+    <button class="panel-header" id="assumptionsToggle">
+      <span class="panel-label" style="margin-bottom:0">METHODOLOGY &amp; ASSUMPTIONS</span>
+      <span class="caret">▼</span>
+    </button>
+    <div class="panel-body" style="margin-top:10px">
+      <ul>
+        <li><strong>Schedule-driven crew sizing.</strong> Total scope hours / (hours per day &times; target working days), rounded up. Larger crew = shorter calendar; baseline-crew callout flags acceleration.</li>
+        <li><strong>OT math (federal).</strong> Hours above 40 / tech / week earn the OT multiplier. Premium = OT_hours &times; avg field rate &times; (OT_mult &minus; 1).</li>
+        <li><strong>OT math (California).</strong> Greater of (daily OT: hours per day above 8) or (weekly OT: hours per week above 40). Double-time triggers when hours per day exceed 12. 7th-consecutive-day rule not modeled in v1.0.</li>
+        <li><strong>Vehicle adder.</strong> Total field labor hours &times; per-hour adder. Represents truck/tools/fuel amortization.</li>
+        <li><strong>Remote ODC auto-populate.</strong> Per diem = crew &times; (target days + travel days) &times; rate. Hotel = crew &times; nights &times; rate. Travel = crew &times; airfare. Lines surface in the ODC panel and the summary as auto-computed; manual ODC lines add on top.</li>
+        <li><strong>Overhead.</strong> Applied as % of direct costs (labor + materials + ODC).</li>
+        <li><strong>Margin form.</strong> Final price = (direct &times; (1 + overhead)) / (1 &minus; margin%). Margin form, not naive markup &mdash; ensures the stated margin is the actual margin on the proposal price.</li>
+        <li><strong>BICSI WBS.</strong> Section codes 000&ndash;1000 are pre-created on every new estimate. Empty sections contribute 0 to totals; toggle &ldquo;Hide empty sections&rdquo; to declutter the Builder view.</li>
+        <li><strong>Scope.</strong> Preliminary estimation only. Verify against shop standards before issuing a sealed proposal.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="print-credit">
+    The Estimator v1.0 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+  </div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-align:center;margin-top:20px;letter-spacing:0.1em;" class="no-print">Generated by The Estimator &middot; limitedenergy.net/estimate</div>
+</div>
+
+<!-- METHODOLOGY TAB -->
+<div id="pane-method" class="tab-pane">
+  <div class="panel">
+    <div class="panel-label">CORE FORMULAS</div>
+    <div style="font-family:var(--body);font-size:13px;line-height:1.8;color:var(--gray-light);">
+      <p><strong style="color:var(--white)">1. Per WBS item:</strong></p>
+      <p style="font-family:var(--mono);font-size:12px;padding-left:14px;color:var(--gray-light);">
+        labor_hours = qty &times; hours_each<br>
+        labor_cost = labor_hours &times; role_rate<br>
+        materials_cost = mat_qty &times; mat_unit_cost<br>
+        line_total = labor_cost + materials_cost
+      </p>
+      <p><strong style="color:var(--white)">2. Per section:</strong> sum of line items.</p>
+      <p><strong style="color:var(--white)">3. Project totals:</strong> sum of sections + manual ODC + auto-populated remote ODC.</p>
+      <p><strong style="color:var(--white)">4. OT premium:</strong></p>
+      <p style="font-family:var(--mono);font-size:12px;padding-left:14px;color:var(--gray-light);">
+        ot_hours_total = crew_size &times; ot_hrs_per_tech_per_wk &times; weeks<br>
+        ot_premium = ot_hours_total &times; avg_field_rate &times; (ot_mult &minus; 1)
+      </p>
+      <p><strong style="color:var(--white)">5. Final price (margin form):</strong></p>
+      <p style="font-family:var(--mono);font-size:12px;padding-left:14px;color:var(--gray-light);">
+        subtotal = direct_costs &times; (1 + overhead%)<br>
+        final_price = subtotal / (1 &minus; margin%)
+      </p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">BICSI WBS SECTIONS</div>
+    <div style="font-family:var(--body);font-size:13px;line-height:1.8;color:var(--gray-light);">
+      <p><strong style="color:var(--white)">000 Mobilization</strong> &mdash; site startup, kickoff, mobilization labor and direct costs.</p>
+      <p><strong style="color:var(--white)">100 Supports</strong> &mdash; cable supports, J-hooks, sleeves, firestop, conduit attachments.</p>
+      <p><strong style="color:var(--white)">200 Copper Backbone</strong> &mdash; multipair copper backbone cabling and terminations.</p>
+      <p><strong style="color:var(--white)">300 Fiber Backbone</strong> &mdash; SM / MM fiber backbone, splice / termination, distribution units.</p>
+      <p><strong style="color:var(--white)">400 Horizontal</strong> &mdash; horizontal Cat6 / Cat6A station cabling, jacks, patch panels.</p>
+      <p><strong style="color:var(--white)">500 TR Buildout</strong> &mdash; Telecommunications Room: racks, ladder rack, PDUs, grounding, labeling.</p>
+      <p><strong style="color:var(--white)">600 ER Buildout</strong> &mdash; Equipment Room: same as TR scaled up; main/distribution.</p>
+      <p><strong style="color:var(--white)">700 Testing</strong> &mdash; permanent-link / channel test, OTDR, certification reports, test deliverables.</p>
+      <p><strong style="color:var(--white)">800 Ancillary</strong> &mdash; misc. items not covered above; sleeve seal kits, miscellaneous labor.</p>
+      <p><strong style="color:var(--white)">900 Bonding / Grounding</strong> &mdash; TBB, TGB, TMGB, equipment bonding per J-STD-607.</p>
+      <p><strong style="color:var(--white)">1000 Demobilization</strong> &mdash; cleanup, punch list, closeout deliverables, demob labor.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">MARGIN FORM vs. NAIVE MARKUP</div>
+    <div style="font-family:var(--body);font-size:13px;line-height:1.8;color:var(--gray-light);">
+      <p>Naive markup adds a percentage to cost (e.g. cost &times; 1.20 = &ldquo;20% markup&rdquo;). But the actual margin on that price is only ~16.7% (profit / sell), not 20%.</p>
+      <p><strong style="color:var(--white)">Margin form</strong> divides instead: price = cost / (1 &minus; margin%). A 20% margin form on $100 of cost = $125 price, where margin is $25 = 20% of $125. The stated margin equals the actual proposal margin.</p>
+      <p>The Estimator uses margin form throughout. Enter the target margin you want on the sell price.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div id="credit-line">
+  <strong>The Estimator</strong> is free to use. Please credit <a href="https://limitedenergy.net" target="_blank" rel="noopener">Limited Energy eXperts &middot; limitedenergy.net</a>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="schedModal">
+  <div class="modal-box">
+    <button class="modal-close" id="schedModalClose">×</button>
+    <div class="modal-title">SCHEDULE &amp; CREW EXPLAINED</div>
+    <div class="modal-body">
+      <p><strong>Total scope hours</strong> are summed from every WBS item across all sections (labor qty &times; hours each).</p><br>
+      <p><strong>Target working days</strong> is your input. The estimator computes the crew size required to hit that target:<br><code>crew = ceil(total_hours / (hours_per_day &times; target_days))</code></p><br>
+      <p><strong>If the required crew exceeds your baseline</strong> (default 4 techs), the schedule is flagged as accelerated. You may also want to bump the workweek pattern to 5&times;10 or 6&times;8, which triggers overtime math automatically.</p><br>
+      <p><strong>Remote jobs</strong> auto-populate per-diem / hotel / travel ODC lines from crew size + target days.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="marginModal">
+  <div class="modal-box">
+    <button class="modal-close" id="marginModalClose">×</button>
+    <div class="modal-title">OVERHEAD &amp; MARGIN</div>
+    <div class="modal-body">
+      <p><strong>Overhead %</strong> is applied to direct costs (labor + materials + ODC). Typical: 10&ndash;20% for non-union shops.</p><br>
+      <p><strong>Margin %</strong> uses the margin form: <code>price = subtotal / (1 &minus; margin%)</code></p><br>
+      <p>A 20% margin on $100 cost = $125 price ($25 / $125 = 20%). Naive 20% markup ($100 &times; 1.20 = $120) only yields a 16.7% margin.</p><br>
+      <p>Set the margin you want to land on; the estimator does the inverse math.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importModal">
+  <div class="modal-box">
+    <button class="modal-close" id="importModalClose">×</button>
+    <div class="modal-title">IMPORT ESTIMATE JSON</div>
+    <div class="modal-body">
+      <p>Select a JSON file previously exported from The Estimator. The current session will be replaced.</p>
+      <div style="margin-top:14px;"><input type="file" id="importFile" accept=".json,application/json"></div>
+      <div id="importStatus"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="newModal">
+  <div class="modal-box">
+    <button class="modal-close" id="newModalClose">×</button>
+    <div class="modal-title">START NEW ESTIMATE?</div>
+    <div class="modal-body">
+      <p>This will clear the current estimate. Export first if you want to save it.</p>
+      <div style="display:flex;gap:8px;margin-top:18px;">
+        <button class="hbtn" id="newCancelBtn">Cancel</button>
+        <button class="hbtn primary" id="newConfirmBtn">Yes, Clear &amp; Start New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// THE ESTIMATOR v1.0 — Limited Energy Job Estimation
+// ============================================================================
+
+const BICSI_SECTIONS = [
+  {id:'000',  name:'Mobilization'},
+  {id:'100',  name:'Supports'},
+  {id:'200',  name:'Copper Backbone'},
+  {id:'300',  name:'Fiber Backbone'},
+  {id:'400',  name:'Horizontal'},
+  {id:'500',  name:'TR Buildout'},
+  {id:'600',  name:'ER Buildout'},
+  {id:'700',  name:'Testing'},
+  {id:'800',  name:'Ancillary'},
+  {id:'900',  name:'Bonding / Grounding'},
+  {id:'1000', name:'Demobilization'}
+];
+
+const DEFAULT_FIELD_ROLES = [
+  {id:1, role:'Lead Tech',  rate:90},
+  {id:2, role:'Tech I',     rate:75},
+  {id:3, role:'Tech II',    rate:60},
+  {id:4, role:'Helper',     rate:50},
+  {id:5, role:'Apprentice', rate:40}
+];
+const DEFAULT_MGMT_ROLES = [
+  {id:6, role:'Project Manager',  rate:130},
+  {id:7, role:'Project Engineer', rate:115},
+  {id:8, role:'Foreman',          rate:95}
+];
+
+const STORAGE_KEY = 'lex_est_session_v1';
+const SIG = 'LEX-EST';
+const EST_VERSION = '1.0';
+
+const WORKWEEK_PATTERNS = {
+  '5x8':  {hpd:8,  dpw:5},
+  '5x10': {hpd:10, dpw:5},
+  '4x10': {hpd:10, dpw:4},
+  '6x8':  {hpd:8,  dpw:6},
+  '6x10': {hpd:10, dpw:6}
+};
+
+function defaultState(){
+  return {
+    project:{
+      name:'', client:'', location:'', estimator:'Shawn C. Tovey, RCDD',
+      proposalDate:new Date().toISOString().slice(0,10), validUntil:'',
+      scope:'', exclusions:'', notes:''
+    },
+    schedule:{
+      targetWorkingDays:30,
+      workweekPattern:'5x8',
+      workweek:{hoursPerDay:8, daysPerWeek:5, overtimeMode:'federal', overtimeMultiplier:1.5, doubletimeMultiplier:2.0},
+      baselineCrew:4
+    },
+    jobType:{
+      mode:'local',
+      remote:{travelDaysEachWay:1, perDiemPerTechPerDay:75, hotelPerTechPerNight:150, airfarePerTechRoundTrip:0}
+    },
+    crew:{
+      field:DEFAULT_FIELD_ROLES.map(r=>({...r})),
+      mgmt:DEFAULT_MGMT_ROLES.map(r=>({...r})),
+      vehicleAdder:{perHour:10, description:'Truck / tools'}
+    },
+    settings:{overheadPct:0.15, marginPct:0.20},
+    wbs:{sections:BICSI_SECTIONS.map(s=>({...s, items:[], collapsed:false}))},
+    odc:{rentals:[], subcontractors:[]}
+  };
+}
+
+let state = defaultState();
+let nextWbsId = 1, nextOdcId = 1;
+let dirty = false, lastSaveTime = null, hideEmpty = false;
+const v = id => document.getElementById(id);
+
+function autoSave(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({state, nextWbsId, nextOdcId, hideEmpty, savedAt:Date.now()}));
+    lastSaveTime = Date.now();
+    dirty = false;
+    updateSavedIndicator();
+  }catch(e){console.error('Save failed:',e);}
+}
+function loadSaved(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+    const p = JSON.parse(raw);
+    if(!p.state) return false;
+    state = p.state;
+    nextWbsId = p.nextWbsId || 1;
+    nextOdcId = p.nextOdcId || 1;
+    hideEmpty = !!p.hideEmpty;
+    lastSaveTime = p.savedAt;
+    return true;
+  }catch(e){return false;}
+}
+function updateSavedIndicator(){
+  const el = v('savedInd');
+  if(!lastSaveTime){el.textContent='Unsaved';el.classList.remove('fresh');return;}
+  const d = Math.floor((Date.now()-lastSaveTime)/1000);
+  let t;
+  if(d<5) t='✓ Saved just now';
+  else if(d<60) t=`✓ Saved ${d}s ago`;
+  else if(d<3600) t=`✓ Saved ${Math.floor(d/60)}m ago`;
+  else t=`✓ Saved ${Math.floor(d/3600)}h ago`;
+  el.textContent = t;
+  el.classList.toggle('fresh', d<10);
+}
+function markDirty(){dirty=true;autoSave();}
+window.addEventListener('beforeunload', e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+setInterval(updateSavedIndicator, 15000);
+
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmtMoney = n => '$' + Math.round(n||0).toLocaleString('en-US');
+const fmtMoneyDec = n => '$' + (Math.round((n||0)*100)/100).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmtHrs = n => (Math.round((n||0)*10)/10).toLocaleString('en-US') + ' hrs';
+const fmtPct = p => (p*100).toFixed(1) + '%';
+
+// =========================================================================
+// CALC — single-pass, unidirectional dependency graph
+// =========================================================================
+function calc(){
+  const allRoles = [...state.crew.field, ...state.crew.mgmt];
+  const roleById = new Map(allRoles.map(r => [r.id, r]));
+  const avgFieldRate = state.crew.field.length
+    ? state.crew.field.reduce((s,r)=>s + (r.rate||0), 0) / state.crew.field.length
+    : 0;
+
+  // Per WBS item / section totals
+  let totalHours = 0, totalLaborCost = 0, totalMaterialsCost = 0;
+  const sectionTotals = {};
+  for(const sec of state.wbs.sections){
+    let h=0, lc=0, mc=0;
+    for(const it of sec.items){
+      const lq = +it.labor.qty||0, le = +it.labor.hoursEach||0;
+      const itHours = lq * le;
+      const role = roleById.get(it.labor.roleId);
+      const rate = role ? (+role.rate||0) : 0;
+      const itLaborCost = itHours * rate;
+      const mq = +it.materials.qty||0, mu = +it.materials.unitCost||0;
+      const itMatCost = mq * mu;
+      h += itHours; lc += itLaborCost; mc += itMatCost;
+    }
+    sectionTotals[sec.id] = {hours:h, laborCost:lc, materialsCost:mc, total:lc+mc};
+    totalHours += h; totalLaborCost += lc; totalMaterialsCost += mc;
+  }
+
+  // Schedule
+  const sched = state.schedule;
+  const target = Math.max(1, +sched.targetWorkingDays||1);
+  const hpd = Math.max(1, +sched.workweek.hoursPerDay||1);
+  const dpw = Math.max(1, +sched.workweek.daysPerWeek||1);
+  const otMult = +sched.workweek.overtimeMultiplier||1.5;
+  const dtMult = +sched.workweek.doubletimeMultiplier||2.0;
+  const requiredCrew = totalHours > 0 ? Math.max(1, Math.ceil(totalHours / (hpd * target))) : 0;
+  const weeksRequired = target / dpw;
+  const baselineCrew = Math.max(1, +sched.baselineCrew||4);
+  const isAccelerated = requiredCrew > baselineCrew;
+
+  // OT/DT per tech per week
+  const isCA = sched.workweek.overtimeMode === 'california';
+  const weeklyHours = hpd * dpw;
+  let otHrsPerTechPerWk = 0, dtHrsPerTechPerWk = 0;
+  if(isCA){
+    const dailyOTPerDay = Math.max(0, Math.min(hpd, 12) - 8);
+    const dailyDTPerDay = Math.max(0, hpd - 12);
+    const dailyOTWeek = dailyOTPerDay * dpw;
+    const dailyDTWeek = dailyDTPerDay * dpw;
+    const weeklyOT = Math.max(0, weeklyHours - 40);
+    otHrsPerTechPerWk = Math.max(dailyOTWeek, weeklyOT);
+    dtHrsPerTechPerWk = dailyDTWeek;
+  } else {
+    otHrsPerTechPerWk = Math.max(0, weeklyHours - 40);
+  }
+  const regHrsPerTechPerWk = weeklyHours - otHrsPerTechPerWk - dtHrsPerTechPerWk;
+  const otHoursTotal = requiredCrew * otHrsPerTechPerWk * weeksRequired;
+  const dtHoursTotal = requiredCrew * dtHrsPerTechPerWk * weeksRequired;
+  const otPremium = otHoursTotal * avgFieldRate * (otMult - 1);
+  const dtPremium = dtHoursTotal * avgFieldRate * (dtMult - 1);
+
+  // Vehicle adder (on total field labor hours)
+  const vehicleRate = +state.crew.vehicleAdder.perHour||0;
+  const vehicleCost = totalHours * vehicleRate;
+
+  // Remote ODC auto-populate
+  const remote = {perDiem:0, hotel:0, travel:0, total:0, breakdown:''};
+  if(state.jobType.mode === 'remote' && requiredCrew > 0){
+    const r = state.jobType.remote;
+    const travelDays = +r.travelDaysEachWay||0;
+    const perDiemRate = +r.perDiemPerTechPerDay||0;
+    const hotelRate = +r.hotelPerTechPerNight||0;
+    const airfare = +r.airfarePerTechRoundTrip||0;
+    const onsiteDays = target + (travelDays*2);
+    const nights = Math.max(0, onsiteDays - 1);
+    remote.perDiem = requiredCrew * perDiemRate * onsiteDays;
+    remote.hotel   = requiredCrew * hotelRate   * nights;
+    remote.travel  = requiredCrew * airfare;
+    remote.total   = remote.perDiem + remote.hotel + remote.travel;
+    remote.breakdown = `${requiredCrew} techs × ${onsiteDays} days · ${nights} nights`;
+  }
+
+  // Manual ODC
+  const odcRentals = state.odc.rentals.reduce((s,x)=>s + (+x.cost||0), 0);
+  const odcSubs = state.odc.subcontractors.reduce((s,x)=>s + (+x.cost||0), 0);
+  const odcManual = odcRentals + odcSubs;
+
+  // Roll-up
+  const directLabor = totalLaborCost + otPremium + dtPremium + vehicleCost;
+  const directMaterials = totalMaterialsCost;
+  const directODC = odcManual + remote.total;
+  const directCosts = directLabor + directMaterials + directODC;
+  const overheadPct = +state.settings.overheadPct||0;
+  const marginPct = +state.settings.marginPct||0;
+  const overheadAmount = directCosts * overheadPct;
+  const subtotalWithOH = directCosts + overheadAmount;
+  const finalPrice = marginPct < 1 ? subtotalWithOH / (1 - marginPct) : subtotalWithOH;
+  const marginAmount = finalPrice - subtotalWithOH;
+  const totalDays = (hpd > 0 && requiredCrew > 0) ? totalHours / (hpd * requiredCrew) : 0;
+
+  return {
+    totalHours, totalLaborCost, totalMaterialsCost,
+    sectionTotals,
+    requiredCrew, weeksRequired, targetWorkingDays:target, baselineCrew, isAccelerated,
+    weeklyHours, regHrsPerTechPerWk, otHrsPerTechPerWk, dtHrsPerTechPerWk,
+    otHoursTotal, dtHoursTotal, otPremium, dtPremium,
+    avgFieldRate, vehicleCost, vehicleRate,
+    remote, odcManual, odcRentals, odcSubs,
+    directLabor, directMaterials, directODC, directCosts,
+    overheadPct, overheadAmount, subtotalWithOH,
+    marginPct, marginAmount, finalPrice,
+    totalDays, isCA, otMult, dtMult, hpd, dpw
+  };
+}
+
+// =========================================================================
+// RENDER
+// =========================================================================
+function render(){
+  const s = calc();
+
+  // Project Info
+  setIfDiff('proj-name', state.project.name);
+  setIfDiff('proj-client', state.project.client);
+  setIfDiff('proj-location', state.project.location);
+  setIfDiff('proj-estimator', state.project.estimator);
+  setIfDiff('proj-date', state.project.proposalDate);
+  setIfDiff('proj-valid', state.project.validUntil);
+  setIfDiff('proj-scope', state.project.scope);
+  setIfDiff('proj-exclusions', state.project.exclusions);
+  setIfDiff('proj-notes', state.project.notes);
+
+  // Schedule
+  setIfDiff('sched-days', state.schedule.targetWorkingDays);
+  setIfDiff('sched-pattern', state.schedule.workweekPattern);
+  setIfDiff('sched-baseline', state.schedule.baselineCrew);
+  setIfDiff('sched-hpd', state.schedule.workweek.hoursPerDay);
+  setIfDiff('sched-dpw', state.schedule.workweek.daysPerWeek);
+  setIfDiff('sched-otmode', state.schedule.workweek.overtimeMode);
+  setIfDiff('sched-otmult', state.schedule.workweek.overtimeMultiplier);
+  setIfDiff('sched-dtmult', state.schedule.workweek.doubletimeMultiplier);
+  v('customPatternRow').style.display = state.schedule.workweekPattern === 'custom' ? 'grid' : 'none';
+
+  // Schedule stats
+  v('ss-total').textContent = fmtHrs(s.totalHours);
+  v('ss-crew').textContent = s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—';
+  v('ss-weeks').textContent = s.requiredCrew > 0 ? s.weeksRequired.toFixed(1) : '—';
+  v('ss-reg').textContent = s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—';
+  v('ss-ot').textContent  = s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—';
+  v('ss-dt').textContent  = s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : (s.isCA?'0.0':'n/a (federal)');
+  const statusEl = v('ss-status');
+  if(s.requiredCrew === 0){statusEl.textContent='—';statusEl.className='val';}
+  else if(s.isAccelerated){statusEl.innerHTML=`<span class="pill pill-warn">ACCELERATED · +${s.requiredCrew - s.baselineCrew} above baseline</span>`;}
+  else {statusEl.innerHTML=`<span class="pill pill-ok">BASELINE</span>`;}
+
+  // Job type
+  document.getElementById('jt-' + state.jobType.mode).checked = true;
+  v('remotePanel').style.display = state.jobType.mode === 'remote' ? 'block' : 'none';
+  setIfDiff('rmt-travel-days', state.jobType.remote.travelDaysEachWay);
+  setIfDiff('rmt-perdiem', state.jobType.remote.perDiemPerTechPerDay);
+  setIfDiff('rmt-hotel', state.jobType.remote.hotelPerTechPerNight);
+  setIfDiff('rmt-airfare', state.jobType.remote.airfarePerTechRoundTrip);
+
+  // Rates
+  renderRoles();
+  setIfDiff('vehicle-desc', state.crew.vehicleAdder.description);
+  setIfDiff('vehicle-rate', state.crew.vehicleAdder.perHour);
+
+  // Settings
+  setIfDiff('set-overhead', state.settings.overheadPct * 100);
+  setIfDiff('set-margin', state.settings.marginPct * 100);
+
+  // WBS
+  renderWBS(s);
+
+  // ODC auto block + manual
+  renderODC(s);
+
+  // Summary
+  renderSummary(s);
+}
+
+function setIfDiff(id, val){
+  const el = v(id); if(!el) return;
+  const tag = el.tagName; const cur = el.value;
+  const want = (val==null||val==='') ? '' : String(val);
+  if(cur !== want) el.value = want;
+}
+
+function renderRoles(){
+  const fld = v('field-roles');
+  const mgmt = v('mgmt-roles');
+  fld.innerHTML = state.crew.field.map(r => roleRowHTML(r,'field')).join('');
+  mgmt.innerHTML = state.crew.mgmt.map(r => roleRowHTML(r,'mgmt')).join('');
+  fld.querySelectorAll('[data-rid]').forEach(bindRoleRow);
+  mgmt.querySelectorAll('[data-rid]').forEach(bindRoleRow);
+}
+function roleRowHTML(r, kind){
+  return `<div class="rate-row">
+    <input type="text" data-rid="${r.id}" data-rk="${kind}" data-rf="role" value="${esc(r.role)}">
+    <input type="number" data-rid="${r.id}" data-rk="${kind}" data-rf="rate" min="0" step="0.5" value="${r.rate}">
+    <span class="rate-prefix">$/hr</span>
+  </div>`;
+}
+function bindRoleRow(row){
+  const id = +row.dataset.rid;
+  const kind = row.dataset.rk;
+  const field = row.dataset.rf;
+  row.addEventListener('change', () => {
+    const arr = state.crew[kind];
+    const r = arr.find(x => x.id === id);
+    if(!r) return;
+    if(field === 'role') r.role = row.value;
+    else if(field === 'rate') r.rate = parseFloat(row.value)||0;
+    render(); markDirty();
+  });
+}
+
+function renderWBS(s){
+  const host = v('wbs-sections');
+  host.innerHTML = state.wbs.sections.map(sec => {
+    const t = s.sectionTotals[sec.id] || {hours:0, laborCost:0, materialsCost:0, total:0};
+    if(hideEmpty && sec.items.length === 0) return '';
+    const collapsed = sec.collapsed ? ' collapsed' : '';
+    const itemsHTML = sec.items.length === 0
+      ? `<div class="wbs-empty">No items in this section yet.</div>`
+      : (`<div class="wbs-item hdr">
+            <span>Description</span><span style="text-align:right">Lbr Qty</span><span style="text-align:right">Hrs Each</span><span>Role</span><span style="text-align:right">Mat Qty</span><span style="text-align:right">$/Each</span><span></span>
+          </div>` + sec.items.map(it => wbsItemHTML(it, sec.id)).join(''));
+    return `<div class="wbs-section${collapsed}" data-sec="${sec.id}">
+      <div class="wbs-section-head" data-sec-toggle="${sec.id}">
+        <div class="wbs-section-code">${sec.id}</div>
+        <div class="wbs-section-name">${esc(sec.name)}</div>
+        <div class="wbs-section-totals">
+          <span class="hrs">${fmtHrs(t.hours)}</span>
+          <span class="lbr">Lbr ${fmtMoney(t.laborCost)}</span>
+          <span class="mat">Mat ${fmtMoney(t.materialsCost)}</span>
+          <span class="tot">${fmtMoney(t.total)}</span>
+          <span style="color:var(--gray-mid)">${sec.collapsed?'▸':'▼'}</span>
+        </div>
+      </div>
+      <div class="wbs-body">
+        ${itemsHTML}
+        <div class="wbs-add"><button class="btn-secondary" data-add-item="${sec.id}">+ ADD ITEM</button></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Bind section headers
+  host.querySelectorAll('[data-sec-toggle]').forEach(h => {
+    h.addEventListener('click', e => {
+      if(e.target.closest('input,select,button')) return;
+      const id = h.dataset.secToggle;
+      const sec = state.wbs.sections.find(x=>x.id===id);
+      sec.collapsed = !sec.collapsed;
+      render(); markDirty();
+    });
+  });
+  // Bind add-item buttons
+  host.querySelectorAll('[data-add-item]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      addWbsItem(b.dataset.addItem);
+    });
+  });
+  // Bind item inputs & removes
+  host.querySelectorAll('[data-wid]').forEach(el => bindWbsInput(el));
+  host.querySelectorAll('[data-rm-wid]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      removeWbsItem(b.dataset.rmWid);
+    });
+  });
+}
+
+function wbsItemHTML(it, secId){
+  const roleOptions = [...state.crew.field, ...state.crew.mgmt]
+    .map(r => `<option value="${r.id}"${r.id===it.labor.roleId?' selected':''}>${esc(r.role)}</option>`)
+    .join('');
+  return `<div class="wbs-item">
+    <div class="item-desc"><input type="text" data-wid="${it.id}" data-wf="description" placeholder="Item description" value="${esc(it.description)}"></div>
+    <input type="number" data-wid="${it.id}" data-wf="labor.qty"        min="0" step="1"   value="${it.labor.qty}">
+    <input type="number" data-wid="${it.id}" data-wf="labor.hoursEach"  min="0" step="0.1" value="${it.labor.hoursEach}">
+    <select data-wid="${it.id}" data-wf="labor.roleId">${roleOptions}</select>
+    <input type="number" data-wid="${it.id}" data-wf="materials.qty"    min="0" step="1"   value="${it.materials.qty}">
+    <input type="number" data-wid="${it.id}" data-wf="materials.unitCost" min="0" step="0.01" value="${it.materials.unitCost}">
+    <button class="btn-remove" data-rm-wid="${it.id}">×</button>
+  </div>
+  <div class="wbs-item-row2">
+    <input type="text" data-wid="${it.id}" data-wf="notes" placeholder="Item notes (optional)" value="${esc(it.notes||'')}">
+    <span class="row2-lbl">Hrs</span>
+    <span class="row2-lbl" style="text-align:right;color:var(--white);font-family:var(--mono);">${fmtHrs(it.labor.qty * it.labor.hoursEach)}</span>
+    <span></span>
+  </div>`;
+}
+
+function bindWbsInput(el){
+  const id = +el.dataset.wid;
+  const fieldPath = el.dataset.wf;
+  el.addEventListener('change', () => {
+    const item = findWbsItem(id);
+    if(!item) return;
+    setItemField(item, fieldPath, el);
+    render(); markDirty();
+  });
+}
+function findWbsItem(id){
+  for(const sec of state.wbs.sections){
+    const it = sec.items.find(x => x.id === id);
+    if(it) return it;
+  }
+  return null;
+}
+function setItemField(item, path, el){
+  const parts = path.split('.');
+  let obj = item;
+  for(let i=0;i<parts.length-1;i++) obj = obj[parts[i]];
+  const k = parts[parts.length-1];
+  if(el.type === 'number') obj[k] = parseFloat(el.value)||0;
+  else if(k === 'roleId') obj[k] = parseInt(el.value)||0;
+  else obj[k] = el.value;
+}
+function addWbsItem(secId){
+  const sec = state.wbs.sections.find(s => s.id === secId);
+  if(!sec) return;
+  sec.items.push({
+    id:nextWbsId++,
+    description:'',
+    labor:{qty:0, hoursEach:0, roleId:state.crew.field[0]?.id || 1},
+    materials:{qty:0, unitCost:0},
+    notes:''
+  });
+  render(); markDirty();
+}
+function removeWbsItem(id){
+  id = +id;
+  for(const sec of state.wbs.sections){
+    sec.items = sec.items.filter(x => x.id !== id);
+  }
+  render(); markDirty();
+}
+
+function renderODC(s){
+  // Auto block
+  const auto = v('odc-auto-block');
+  if(state.jobType.mode === 'remote' && s.remote.total > 0){
+    auto.innerHTML = `<div class="odc-auto">
+      <div class="odc-auto-label">AUTO-COMPUTED · REMOTE COSTS · ${esc(s.remote.breakdown)}</div>
+      <div class="odc-auto-line"><span class="k">Per diem</span><span class="v">${fmtMoney(s.remote.perDiem)}</span></div>
+      <div class="odc-auto-line"><span class="k">Hotel / lodging</span><span class="v">${fmtMoney(s.remote.hotel)}</span></div>
+      <div class="odc-auto-line"><span class="k">Travel (airfare / mileage)</span><span class="v">${fmtMoney(s.remote.travel)}</span></div>
+      <div class="odc-auto-line" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px;"><span class="k" style="color:var(--white);font-weight:600">Auto-computed total</span><span class="v" style="color:var(--teal)">${fmtMoney(s.remote.total)}</span></div>
+    </div>`;
+  } else {
+    auto.innerHTML = '';
+  }
+
+  // Rentals
+  const ren = v('odc-rentals');
+  ren.innerHTML = state.odc.rentals.length === 0
+    ? `<div class="wbs-empty">No rentals.</div>`
+    : state.odc.rentals.map(x => odcRowHTML(x, 'rentals')).join('');
+  ren.querySelectorAll('[data-oid]').forEach(bindOdcInput);
+  ren.querySelectorAll('[data-rm-oid]').forEach(b => b.addEventListener('click', () => removeOdc('rentals', b.dataset.rmOid)));
+
+  // Subs
+  const sub = v('odc-subs');
+  sub.innerHTML = state.odc.subcontractors.length === 0
+    ? `<div class="wbs-empty">No subcontractors.</div>`
+    : state.odc.subcontractors.map(x => odcRowHTML(x, 'subcontractors')).join('');
+  sub.querySelectorAll('[data-oid]').forEach(bindOdcInput);
+  sub.querySelectorAll('[data-rm-oid]').forEach(b => b.addEventListener('click', () => removeOdc('subcontractors', b.dataset.rmOid)));
+}
+function odcRowHTML(x, bucket){
+  return `<div class="odc-row" data-bucket="${bucket}">
+    <input type="text" data-oid="${x.id}" data-ob="${bucket}" data-of="description" placeholder="Description" value="${esc(x.description)}">
+    <input type="number" data-oid="${x.id}" data-ob="${bucket}" data-of="cost" min="0" step="0.01" value="${x.cost}">
+    <input type="text" data-oid="${x.id}" data-ob="${bucket}" data-of="notes" placeholder="Notes" value="${esc(x.notes||'')}">
+    <button class="btn-remove" data-rm-oid="${x.id}" data-rm-ob="${bucket}">×</button>
+  </div>`;
+}
+function bindOdcInput(el){
+  const id = +el.dataset.oid;
+  const bucket = el.dataset.ob;
+  const field = el.dataset.of;
+  el.addEventListener('change', () => {
+    const item = state.odc[bucket].find(x => x.id === id);
+    if(!item) return;
+    if(el.type === 'number') item[field] = parseFloat(el.value)||0;
+    else item[field] = el.value;
+    render(); markDirty();
+  });
+}
+function addOdc(bucket){
+  state.odc[bucket].push({id:nextOdcId++, description:'', cost:0, notes:''});
+  render(); markDirty();
+}
+function removeOdc(bucket, id){
+  id = +id;
+  state.odc[bucket] = state.odc[bucket].filter(x => x.id !== id);
+  render(); markDirty();
+}
+
+function sumRow(k, val){
+  return `<div class="sum-row"><span class="sum-key">${esc(k)}</span><span class="sum-val">${val}</span></div>`;
+}
+
+function renderSummary(s){
+  const p = state.project;
+  v('sum-title').textContent = p.name || 'Limited Energy Job Estimate';
+  const sp = [];
+  if(p.client) sp.push(p.client);
+  if(p.location) sp.push(p.location);
+  if(p.proposalDate) sp.push(p.proposalDate);
+  v('sum-subtitle').textContent = sp.length ? sp.join(' · ') : 'Enter project info in the Builder tab';
+
+  // Headline card
+  v('hdl-price').textContent = fmtMoney(s.finalPrice);
+  v('hdl-direct').textContent = fmtMoney(s.directCosts);
+  v('hdl-oh').textContent = fmtMoney(s.overheadAmount);
+  v('hdl-margin').textContent = fmtMoney(s.marginAmount);
+  v('hdl-hours').textContent = `${fmtHrs(s.totalHours)} / ${s.totalDays.toFixed(1)} days`;
+
+  // Project info
+  v('sum-project').innerHTML = [
+    ['Project Name', p.name || '—'],
+    ['Client', p.client || '—'],
+    ['Location', p.location || '—'],
+    ['Estimator', p.estimator || '—'],
+    ['Proposal Date', p.proposalDate || '—'],
+    ['Valid Until', p.validUntil || '—'],
+    ['Scope', p.scope || '—'],
+    ['Exclusions', p.exclusions || '—'],
+    ['Notes', p.notes || '—']
+  ].map(r => sumRow(r[0], esc(r[1]))).join('');
+
+  // Schedule & Crew
+  v('sum-sched').innerHTML = [
+    ['Job Type', state.jobType.mode === 'remote' ? 'Remote' : 'Local'],
+    ['Total Scope Hours', fmtHrs(s.totalHours)],
+    ['Target Working Days', `${s.targetWorkingDays}`],
+    ['Required Crew Size', s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—'],
+    ['Baseline Crew (info)', `${s.baselineCrew} techs`],
+    ['Acceleration Flag', s.isAccelerated ? `ACCELERATED (+${s.requiredCrew - s.baselineCrew} above baseline)` : 'Baseline'],
+    ['Weeks Required', s.weeksRequired.toFixed(1)],
+    ['Calendar Days', s.totalDays.toFixed(1)],
+    ['Workweek Pattern', `${s.hpd} × ${s.dpw} (${s.weeklyHours} hrs/wk)`],
+    ['OT Mode', s.isCA ? 'California (daily + weekly)' : 'Federal (40 hrs/wk)'],
+    ['Regular hrs / tech / wk', s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—'],
+    ['OT hrs / tech / wk', s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—'],
+    ['DT hrs / tech / wk', s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : 'n/a'],
+    ['Total OT hours', fmtHrs(s.otHoursTotal)],
+    ['Total DT hours', s.isCA ? fmtHrs(s.dtHoursTotal) : 'n/a']
+  ].map(r => sumRow(r[0], r[1])).join('');
+
+  // Labor roll-up
+  v('sum-labor').innerHTML = [
+    ['Base labor (regular)', fmtMoney(s.totalLaborCost)],
+    ['OT premium', fmtMoney(s.otPremium)],
+    ['DT premium', s.isCA ? fmtMoney(s.dtPremium) : 'n/a'],
+    ['Vehicle / tools adder', fmtMoney(s.vehicleCost) + ` (${fmtHrs(s.totalHours)} × $${s.vehicleRate}/hr)`],
+    ['Total direct labor', fmtMoney(s.directLabor)]
+  ].map(r => sumRow(r[0], r[1])).join('');
+
+  // Materials roll-up
+  v('sum-mat').innerHTML = [
+    ['Total direct materials', fmtMoney(s.directMaterials)]
+  ].map(r => sumRow(r[0], r[1])).join('');
+
+  // Per-section breakdown
+  const secRows = state.wbs.sections.map(sec => {
+    const t = s.sectionTotals[sec.id];
+    if(t.total === 0 && hideEmpty) return '';
+    return `<div class="sum-row"><span class="sum-key">${sec.id} · ${esc(sec.name)} <span style="color:var(--gray-mid);font-size:11px">(${fmtHrs(t.hours)})</span></span><span class="sum-val">${fmtMoney(t.total)}</span></div>`;
+  }).join('');
+  v('sum-sections').innerHTML = secRows || `<div style="color:var(--gray-dark);font-style:italic">No WBS items yet.</div>`;
+
+  // ODC
+  const odcRows = [];
+  if(state.jobType.mode === 'remote' && s.remote.total > 0){
+    odcRows.push(['Remote: per diem', fmtMoney(s.remote.perDiem)]);
+    odcRows.push(['Remote: hotel / lodging', fmtMoney(s.remote.hotel)]);
+    odcRows.push(['Remote: travel', fmtMoney(s.remote.travel)]);
+  }
+  if(s.odcRentals > 0) odcRows.push(['Rentals (manual)', fmtMoney(s.odcRentals)]);
+  if(s.odcSubs > 0) odcRows.push(['Subcontractors (manual)', fmtMoney(s.odcSubs)]);
+  odcRows.push(['Total ODC', fmtMoney(s.directODC)]);
+  v('sum-odc').innerHTML = odcRows.map(r => sumRow(r[0], r[1])).join('');
+
+  // Financial roll-up
+  v('sum-financial').innerHTML = [
+    ['Direct labor', fmtMoney(s.directLabor)],
+    ['Direct materials', fmtMoney(s.directMaterials)],
+    ['Direct ODC', fmtMoney(s.directODC)],
+    ['Direct costs (subtotal)', fmtMoney(s.directCosts)],
+    [`Overhead @ ${fmtPct(s.overheadPct)}`, fmtMoney(s.overheadAmount)],
+    ['Subtotal with overhead', fmtMoney(s.subtotalWithOH)],
+    [`Margin @ ${fmtPct(s.marginPct)} (form)`, fmtMoney(s.marginAmount)],
+    ['Final proposal price', `<span style="color:var(--red);font-size:18px">${fmtMoney(s.finalPrice)}</span>`]
+  ].map(r => sumRow(r[0], r[1])).join('');
+}
+
+// =========================================================================
+// EVENT BINDINGS
+// =========================================================================
+function bindAll(){
+  // Project info
+  ['name','client','location','estimator'].forEach(f => v('proj-'+f).addEventListener('input', e=>{state.project[f]=e.target.value;markDirty();}));
+  v('proj-date').addEventListener('change', e=>{state.project.proposalDate=e.target.value;markDirty();});
+  v('proj-valid').addEventListener('change', e=>{state.project.validUntil=e.target.value;markDirty();});
+  ['scope','exclusions','notes'].forEach(f => v('proj-'+f).addEventListener('input', e=>{state.project[f]=e.target.value;markDirty();}));
+
+  // Schedule
+  v('sched-days').addEventListener('input', e=>{state.schedule.targetWorkingDays=parseFloat(e.target.value)||1;render();markDirty();});
+  v('sched-pattern').addEventListener('change', e=>{
+    state.schedule.workweekPattern = e.target.value;
+    if(e.target.value !== 'custom'){
+      const p = WORKWEEK_PATTERNS[e.target.value];
+      state.schedule.workweek.hoursPerDay = p.hpd;
+      state.schedule.workweek.daysPerWeek = p.dpw;
+    }
+    render(); markDirty();
+  });
+  v('sched-hpd').addEventListener('input', e=>{state.schedule.workweek.hoursPerDay=parseFloat(e.target.value)||1;render();markDirty();});
+  v('sched-dpw').addEventListener('input', e=>{state.schedule.workweek.daysPerWeek=parseFloat(e.target.value)||1;render();markDirty();});
+  v('sched-baseline').addEventListener('input', e=>{state.schedule.baselineCrew=parseInt(e.target.value)||1;render();markDirty();});
+  v('sched-otmode').addEventListener('change', e=>{state.schedule.workweek.overtimeMode=e.target.value;render();markDirty();});
+  v('sched-otmult').addEventListener('input', e=>{state.schedule.workweek.overtimeMultiplier=parseFloat(e.target.value)||1.5;render();markDirty();});
+  v('sched-dtmult').addEventListener('input', e=>{state.schedule.workweek.doubletimeMultiplier=parseFloat(e.target.value)||2.0;render();markDirty();});
+
+  // Job type
+  v('jt-local').addEventListener('change', ()=>{state.jobType.mode='local';render();markDirty();});
+  v('jt-remote').addEventListener('change', ()=>{state.jobType.mode='remote';render();markDirty();});
+  v('rmt-travel-days').addEventListener('input', e=>{state.jobType.remote.travelDaysEachWay=parseFloat(e.target.value)||0;render();markDirty();});
+  v('rmt-perdiem').addEventListener('input', e=>{state.jobType.remote.perDiemPerTechPerDay=parseFloat(e.target.value)||0;render();markDirty();});
+  v('rmt-hotel').addEventListener('input', e=>{state.jobType.remote.hotelPerTechPerNight=parseFloat(e.target.value)||0;render();markDirty();});
+  v('rmt-airfare').addEventListener('input', e=>{state.jobType.remote.airfarePerTechRoundTrip=parseFloat(e.target.value)||0;render();markDirty();});
+
+  // Vehicle adder
+  v('vehicle-desc').addEventListener('input', e=>{state.crew.vehicleAdder.description=e.target.value;markDirty();});
+  v('vehicle-rate').addEventListener('input', e=>{state.crew.vehicleAdder.perHour=parseFloat(e.target.value)||0;render();markDirty();});
+
+  // Settings
+  v('set-overhead').addEventListener('input', e=>{state.settings.overheadPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
+  v('set-margin').addEventListener('input', e=>{state.settings.marginPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
+
+  // WBS hide empty
+  v('hideEmpty').addEventListener('change', e=>{hideEmpty=e.target.checked;render();markDirty();});
+  v('hideEmpty').checked = hideEmpty;
+
+  // ODC adds
+  v('addRentalBtn').addEventListener('click', ()=>addOdc('rentals'));
+  v('addSubBtn').addEventListener('click', ()=>addOdc('subcontractors'));
+
+  // Collapsibles
+  v('projToggle').addEventListener('click', ()=>v('projPanel').classList.toggle('collapsed'));
+  v('ratesToggle').addEventListener('click', ()=>v('ratesPanel').classList.toggle('collapsed'));
+  v('sum-assumptions-panel').classList.add('collapsed');
+  v('assumptionsToggle').addEventListener('click', ()=>v('sum-assumptions-panel').classList.toggle('collapsed'));
+
+  // Help modals
+  v('schedHelpBtn').addEventListener('click', ()=>openModal('schedModal'));
+  v('schedModalClose').addEventListener('click', ()=>closeModal('schedModal'));
+  v('schedModal').addEventListener('click', e=>{if(e.target===v('schedModal'))closeModal('schedModal');});
+  v('marginHelpBtn').addEventListener('click', ()=>openModal('marginModal'));
+  v('marginModalClose').addEventListener('click', ()=>closeModal('marginModal'));
+  v('marginModal').addEventListener('click', e=>{if(e.target===v('marginModal'))closeModal('marginModal');});
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      v('pane-' + btn.dataset.tab).classList.add('active');
+      render();
+    });
+  });
+
+  // Export / Import / New
+  v('exportBtn').addEventListener('click', exportEstimate);
+  v('importBtn').addEventListener('click', ()=>{v('importStatus').innerHTML='';v('importFile').value='';openModal('importModal');});
+  v('importModalClose').addEventListener('click', ()=>closeModal('importModal'));
+  v('importModal').addEventListener('click', e=>{if(e.target===v('importModal'))closeModal('importModal');});
+  v('importFile').addEventListener('change', importEstimate);
+  v('newBtn').addEventListener('click', ()=>openModal('newModal'));
+  v('newModalClose').addEventListener('click', ()=>closeModal('newModal'));
+  v('newCancelBtn').addEventListener('click', ()=>closeModal('newModal'));
+  v('newConfirmBtn').addEventListener('click', confirmNew);
+
+  // Print
+  v('printBtn').addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    document.querySelector('.tab-btn[data-tab="summary"]').classList.add('active');
+    v('pane-summary').classList.add('active');
+    render();
+    setTimeout(()=>window.print(), 200);
+  });
+}
+
+function openModal(id){v(id).classList.add('open');}
+function closeModal(id){v(id).classList.remove('open');}
+
+function toggleBadge(id){
+  const badge = document.getElementById(id);
+  const isActive = badge.classList.contains('active');
+  document.querySelectorAll('.intro-badge').forEach(b=>b.classList.remove('active'));
+  if(!isActive) badge.classList.add('active');
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.intro-badge')){
+    document.querySelectorAll('.intro-badge').forEach(b=>b.classList.remove('active'));
+  }
+});
+
+// =========================================================================
+// EXPORT / IMPORT
+// =========================================================================
+function exportEstimate(){
+  const s = calc();
+  const payload = {
+    _lex_est:{signature:SIG, version:EST_VERSION, exported:new Date().toISOString()},
+    _credit:'Compiled by Limited Energy eXperts · limitedenergy.net · Open reuse permitted with credit.',
+    project:state.project,
+    schedule:state.schedule,
+    jobType:state.jobType,
+    crew:state.crew,
+    settings:state.settings,
+    wbs:state.wbs,
+    odc:state.odc,
+    summary:{
+      finalPrice:Math.round(s.finalPrice),
+      directCosts:Math.round(s.directCosts),
+      overheadAmount:Math.round(s.overheadAmount),
+      marginAmount:Math.round(s.marginAmount),
+      totalHours:Math.round(s.totalHours*10)/10,
+      totalDays:Math.round(s.totalDays*10)/10,
+      requiredCrew:s.requiredCrew,
+      isAccelerated:s.isAccelerated,
+      otPremium:Math.round(s.otPremium),
+      dtPremium:Math.round(s.dtPremium),
+      remoteODC:Math.round(s.remote.total),
+      perSection:Object.entries(s.sectionTotals).map(([id,t])=>({id, hours:Math.round(t.hours*10)/10, total:Math.round(t.total)}))
+    }
+  };
+  const fn = ((state.project.name||'estimate').replace(/[^a-z0-9-_]+/gi,'_')) + '.json';
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = fn;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importEstimate(e){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!data._lex_est || data._lex_est.signature !== SIG){
+        v('importStatus').innerHTML = '<div class="import-status err">✗ Not a valid Estimator file. Missing or wrong signature.</div>';
+        return;
+      }
+      if(!data.project || !data.schedule || !data.crew || !data.wbs){
+        v('importStatus').innerHTML = '<div class="import-status err">✗ File structure is invalid.</div>';
+        return;
+      }
+      state = {
+        project:data.project,
+        schedule:data.schedule,
+        jobType:data.jobType || defaultState().jobType,
+        crew:data.crew,
+        settings:data.settings || defaultState().settings,
+        wbs:data.wbs,
+        odc:data.odc || {rentals:[], subcontractors:[]}
+      };
+      // Re-seed ID counters
+      let mw = 0, mo = 0;
+      for(const sec of state.wbs.sections){
+        for(const it of sec.items) if(it.id > mw) mw = it.id;
+      }
+      for(const x of state.odc.rentals) if(x.id > mo) mo = x.id;
+      for(const x of state.odc.subcontractors) if(x.id > mo) mo = x.id;
+      nextWbsId = mw + 1; nextOdcId = mo + 1;
+      v('importStatus').innerHTML = `<div class="import-status ok">✓ Imported successfully. ${state.wbs.sections.length} sections, ${state.wbs.sections.reduce((a,s)=>a+s.items.length,0)} items.</div>`;
+      render(); markDirty();
+      setTimeout(()=>closeModal('importModal'), 1200);
+    }catch(err){
+      v('importStatus').innerHTML = '<div class="import-status err">✗ Could not parse file: ' + esc(err.message) + '</div>';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmNew(){
+  state = defaultState();
+  nextWbsId = 1; nextOdcId = 1; hideEmpty = false;
+  closeModal('newModal');
+  render(); markDirty();
+}
+
+// =========================================================================
+// BOOT
+// =========================================================================
+if(loadSaved()) console.log('Loaded saved Estimator session');
+if(!state.project.proposalDate) state.project.proposalDate = new Date().toISOString().slice(0,10);
+bindAll();
+render();
+updateSavedIndicator();
+</script>
+</body>
+</html>
