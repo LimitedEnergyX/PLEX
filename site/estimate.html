@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <!--
-  THE ESTIMATOR v1.2 — Limited Energy Job Estimation
+  THE ESTIMATOR v1.22 — Limited Energy Job Estimation
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary estimation and proposal use only.
@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estimator v1.2 — Limited Energy Job Estimation | Limited Energy eXperts</title>
+<title>The Estimator v1.22 — Limited Energy Job Estimation | Limited Energy eXperts</title>
 <meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
 <meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
 <meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
@@ -249,12 +249,6 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .bar-fill{height:100%;background:var(--red);}
 .bar-fill.materials{background:var(--blue);}
 .bar-val{font-family:var(--mono);color:var(--white);text-align:right;font-size:11px;}
-@media print{
-  .chart-stack{border:1px solid #999 !important;}
-  .chart-seg{color:white !important;}
-  .bar-track{background:#eee !important;border-color:#ccc !important;}
-  .chart-title,.bar-label,.bar-val{color:#222 !important;}
-}
 @media(max-width:880px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.headline-card .breakdown{grid-template-columns:1fr 1fr;}.wbs-item{grid-template-columns:1fr;gap:4px;}.wbs-item.hdr{display:none;}.mat-row,.mat-list-head{grid-template-columns:1fr;}.mat-list-head{display:none;}.pick-row{grid-template-columns:1fr 80px;}.pick-row .cat,.pick-row .meta,.pick-row .price{display:none;}.bar-row{grid-template-columns:1fr;}}
 @media(max-width:600px){
   .header-inner{flex-wrap:wrap;gap:6px;padding:10px 12px;}
@@ -271,22 +265,36 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   .headline-card .price{font-size:32px;}
 }
 @media print{
-  body{background:white !important;color:black !important;font-size:11pt;}
-  #header,#tabs,.tab-btn,.hbtn,.saved-indicator,.header-actions,#pane-build,#pane-method,#intro-block,#credit-line,.intro-badges,.best-viewed{display:none !important;}
-  #pane-summary,#sum-assumptions-panel{display:block !important;}
-  #sum-assumptions-panel.collapsed .panel-body{display:block !important;}
-  .panel{background:white !important;border:1px solid #999 !important;page-break-inside:avoid;margin-bottom:12pt;padding:10pt;}
-  .panel-label{color:#9E0B23 !important;font-weight:700;}
+  body{background:white !important;color:black !important;font-size:9pt;}
+  #header,#tabs,.tab-btn,.hbtn,.saved-indicator,.header-actions,#pane-build,#pane-method,#intro-block,#credit-line,.intro-badges,.best-viewed,#sum-assumptions-panel,#sum-cat-bars-panel{display:none !important;}
+  #pane-summary{display:block !important;}
+  .summary-header{margin-bottom:8pt;}
+  .summary-header h1{font-size:18pt !important;}
+  .sum-meta{font-size:9pt;}
+  .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:auto;margin-bottom:4pt;padding:5pt 8pt;}
+  .headline-card{background:white !important;border:1px solid #9E0B23 !important;page-break-inside:avoid;margin-bottom:8pt;padding:10pt 14pt;}
+  .headline-card .price{font-size:26pt !important;}
+  .panel-label{color:#9E0B23 !important;font-weight:700;font-size:8pt;margin-bottom:4pt;}
   .sum-val,.summary-header h1,.sum-row,.headline-card .price{color:black !important;}
   .sum-key,.sum-meta,.headline-card .breakdown div{color:#555 !important;}
-  .headline-card{background:white !important;border:1px solid #9E0B23 !important;}
   .headline-card .breakdown div .v{color:black !important;}
-  .assumptions-panel li{color:#222 !important;}
-  .assumptions-panel li strong{color:black !important;}
-  .assumptions-panel li::before{color:#9E0B23 !important;}
+  .sum-row{padding:2pt 0;font-size:9pt;border-bottom:1px solid #eee;}
+  .sum-key,.sum-val{font-size:9pt;}
+  /* Restore bar rows — override 880px breakpoint stacking */
+  .bar-row{display:grid !important;grid-template-columns:130px 1fr 68px !important;gap:5px !important;align-items:center !important;padding:2pt 0 !important;}
+  .bar-label{color:#333 !important;font-size:9pt !important;}
+  .bar-val{color:#000 !important;font-size:9pt !important;text-align:right;}
+  .bar-track{height:7px !important;background:#ddd !important;border-color:#bbb !important;}
+  .bar-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact;background:#9E0B23 !important;}
+  .bar-fill.materials{background:#3b82f6 !important;}
+  /* 2-column section bars */
+  #sum-section-bars{display:grid !important;grid-template-columns:1fr 1fr !important;column-gap:16pt !important;}
+  .chart-stack{border:1px solid #999 !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .chart-seg{color:white !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .chart-title{color:#222 !important;}
   #printBtn,.no-print{display:none !important;}
-  #print-credit{display:block !important;text-align:center;font-family:monospace;font-size:9pt;color:#666 !important;margin-top:16pt;padding-top:8pt;border-top:1px solid #ccc;}
-  @page{margin:0.5in;}
+  #print-credit{display:block !important;text-align:center;font-family:monospace;font-size:8pt;color:#666 !important;margin-top:10pt;padding-top:6pt;border-top:1px solid #ccc;}
+  @page{margin:0.4in;}
 }
 #print-credit{display:none;}
 </style>
@@ -297,7 +305,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="header-brand">
       <div class="header-mark">🧮</div>
       <div>
-        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.2</span></div>
+        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.22</span></div>
         <div class="header-sub">LIMITED ENERGY &nbsp;·&nbsp; JOB ESTIMATION</div>
       </div>
     </div>
@@ -558,6 +566,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="lbl">FINAL PROPOSAL PRICE</div>
     <div class="price" id="hdl-price">$0</div>
     <div class="breakdown" id="hdl-breakdown">
+      <div id="hdl-bd-labor">LABOR<span class="v" id="hdl-labor">$0</span></div>
+      <div id="hdl-bd-mat">MATERIALS<span class="v" id="hdl-mat">$0</span></div>
       <div id="hdl-bd-direct">DIRECT COSTS<span class="v" id="hdl-direct">$0</span></div>
       <div id="hdl-bd-oh">OVERHEAD<span class="v" id="hdl-oh">$0</span></div>
       <div id="hdl-bd-margin">MARGIN<span class="v" id="hdl-margin">$0</span></div>
@@ -572,7 +582,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
 
   <div class="panel"><div class="panel-label">PER-SECTION BARS (BICSI WBS)</div><div id="sum-section-bars"></div></div>
-  <div class="panel"><div class="panel-label">PER-CATEGORY BARS (MATERIALS)</div><div id="sum-category-bars"></div></div>
+  <div class="panel" id="sum-cat-bars-panel"><div class="panel-label">PER-CATEGORY BARS (MATERIALS)</div><div id="sum-category-bars"></div></div>
 
   <div class="panel"><div class="panel-label">PROJECT INFORMATION</div><div id="sum-project"></div></div>
   <div class="panel"><div class="panel-label">SCHEDULE &amp; CREW</div><div id="sum-sched"></div></div>
@@ -603,7 +613,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
 
   <div id="print-credit">
-    The Estimator v1.2 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    The Estimator v1.22 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
   <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-align:center;margin-top:20px;letter-spacing:0.1em;" class="no-print">Generated by The Estimator &middot; limitedenergy.net/estimate</div>
 </div>
@@ -638,26 +648,26 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel">
     <div class="panel-label">BICSI WBS SECTIONS</div>
     <div style="font-family:var(--body);font-size:13px;line-height:1.8;color:var(--gray-light);">
-      <p><strong style="color:var(--white)">000 Mobilization</strong> &mdash; site startup, kickoff, mobilization labor and direct costs.</p>
-      <p><strong style="color:var(--white)">100 Supports</strong> &mdash; cable supports, J-hooks, sleeves, firestop, conduit attachments.</p>
-      <p><strong style="color:var(--white)">200 Copper Backbone</strong> &mdash; multipair copper backbone cabling and terminations.</p>
+      <p><strong style="color:var(--white)">000 Mobilization</strong> &mdash; Site startup, kickoff, mobilization labor and direct costs.</p>
+      <p><strong style="color:var(--white)">100 Supports</strong> &mdash; Cable supports, J-hooks, sleeves, firestop, conduit attachments.</p>
+      <p><strong style="color:var(--white)">200 Copper Backbone</strong> &mdash; Multipair copper backbone cabling and terminations.</p>
       <p><strong style="color:var(--white)">300 Fiber Backbone</strong> &mdash; SM / MM fiber backbone, splice / termination, distribution units.</p>
-      <p><strong style="color:var(--white)">400 Horizontal</strong> &mdash; horizontal Cat6 / Cat6A station cabling, jacks, patch panels.</p>
+      <p><strong style="color:var(--white)">400 Horizontal</strong> &mdash; Horizontal Cat6 / Cat6A station cabling, jacks, patch panels.</p>
       <p><strong style="color:var(--white)">500 TR Buildout</strong> &mdash; Telecommunications Room: racks, ladder rack, PDUs, grounding, labeling.</p>
-      <p><strong style="color:var(--white)">600 ER Buildout</strong> &mdash; Equipment Room: same as TR scaled up; main/distribution.</p>
-      <p><strong style="color:var(--white)">700 Testing</strong> &mdash; permanent-link / channel test, OTDR, certification reports, test deliverables.</p>
-      <p><strong style="color:var(--white)">800 Ancillary</strong> &mdash; misc. items not covered above; sleeve seal kits, miscellaneous labor.</p>
+      <p><strong style="color:var(--white)">600 ER Buildout</strong> &mdash; Equipment Room: same as TR scaled up; main / distribution.</p>
+      <p><strong style="color:var(--white)">700 Testing</strong> &mdash; Permanent-link / channel test, OTDR, certification reports, test deliverables.</p>
+      <p><strong style="color:var(--white)">800 Ancillary</strong> &mdash; Misc. items not covered above; sleeve seal kits, miscellaneous labor.</p>
       <p><strong style="color:var(--white)">900 Bonding / Grounding</strong> &mdash; TBB, TGB, TMGB, equipment bonding per J-STD-607.</p>
-      <p><strong style="color:var(--white)">1000 Demobilization</strong> &mdash; cleanup, punch list, closeout deliverables, demob labor.</p>
+      <p><strong style="color:var(--white)">1000 Demobilization</strong> &mdash; Cleanup, punch list, closeout deliverables, demob labor.</p>
     </div>
   </div>
 
   <div class="panel">
     <div class="panel-label">MARGIN FORM vs. NAIVE MARKUP</div>
     <div style="font-family:var(--body);font-size:13px;line-height:1.8;color:var(--gray-light);">
-      <p>Naive markup adds a percentage to cost (e.g. cost &times; 1.20 = &ldquo;20% markup&rdquo;). But the actual margin on that price is only ~16.7% (profit / sell), not 20%.</p>
-      <p><strong style="color:var(--white)">Margin form</strong> divides instead: price = cost / (1 &minus; margin%). A 20% margin form on $100 of cost = $125 price, where margin is $25 = 20% of $125. The stated margin equals the actual proposal margin.</p>
-      <p>The Estimator uses margin form throughout. Enter the target margin you want on the sell price.</p>
+      <p><strong style="color:var(--white)">Naive markup</strong> multiplies cost by a factor (e.g. cost &times; 1.20). The problem: that &ldquo;20% markup&rdquo; only yields a 16.7% margin (profit &divide; sell price) &mdash; Not what you quoted.</p>
+      <p><strong style="color:var(--white)">Margin form</strong> works backward from the sell price: price = cost &divide; (1 &minus; margin%). At 20% margin on $100 cost, price = $100 &divide; 0.80 = $125 &mdash; Profit is $25, and $25 &divide; $125 = 20% exactly. The stated margin equals the actual margin.</p>
+      <p>The Estimator uses margin form throughout. Enter the margin % you want to land on the sell price.</p>
     </div>
   </div>
 </div>
@@ -702,6 +712,11 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="modal-body">
       <p>Select a JSON file previously exported from The Estimator. The current session will be replaced.</p>
       <div style="margin-top:14px;"><input type="file" id="importFile" accept=".json,application/json"></div>
+      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Or load the built-in example</div>
+        <button class="btn-secondary" id="loadSampleBtn">📋 Load Sample Estimate</button>
+        <div style="font-size:11px;color:var(--gray-mid);margin-top:6px;">Office building — structured cabling, fiber backbone, cameras</div>
+      </div>
       <div id="importStatus"></div>
     </div>
   </div>
@@ -832,7 +847,7 @@ const DEFAULT_COST_BURDEN = 0.60; // legacy v1.1 migration: costRate = sellRate 
 
 const STORAGE_KEY = 'lex_est_session_v1';
 const SIG = 'LEX-EST';
-const EST_VERSION = '1.2';
+const EST_VERSION = '1.22';
 
 const WORKWEEK_PATTERNS = {
   '5x8':  {hpd:8,  dpw:5},
@@ -2022,11 +2037,17 @@ function renderSummary(s){
   // Labor roll-up — sell side (customer-visible); internal view also surfaces cost & profit
   const isInternal = summaryView === 'internal';
 
-  // Hide cost/margin/overhead details in customer view
+  // Customer headline items — labor + materials sell
+  v('hdl-labor').textContent = fmtMoney(s.directLaborSell);
+  v('hdl-mat').textContent = fmtMoney(s.directMaterialsSell);
+  // Toggle internal vs customer breakdown items
   ['hdl-bd-direct','hdl-bd-oh','hdl-bd-margin'].forEach(id => {
     v(id).style.display = isInternal ? '' : 'none';
   });
-  v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : '1fr';
+  ['hdl-bd-labor','hdl-bd-mat'].forEach(id => {
+    v(id).style.display = isInternal ? 'none' : '';
+  });
+  v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
   v('cost-chart-card').style.display = isInternal ? '' : 'none';
   v('sum-financial-panel').style.display = isInternal ? '' : 'none';
   v('sum-labor').innerHTML = [
@@ -2227,6 +2248,7 @@ function bindAll(){
   // Export / Import / New
   v('exportBtn').addEventListener('click', exportEstimate);
   v('importBtn').addEventListener('click', ()=>{v('importStatus').innerHTML='';v('importFile').value='';openModal('importModal');});
+  v('loadSampleBtn').addEventListener('click', loadSample);
   v('importModalClose').addEventListener('click', ()=>closeModal('importModal'));
   v('importModal').addEventListener('click', e=>{if(e.target===v('importModal'))closeModal('importModal');});
   v('importFile').addEventListener('change', importEstimate);
@@ -2322,6 +2344,36 @@ function exportEstimate(){
   a.href = url; a.download = fn;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function loadSample(){
+  v('importStatus').innerHTML = '<div class="import-status ok" style="opacity:0.7">Loading sample…</div>';
+  fetch('/Sample-Office-Limited-Energy.json')
+    .then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(data => {
+      if(!data._lex_est || data._lex_est.signature !== SIG) throw new Error('Invalid sample file');
+      state = {
+        project:   data.project,
+        schedule:  data.schedule,
+        jobType:   data.jobType   || defaultState().jobType,
+        crew:      data.crew,
+        settings:  Object.assign({}, defaultState().settings, data.settings || {}),
+        wbs:       data.wbs,
+        odc:       data.odc       || {rentals:[], subcontractors:[]},
+        materials: data.materials || {items:[]}
+      };
+      let mw=0, mo=0, mm=0;
+      for(const sec of state.wbs.sections) for(const it of sec.items) if(it.id>mw) mw=it.id;
+      for(const x of state.odc.rentals)        if(x.id>mo) mo=x.id;
+      for(const x of state.odc.subcontractors) if(x.id>mo) mo=x.id;
+      for(const x of state.materials.items)    if(x.id>mm) mm=x.id;
+      nextWbsId=mw+1; nextOdcId=mo+1; nextMatId=mm+1;
+      render(); markDirty();
+      setTimeout(()=>closeModal('importModal'), 600);
+    })
+    .catch(err => {
+      v('importStatus').innerHTML = '<div class="import-status err">✗ Could not load sample: ' + esc(err.message) + '</div>';
+    });
 }
 
 function importEstimate(e){
