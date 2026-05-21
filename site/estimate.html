@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <!--
-  THE ESTIMATOR v1.22 — Limited Energy Job Estimation
+  THE ESTIMATOR v1.23 — Limited Energy Job Estimation
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary estimation and proposal use only.
@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estimator v1.22 — Limited Energy Job Estimation | Limited Energy eXperts</title>
+<title>The Estimator v1.23 — Limited Energy Job Estimation | Limited Energy eXperts</title>
 <meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
 <meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
 <meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
@@ -301,6 +301,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   .chart-title{color:#222 !important;}
   #printBtn,.no-print{display:none !important;}
   #print-credit{display:block !important;text-align:center;font-family:monospace;font-size:8pt;color:#666 !important;margin-top:10pt;padding-top:6pt;border-top:1px solid #ccc;}
+  #sum-acceptance ul,#sum-commercial ul{font-size:8pt !important;line-height:1.5 !important;color:#333 !important;margin:0 !important;padding-left:14pt !important;}
   @page{margin:0.4in;}
 }
 #print-credit{display:none;}
@@ -312,7 +313,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="header-brand">
       <div class="header-mark">🧮</div>
       <div>
-        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.22</span></div>
+        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.23</span></div>
         <div class="header-sub">LIMITED ENERGY &nbsp;·&nbsp; JOB ESTIMATION</div>
       </div>
     </div>
@@ -584,6 +585,10 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     </div>
   </div>
 
+  <div id="hdl-price-note" style="font-family:var(--body);font-size:11px;color:var(--gray-mid);padding:6px 14px 10px;text-align:center;line-height:1.5;font-style:italic;">
+    Proposal total includes labor, materials, applicable burden, overhead, profit, consumables, tools, warranty allowance, and standard project administration.
+  </div>
+
   <div class="chart-card" id="cost-chart-card">
     <div class="chart-title">COST COMPOSITION &mdash; HOW THE FINAL PRICE BREAKS DOWN</div>
     <div class="chart-stack" id="chart-stack"></div>
@@ -599,6 +604,29 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel"><div class="panel-label">PER-SECTION BREAKDOWN</div><div id="sum-sections"></div></div>
   <div class="panel" id="sum-odc-panel"><div class="panel-label teal">OTHER DIRECT COSTS</div><div id="sum-odc"></div></div>
   <div class="panel" id="sum-financial-panel"><div class="panel-label">FINANCIAL ROLL-UP</div><div id="sum-financial"></div></div>
+
+  <div class="panel" id="sum-acceptance">
+    <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
+    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
+      <li><strong>Copper — CAT6 / CAT6A.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits. Test reports (pass/fail per link, per pair) shall be delivered electronically prior to final payment.</li>
+      <li><strong>Fiber — OS2 backbone.</strong> All strands shall be OTDR-tested in both directions. Splice loss and end-to-end insertion loss documented per strand and included in the closeout package.</li>
+      <li><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
+    </ul>
+  </div>
+
+  <div class="panel" id="sum-commercial">
+    <div class="panel-label">COMMERCIAL CLARIFICATIONS</div>
+    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
+      <li><strong>Working hours.</strong> Work is scheduled during normal business hours (Mon–Fri, 7 AM–5 PM local time). After-hours or weekend work required by Owner will be authorized by written change order prior to performance.</li>
+      <li><strong>Site access.</strong> Owner shall provide safe, unobstructed access to all work areas, including above-ceiling pathways and equipment rooms. Delays caused by restricted access may result in a schedule and cost change order.</li>
+      <li><strong>Concealed conditions.</strong> Pricing assumes accessible pathways per contract documents. Obstructed or undisclosed field conditions will be documented and resolved by written change order.</li>
+      <li><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
+      <li><strong>Camera scope.</strong> Contractor responsibility is limited to cable installation, Owner-furnished mount installation, termination, and PoE link verification. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
+      <li><strong>Permit &amp; tax.</strong> Permit fees and applicable sales tax are not included and will be added as direct pass-through costs.</li>
+      <li><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
+      <li><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
+    </ul>
+  </div>
 
   <div class="panel collapsible assumptions-panel" id="sum-assumptions-panel">
     <button class="panel-header" id="assumptionsToggle">
@@ -621,7 +649,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
 
   <div id="print-credit">
-    The Estimator v1.22 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    The Estimator v1.23 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
   <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-align:center;margin-top:20px;letter-spacing:0.1em;" class="no-print">Generated by The Estimator &middot; limitedenergy.net/estimate</div>
 </div>
@@ -855,7 +883,7 @@ const DEFAULT_COST_BURDEN = 0.60; // legacy v1.1 migration: costRate = sellRate 
 
 const STORAGE_KEY = 'lex_est_session_v1';
 const SIG = 'LEX-EST';
-const EST_VERSION = '1.22';
+const EST_VERSION = '1.23';
 
 const WORKWEEK_PATTERNS = {
   '5x8':  {hpd:8,  dpw:5},
@@ -2059,6 +2087,7 @@ function renderSummary(s){
     v(id).style.display = isInternal ? 'none' : '';
   });
   v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
+  v('hdl-price-note').style.display = isInternal ? 'none' : '';
   v('cost-chart-card').style.display = isInternal ? '' : 'none';
   v('sum-financial-panel').style.display = isInternal ? '' : 'none';
   v('sum-labor-panel').style.display = isInternal ? '' : 'none';
