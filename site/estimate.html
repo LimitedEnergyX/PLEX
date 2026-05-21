@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <!--
-  THE ESTIMATOR v1.24 — Limited Energy Job Estimation
+  THE ESTIMATOR v1.25 — Limited Energy Job Estimation
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary estimation and proposal use only.
@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estimator v1.24 — Limited Energy Job Estimation | Limited Energy eXperts</title>
+<title>The Estimator v1.25 — Limited Energy Job Estimation | Limited Energy eXperts</title>
 <meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
 <meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
 <meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
@@ -316,13 +316,14 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="header-brand">
       <div class="header-mark">🧮</div>
       <div>
-        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.24</span></div>
+        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.25</span></div>
         <div class="header-sub">LIMITED ENERGY &nbsp;·&nbsp; JOB ESTIMATION</div>
       </div>
     </div>
     <div class="header-actions">
       <a href="/" style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;padding-right:0.75rem;border-right:1px solid var(--border2);margin-right:0.25rem;" onmouseover="this.style.color='#C8102E'" onmouseout="this.style.color='var(--gray-mid)'">← LEX</a>
       <span class="saved-indicator" id="savedInd">Unsaved</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--warn);letter-spacing:0.04em;padding:5px 9px;border:1px solid rgba(245,158,11,0.3);border-radius:3px;background:rgba(245,158,11,0.06);white-space:nowrap" class="no-print">⚠ Browser-only storage. Export file before closing browser.</span>
       <button class="hbtn" id="newBtn">🗒 New</button>
       <button class="hbtn" id="importBtn">📥 Import</button>
       <button class="hbtn primary" id="exportBtn">📤 Export</button>
@@ -565,10 +566,16 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
         <label><input type="radio" name="sumview" value="customer" id="sv-customer" checked> Customer Proposal</label>
         <label><input type="radio" name="sumview" value="internal" id="sv-internal"> Internal Bid Report</label>
       </div>
+      <div id="section-pricing-toggle-row" class="no-print" style="margin-top:6px;font-family:var(--mono);font-size:10px;color:var(--gray-mid)">
+        <label style="cursor:pointer"><input type="checkbox" id="showSectionPricing" style="margin-right:5px">Show per-section pricing on customer proposal</label>
+      </div>
     </div>
-    <div class="header-actions no-print">
-      <button class="hbtn primary" id="printBtn">🖨 Print Customer</button>
-      <button class="hbtn" id="printInternalBtn">🖨 Print Internal</button>
+    <div class="header-actions no-print" style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;gap:8px">
+        <button class="hbtn primary" id="printBtn">🖨 Print Customer</button>
+        <button class="hbtn" id="printInternalBtn">🖨 Print Internal</button>
+      </div>
+      <div style="font-family:var(--body);font-size:10px;color:var(--gray-mid);line-height:1.4;max-width:260px;text-align:right">Customer proposal hides cost and margin data. Internal bid report includes confidential cost, markup, margin, bid health, and risk data.</div>
     </div>
   </div>
   <div id="internal-watermark" style="display:none;background:rgba(245,158,11,0.12);border:1px solid var(--warn);color:var(--warn);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-align:center;padding:8px 12px;margin-bottom:14px;border-radius:4px;font-weight:700">⚠ INTERNAL BID REPORT &mdash; CONTAINS COST &amp; MARGIN &mdash; DO NOT SHARE WITH CUSTOMER</div>
@@ -576,7 +583,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel"><div class="panel-label">PROJECT INFORMATION</div><div id="sum-project"></div></div>
 
   <div class="headline-card">
-    <div class="lbl" id="hdl-price-lbl">FINAL PROPOSAL PRICE</div>
+    <div class="lbl" id="hdl-price-lbl">TOTAL PROPOSAL PRICE</div>
     <div class="price" id="hdl-price">$0</div>
     <div class="breakdown" id="hdl-breakdown">
       <div id="hdl-bd-labor">LABOR<span class="v" id="hdl-labor">$0</span></div>
@@ -604,7 +611,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel"><div class="panel-label">SCHEDULE &amp; CREW</div><div id="sum-sched"></div></div>
   <div class="panel" id="sum-labor-panel"><div class="panel-label">LABOR ROLL-UP</div><div id="sum-labor"></div></div>
   <div class="panel" id="sum-mat-panel"><div class="panel-label">MATERIALS ROLL-UP</div><div id="sum-mat"></div></div>
-  <div class="panel"><div class="panel-label">PER-SECTION BREAKDOWN</div><div id="sum-sections"></div></div>
+  <div class="panel" id="sum-sections-panel"><div class="panel-label">PER-SECTION BREAKDOWN</div><div id="sum-sections"></div></div>
   <div class="panel" id="sum-odc-panel"><div class="panel-label teal">OTHER DIRECT COSTS</div><div id="sum-odc"></div></div>
   <div class="panel" id="sum-financial-panel"><div class="panel-label">FINANCIAL ROLL-UP</div><div id="sum-financial"></div></div>
   <div class="panel" id="sum-bid-health-panel"><div class="panel-label teal">BID HEALTH INDICATORS</div><div id="sum-bid-health"></div></div>
@@ -614,7 +621,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
     <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
       <li><strong>Copper — CAT6 / CAT6A.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits. Test reports (pass/fail per link, per pair) shall be delivered electronically prior to final payment.</li>
-      <li><strong>Fiber — OS2 backbone.</strong> All strands shall be tested for continuity, polarity, and insertion loss. OTDR traces shall be included where applicable. Results shall be documented per strand and included in the closeout package.</li>
+      <li><strong>Fiber — OS2 backbone.</strong> All fiber strands shall be certified using industry-standard fiber test equipment. Test results shall document pass/fail status and loss results per strand and shall be included in the closeout package.</li>
       <li><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
     </ul>
   </div>
@@ -626,11 +633,12 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <li><strong>Site access.</strong> Owner shall provide safe, unobstructed access to all work areas, including above-ceiling pathways and equipment rooms. Delays caused by restricted access may result in a schedule and cost change order.</li>
       <li><strong>Concealed conditions.</strong> Pricing assumes accessible pathways per contract documents. Obstructed or undisclosed field conditions will be documented and resolved by written change order.</li>
       <li><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
-      <li><strong>Camera scope.</strong> Contractor responsibility is limited to cable installation, termination, PoE link verification, and installation of Owner-furnished standard camera mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
+      <li><strong>Camera scope.</strong> Camera infrastructure — cable installation, termination, PoE link verification, and installation of Owner-furnished standard mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
       <li><strong>Permit &amp; tax.</strong> Proposal price excludes applicable sales tax and permit fees, which will be added as direct pass-through costs if required.</li>
       <li><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
       <li><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
       <li><strong>Basis of proposal.</strong> Proposal is based on quantities, assumptions, and scope information available as of the proposal date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, or Owner requirements change.</li>
+      <li><strong>Sealed design.</strong> This proposal is not a sealed design document and does not replace engineered drawings, specifications, code review, or AHJ requirements.</li>
       <li><strong>Warranty.</strong> One-year workmanship warranty from date of substantial completion. Manufacturer warranties pass through to Owner.</li>
     </ul>
   </div>
@@ -683,7 +691,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
 
   <div id="print-credit">
-    The Estimator v1.24 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    The Estimator v1.25 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
   <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-align:center;margin-top:20px;letter-spacing:0.1em;" class="no-print">Generated by The Estimator &middot; limitedenergy.net/estimate</div>
 </div>
@@ -725,7 +733,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <p><strong style="color:var(--white)">400 Horizontal</strong> &mdash; Horizontal Cat6 / Cat6A station cabling, jacks, patch panels.</p>
       <p><strong style="color:var(--white)">500 TR Buildout</strong> &mdash; Telecommunications Room: racks, ladder rack, PDUs, grounding, labeling.</p>
       <p><strong style="color:var(--white)">600 ER Buildout</strong> &mdash; Equipment Room: same as TR scaled up; main / distribution.</p>
-      <p><strong style="color:var(--white)">700 Testing</strong> &mdash; Permanent-link / channel test, OTDR, certification reports, test deliverables.</p>
+      <p><strong style="color:var(--white)">700 Testing</strong> &mdash; Permanent-link / channel test, fiber certification, certification reports, test deliverables.</p>
       <p><strong style="color:var(--white)">800 Ancillary</strong> &mdash; Misc. items not covered above; sleeve seal kits, miscellaneous labor.</p>
       <p><strong style="color:var(--white)">900 Bonding / Grounding</strong> &mdash; TBB, TGB, TMGB, equipment bonding per J-STD-607.</p>
       <p><strong style="color:var(--white)">1000 Demobilization</strong> &mdash; Cleanup, punch list, closeout deliverables, demob labor.</p>
@@ -917,7 +925,7 @@ const DEFAULT_COST_BURDEN = 0.60; // legacy v1.1 migration: costRate = sellRate 
 
 const STORAGE_KEY = 'lex_est_session_v1';
 const SIG = 'LEX-EST';
-const EST_VERSION = '1.24';
+const EST_VERSION = '1.25';
 
 const WORKWEEK_PATTERNS = {
   '5x8':  {hpd:8,  dpw:5},
@@ -1182,13 +1190,13 @@ function defaultState(){
 
 let state = defaultState();
 let nextWbsId = 1, nextOdcId = 1, nextMatId = 1;
-let dirty = false, lastSaveTime = null, hideEmpty = false;
+let dirty = false, lastSaveTime = null, hideEmpty = false, showSectionPricing = false;
 let summaryView = 'customer';  // 'customer' or 'internal'
 const v = id => document.getElementById(id);
 
 function autoSave(){
   try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({state, nextWbsId, nextOdcId, nextMatId, hideEmpty, savedAt:Date.now()}));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({state, nextWbsId, nextOdcId, nextMatId, hideEmpty, showSectionPricing, savedAt:Date.now()}));
     lastSaveTime = Date.now();
     dirty = false;
     updateSavedIndicator();
@@ -1211,6 +1219,7 @@ function loadSaved(){
     nextOdcId = p.nextOdcId || 1;
     nextMatId = p.nextMatId || (Math.max(0, ...state.materials.items.map(x=>x.id||0)) + 1);
     hideEmpty = !!p.hideEmpty;
+    showSectionPricing = !!p.showSectionPricing;
     lastSaveTime = p.savedAt;
     return true;
   }catch(e){return false;}
@@ -2121,13 +2130,16 @@ function renderSummary(s){
     v(id).style.display = isInternal ? 'none' : '';
   });
   v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
-  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE' : 'FINAL PROPOSAL PRICE';
+  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE' : 'TOTAL PROPOSAL PRICE';
   v('hdl-price-note').style.display = isInternal ? 'none' : '';
   v('sum-signature').style.display = isInternal ? 'none' : '';
   v('cost-chart-card').style.display = isInternal ? '' : 'none';
   v('sum-financial-panel').style.display = isInternal ? '' : 'none';
   v('sum-bid-health-panel').style.display = isInternal ? '' : 'none';
   v('sum-risk-flags-panel').style.display = isInternal ? '' : 'none';
+  v('sum-sections-panel').style.display = (isInternal || showSectionPricing) ? '' : 'none';
+  v('section-pricing-toggle-row').style.display = isInternal ? 'none' : '';
+  const spCb = v('showSectionPricing'); if(spCb) spCb.checked = showSectionPricing;
   v('sum-labor-panel').style.display = isInternal ? '' : 'none';
   v('sum-mat-panel').style.display = isInternal ? '' : 'none';
   v('sum-odc-panel').style.display = isInternal ? '' : 'none';
@@ -2347,6 +2359,8 @@ function bindAll(){
   // WBS hide empty
   v('hideEmpty').addEventListener('change', e=>{hideEmpty=e.target.checked;render();markDirty();});
   v('hideEmpty').checked = hideEmpty;
+  // Customer section-pricing toggle
+  v('showSectionPricing').addEventListener('change', e=>{showSectionPricing=e.target.checked;render();markDirty();});
 
   // ODC adds
   v('addRentalBtn').addEventListener('click', ()=>addOdc('rentals'));
@@ -2438,6 +2452,7 @@ function exportEstimate(){
   const s = calc();
   const payload = {
     _lex_est:{signature:SIG, version:EST_VERSION, exported:new Date().toISOString()},
+    _prefs:{showSectionPricing},
     _credit:'Compiled by Limited Energy eXperts · limitedenergy.net · Open reuse permitted with credit.',
     project:state.project,
     schedule:state.schedule,
@@ -2500,6 +2515,7 @@ function loadSample(){
       for(const x of state.odc.subcontractors) if(x.id>mo) mo=x.id;
       for(const x of state.materials.items)    if(x.id>mm) mm=x.id;
       nextWbsId=mw+1; nextOdcId=mo+1; nextMatId=mm+1;
+      showSectionPricing = !!(data._prefs && data._prefs.showSectionPricing);
       render(); markDirty();
       setTimeout(()=>closeModal('importModal'), 600);
     })
@@ -2541,6 +2557,7 @@ function importEstimate(e){
       for(const x of state.odc.subcontractors) if(x.id > mo) mo = x.id;
       for(const x of state.materials.items) if(x.id > mm) mm = x.id;
       nextWbsId = mw + 1; nextOdcId = mo + 1; nextMatId = mm + 1;
+      showSectionPricing = !!(data._prefs && data._prefs.showSectionPricing);
       v('importStatus').innerHTML = `<div class="import-status ok">✓ Imported successfully. ${state.wbs.sections.length} sections, ${state.wbs.sections.reduce((a,s)=>a+s.items.length,0)} items.</div>`;
       render(); markDirty();
       setTimeout(()=>closeModal('importModal'), 1200);
@@ -2762,7 +2779,7 @@ function addEmptyLibraryItem(){
 
 function confirmNew(){
   state = defaultState();
-  nextWbsId = 1; nextOdcId = 1; nextMatId = 1; hideEmpty = false;
+  nextWbsId = 1; nextOdcId = 1; nextMatId = 1; hideEmpty = false; showSectionPricing = false;
   closeModal('newModal');
   render(); markDirty();
 }

@@ -12,7 +12,7 @@
     "estimator": "Shawn C. Tovey, RCDD",
     "proposalDate": "2026-05-20",
     "validUntil": "2026-06-20",
-    "scope": "• Structured cabling — furnish, install, terminate, test, and certify CAT6 and CAT6A horizontal copper runs to all data, WAP, and camera locations.\n• Fiber backbone — furnish and install OS2 12-strand plenum armored fiber ER-to-TR, including fusion splicing and OTDR certification.\n• Equipment Room (ER) buildout — rack installation, patch panels, FDU, cable dressing, and headend patch cables.\n• Telecom Room (TR) buildout — rack installation, patch panels, FDU, cable dressing, and headend patch cables.\n• Camera infrastructure — cable installation, Owner-furnished mount installation, termination, and PoE link verification for all indoor and outdoor camera locations.\n• Testing and certification — TIA-568 permanent-link certification (CAT6 / CAT6A) and OTDR testing (OS2 fiber), with full electronic test reports.\n• Labeling and documentation — label all outlets, patch panels, and fiber strands per project naming convention; deliver complete closeout package.",
+    "scope": "• Structured cabling — furnish, install, terminate, test, and certify CAT6 and CAT6A horizontal copper runs to all data, WAP, and camera locations.\n• Fiber backbone — furnish and install OS2 12-strand plenum armored fiber ER-to-TR, including fusion splicing and fiber certification.\n• Equipment Room (ER) buildout — rack installation, patch panels, FDU, cable dressing, and headend patch cables.\n• Telecom Room (TR) buildout — rack installation, patch panels, FDU, cable dressing, and headend patch cables.\n• Camera infrastructure — cable installation, Owner-furnished mount installation, termination, and PoE link verification for all indoor and outdoor camera locations.\n• Testing and certification — TIA-568 permanent-link certification (CAT6 / CAT6A) and fiber certification (OS2), with full electronic test reports.\n• Labeling and documentation — label all outlets, patch panels, and fiber strands per project naming convention; deliver complete closeout package.",
     "exclusions": "• Network electronics and IT equipment — by Owner's IT.\n• PoE switching for cameras — by Owner's IT or security integrator.\n• IP cameras and VMS server — furnished by Owner's security integrator.\n• Camera programming, final aiming, analytics configuration, and commissioning — by Owner's security integrator.\n• Building ground connection to Primary Bonding Busbar (PBB) — by Electrical Contractor / GC.\n• Conduit and dedicated raceways — by GC unless specifically noted in scope.\n• Permit fees and applicable sales tax — direct pass-through; not included in proposal price.",
     "notes": "Camera mounting and rough aiming are included only to support cable routing and connectivity verification. Final camera aiming, VMS programming, analytics configuration, commissioning, and acceptance testing are excluded unless specifically included in writing.\n\nLabor productivity basis: horizontal ethernet 8 hrs/1,000 ft; OS2 fiber pull 16 hrs/1,000 ft. Average horizontal run assumed at 175 ft including vertical drops and routing slack. Fiber backbone assumed at 300 ft ER-to-TR. Termination rate includes both ends (outlet + patch panel). 1-ft color-matched patch cables at headend; 3-meter color-matched patch cables at all device locations. No labor doubling — WBS items carry all installation labor; materials tab carries hardware only."
   },
@@ -121,13 +121,13 @@
             "id": 8, "description": "Fusion splice OS2 strands at ER FDU (per strand)",
             "labor": {"qty": 12, "hoursEach": 0.5, "roleId": 1},
             "materials": {"qty": 0, "unitCost": 0},
-            "notes": "LC pigtail splice-on. OTDR verified after splicing."
+            "notes": "LC pigtail splice-on. Fiber certified after splicing."
           },
           {
             "id": 9, "description": "Fusion splice OS2 strands at TR FDU (per strand)",
             "labor": {"qty": 12, "hoursEach": 0.5, "roleId": 1},
             "materials": {"qty": 0, "unitCost": 0},
-            "notes": "LC pigtail splice-on. OTDR verified after splicing."
+            "notes": "LC pigtail splice-on. Fiber certified after splicing."
           },
           {
             "id": 10, "description": "Lead Tech oversight — fiber pull setup and splice equipment staging",
@@ -330,7 +330,7 @@
             "notes": "10+6 WAP drops. TIA-568 CAT6A / 10GBase-T. Alien crosstalk checked. PDF reports."
           },
           {
-            "id": 40, "description": "Fiber OTDR testing — OS2 12-strand, both directions (24 strand-directions)",
+            "id": 40, "description": "Fiber certification — OS2 12-strand, both directions (24 strand-directions)",
             "labor": {"qty": 24, "hoursEach": 0.25, "roleId": 1},
             "materials": {"qty": 0, "unitCost": 0},
             "notes": "12 strands x 2 directions. Splice loss and end-to-end IL documented."
