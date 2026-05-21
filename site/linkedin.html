@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn · Shawn C. Tovey, RCDD</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy-deep:  #0E1B30;
+      --navy-mid:   #162338;
+      --navy-light: #1E3260;
+      --red:        #C8102E;
+      --red-dim:    #a00d24;
+      --text:       #EDF1F8;
+      --text-muted: #B8C5D8;
+      --text-dim:   #6B7C95;
+      --border:     #1E3260;
+      --border-dim: #162338;
+      --green:      #2ecc71;
+      --yellow:     #f1c40f;
+      --font-head:  'Oswald', sans-serif;
+      --font-body:  'Barlow', sans-serif;
+      --font-mono:  'Space Mono', monospace;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--navy-deep); color:var(--text); font-family:var(--font-body); font-size:16px; line-height:1.6; min-height:100vh; }
+
+    nav { position:sticky; top:0; z-index:200; background:var(--navy-deep); border-bottom:1px solid var(--border-dim); display:flex; justify-content:space-between; align-items:center; padding:0 2.5rem; height:64px; }
+    .nav-brand { display:flex; align-items:baseline; gap:0.75rem; text-decoration:none; }
+    .nav-brand .lex { font-family:var(--font-head); font-weight:700; font-size:1.5rem; letter-spacing:0.2em; color:var(--red); }
+    .nav-brand .tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.12em; color:var(--text-dim); text-transform:uppercase; }
+    .nav-back { font-family:var(--font-head); font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); text-decoration:none; }
+    .nav-back:hover { color:var(--red); }
+
+    #gate { position:fixed; inset:0; z-index:999; background:var(--navy-deep); display:flex; align-items:center; justify-content:center; }
+    .gate-box { background:var(--navy-mid); border:1px solid var(--border); padding:2.5rem; width:340px; text-align:center; }
+    .gate-box h2 { font-family:var(--font-head); font-size:1.4rem; letter-spacing:0.15em; color:var(--red); margin-bottom:0.5rem; }
+    .gate-box p { font-size:0.85rem; color:var(--text-dim); margin-bottom:1.5rem; }
+    .gate-box input { width:100%; background:var(--navy-deep); border:1px solid var(--border); color:var(--text); font-family:var(--font-mono); font-size:0.9rem; padding:0.6rem 0.8rem; margin-bottom:0.75rem; outline:none; }
+    .gate-box input:focus { border-color:var(--red); }
+    .gate-box button { width:100%; background:var(--red); color:#fff; border:none; font-family:var(--font-head); font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase; padding:0.65rem; cursor:pointer; }
+    .gate-box button:hover { background:var(--red-dim); }
+    .gate-error { font-size:0.8rem; color:var(--red); margin-top:0.5rem; min-height:1.2em; }
+
+    main { max-width:1000px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+    .page-header { margin-bottom:2rem; border-bottom:1px solid var(--border-dim); padding-bottom:1rem; }
+    .page-header h1 { font-family:var(--font-head); font-size:1.6rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; }
+    .page-header .sub { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-dim); margin-top:0.25rem; }
+
+    .section { margin-bottom:2.5rem; }
+    .section-title { font-family:var(--font-head); font-size:0.8rem; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-dim); border-bottom:1px solid var(--border-dim); padding-bottom:0.4rem; margin-bottom:1rem; }
+
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+    .card { background:var(--navy-mid); border:1px solid var(--border-dim); padding:1.25rem; }
+    .card-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.4rem; }
+    .card-value { font-family:var(--font-head); font-size:2rem; font-weight:600; color:var(--text); }
+    .card-note { font-size:0.78rem; color:var(--text-dim); margin-top:0.25rem; }
+    .card-delta-up { color:var(--green); }
+    .card-delta-flat { color:var(--text-dim); }
+    .card-delta-down { color:var(--red); }
+
+    table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    thead tr { border-bottom:1px solid var(--border); }
+    th { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); padding:0.5rem 0.75rem; text-align:left; font-weight:400; }
+    td { padding:0.6rem 0.75rem; color:var(--text-muted); border-bottom:1px solid var(--border-dim); font-family:var(--font-mono); font-size:0.78rem; }
+    tr:last-child td { border-bottom:none; }
+    td.primary { color:var(--text); }
+
+    .tag { display:inline-block; font-size:0.6rem; font-family:var(--font-mono); letter-spacing:0.1em; padding:1px 5px; margin-left:4px; border:1px solid; vertical-align:middle; }
+    .tag-new { color:var(--green); border-color:var(--green); }
+    .tag-recruiter { color:var(--yellow); border-color:var(--yellow); }
+    .tag-rcdd { color:#7eb8f7; border-color:#7eb8f7; }
+    .tag-exante { color:#c17ef7; border-color:#c17ef7; }
+
+    .insight { background:var(--navy-mid); border-left:3px solid var(--red); padding:0.85rem 1rem; margin-bottom:0.75rem; font-size:0.875rem; color:var(--text-muted); }
+    .insight strong { color:var(--text); }
+    .insight-num { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-dim); margin-bottom:0.25rem; }
+  </style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <h2>LEX LINKEDIN</h2>
+    <p>Private dashboard — Shawn C. Tovey, RCDD</p>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
+    <button onclick="checkGate()">ENTER</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <span class="lex">LEX</span>
+    <span class="tagline">Limited Energy eXperts</span>
+  </a>
+  <a class="nav-back" href="/">← Home</a>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>LinkedIn Dashboard</h1>
+    <div class="sub">Shawn C. Tovey, RCDD · Designer II @ Exante360 · Week of 2026-05-20 · vs baseline 2026-05-19 · PREMIUM half-price through ~Jul 19</div>
+  </div>
+
+  <!-- KEY METRICS -->
+  <div class="section">
+    <div class="section-title">Key Metrics</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Profile Viewers (90d)</div>
+        <div class="card-value">569</div>
+        <div class="card-note"><span class="card-delta-down">−6 WoW</span> · ↑32% vs prior 7d</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Post Impressions (7d)</div>
+        <div class="card-value">1,496</div>
+        <div class="card-note"><span class="card-delta-up">+17% WoW</span> · biggest move this week</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Followers</div>
+        <div class="card-value">3,013</div>
+        <div class="card-note"><span class="card-delta-flat">Δ 0</span> · Connections: 27</div>
+      </div>
+      <div class="card">
+        <div class="card-label">All Appearances (7d)</div>
+        <div class="card-value">5,079</div>
+        <div class="card-note"><span class="card-delta-down">−55</span> · ↑1% · May 12–18</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE ENGAGEMENT -->
+  <div class="section">
+    <div class="section-title">Profile Engagement — 90 Days</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Impressions</div>
+        <div class="card-value" style="font-size:1.6rem">1,737</div>
+        <div class="card-note">↑35.9% past week</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Clicks</div>
+        <div class="card-value" style="font-size:1.6rem">59</div>
+        <div class="card-note">↑33.4% · 3.4% CTR</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Avg View Time</div>
+        <div class="card-value" style="font-size:1.6rem">50s</div>
+        <div class="card-note">↑33.5% past week</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Search Appearances (7d)</div>
+        <div class="card-value" style="font-size:1.6rem">99</div>
+        <div class="card-note"><span class="card-delta-down">−55</span> · 1.9% of all appearances</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECRUITER WATCH -->
+  <div class="section">
+    <div class="section-title">Recruiter Watch</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Total Recruiters (visible)</div>
+        <div class="card-value" style="color:var(--yellow)">18</div>
+        <div class="card-note"><span class="card-delta-flat">Δ 0</span> · same banner count as baseline</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Named This Week</div>
+        <div class="card-value" style="font-size:1.6rem">2</div>
+        <div class="card-note">Anthropic (return) · KPG99 INC</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Anonymous Recruiter Lite</div>
+        <div class="card-value" style="font-size:1.6rem">16</div>
+        <div class="card-note">Behind the badge</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAMED VIEWERS -->
+  <div class="section">
+    <div class="section-title">Named Viewers — This Period (Top 20)</div>
+    <table>
+      <thead><tr><th>Who</th><th>Role / Company</th><th>Tier</th><th>Mutuals</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">Ivan Schwartz <span class="tag tag-new">NEW</span></td><td>Director of Consultant Relations, AtlasIED</td><td>2nd</td><td>72</td><td>1h ago</td></tr>
+        <tr><td class="primary">Power Design <span class="tag tag-new">NEW</span></td><td>Anonymous private</td><td>—</td><td>—</td><td>6h ago</td></tr>
+        <tr><td class="primary">KISHOR KUMAR K</td><td>Student, Sathyabama Institute (Chennai)</td><td>3rd+</td><td>—</td><td>1d ago</td></tr>
+        <tr><td class="primary">Nate Lum, RCDD <span class="tag tag-rcdd">RCDD</span></td><td>Territory Sales Manager, Dura-Line</td><td>2nd</td><td>32</td><td>2d ago</td></tr>
+        <tr><td class="primary">Exante360 colleague <span class="tag tag-exante">EXANTE</span></td><td>Anonymous</td><td>—</td><td>—</td><td>2d ago</td></tr>
+        <tr><td class="primary">Lima Metro Area</td><td>Anonymous (Peru)</td><td>—</td><td>—</td><td>3d ago</td></tr>
+        <tr><td class="primary">Nick Lanska</td><td>Level Up Partners</td><td>1st</td><td>—</td><td>4d ago</td></tr>
+        <tr><td class="primary">Tersia Tobin</td><td>People Operations Manager</td><td>2nd</td><td>4</td><td>4d ago</td></tr>
+        <tr><td class="primary">Patrick King</td><td>Journeyman Electrician — 25y LV (CCTV/fire/access)</td><td>2nd</td><td>1</td><td>4d ago</td></tr>
+        <tr><td class="primary">KPG99 INC <span class="tag tag-recruiter">RECRUITER</span></td><td>Private</td><td>—</td><td>—</td><td>5d ago</td></tr>
+        <tr><td class="primary">Anthropic <span class="tag tag-recruiter">RECRUITER</span></td><td>Return visit since May 19</td><td>2nd</td><td>—</td><td>5d ago</td></tr>
+        <tr><td class="primary">Michael Pullifrone</td><td>Data Center Security Superintendent, I2G Systems</td><td>1st</td><td>—</td><td>6d ago</td></tr>
+        <tr><td class="primary">Alyssa Zhang</td><td>Art Director, Bespoke Jewelry</td><td>3rd+</td><td>—</td><td>6d ago</td></tr>
+        <tr><td class="primary">Diego Ortiz</td><td>Partner Program Developer, Aplicaciones Tecnológicas</td><td>2nd</td><td>2</td><td>6d ago</td></tr>
+        <tr><td class="primary">Tommaso Pellegrino <span class="tag tag-new">NEW</span></td><td>Physical Security Engineer</td><td>2nd</td><td>12</td><td>6d ago</td></tr>
+        <tr><td class="primary">Lee Neutzling, MA, PSP</td><td>Sr Project Manager</td><td>2nd</td><td>18</td><td>6d ago</td></tr>
+        <tr><td class="primary">César Augustus</td><td>Professor, Faculdade de Medicina UnB (Brazil)</td><td>3rd+</td><td>—</td><td>6d ago</td></tr>
+        <tr><td class="primary">Jose Caballero</td><td>VP of Technology · AI Transformation Leader</td><td>1st</td><td>1</td><td>1w ago</td></tr>
+        <tr><td class="primary">Brianna Rico</td><td>Marketing Assistant</td><td>2nd</td><td>1</td><td>1w ago</td></tr>
+        <tr><td class="primary">Sakib Sarkar</td><td>OffSec · 10+ CVE · Entrepreneur</td><td>2nd</td><td>3</td><td>1w ago</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SURFACE MIX -->
+  <div class="section">
+    <div class="section-title">Where People See You — Surface Mix (7d)</div>
+    <table>
+      <thead><tr><th>Surface</th><th>Share</th><th>vs Last Week</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">Comments</td><td>70.2%</td><td>+0.8pt</td><td>Dominant surface — comment activity</td></tr>
+        <tr><td class="primary">Posts</td><td>23.2%</td><td>+0.2pt</td><td>Consistent with +17% impressions bump</td></tr>
+        <tr><td class="primary">Network recommendations</td><td>4.6%</td><td>flat</td><td>"People you may know"</td></tr>
+        <tr><td class="primary">Search</td><td>1.9%</td><td>−1.1pt</td><td>Search-driven discovery cooled</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CLICKS PER SECTION -->
+  <div class="section">
+    <div class="section-title">Clicks per Section — 90 Days</div>
+    <table>
+      <thead><tr><th>Section</th><th>Clicks</th><th>Share</th><th>WoW</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">Experience</td><td>24</td><td>40.7%</td><td>flat</td></tr>
+        <tr><td class="primary">Intro</td><td>15</td><td>25.4%</td><td>flat</td></tr>
+        <tr><td class="primary">Activity</td><td>14</td><td>23.7%</td><td>flat</td></tr>
+        <tr><td class="primary">Licenses & Certifications</td><td>6</td><td>10.2%</td><td>flat</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="section">
+    <div class="section-title">Insights — This Week</div>
+
+    <div class="insight">
+      <div class="insight-num">1 of 6</div>
+      <strong>Post impressions +17% WoW</strong> — Jumped from 1,274 to 1,496. Comments surface at 70.2% confirms a comment-rich post or cascade drove this, not search. Check Activity tab for May 12–18 post/thread. Repeat the format Wed/Thu.
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">2 of 6</div>
+      <strong>Anthropic recruiter — second look in ~2 weeks.</strong> Two visits from one employer = short-list signal. Consider toggling Open-to-Work to recruiter-only visibility before Monday's snapshot.
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">3 of 6</div>
+      <strong>18 recruiter views in 30 days</strong> — Anthropic, KPG99, TEECOM (Ryan Joseph, 186 mutuals), Will Bauer (ICT/acoustics). 14 anonymous. Profile reads "open to opportunities" algorithmically even with toggle off.
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">4 of 6</div>
+      <strong>Two Exante360 colleague visits within a week.</strong> Anonymous. Internal interest in your publishing or a quiet check-in. Worth being aware of tone/content before next post.
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">5 of 6</div>
+      <strong>International footprint broader than expected</strong> — Brazil, Italy, India, Bangladesh-adjacent, Peru, Spain. Comment strategy surfaces across the global graph more than posts do.
+    </div>
+
+    <div class="insight">
+      <div class="insight-num">6 of 6</div>
+      <strong>Premium decision point: ~July 19.</strong> If June holds similar named-viewer density, $30/mo is justified. Monitor through June before deciding.
+    </div>
+  </div>
+
+  <!-- METHOD -->
+  <div class="section">
+    <div class="section-title">Capture Method</div>
+    <table>
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">Method</td><td>Claude in Chrome — DOM extraction via LinkedIn analytics pages</td></tr>
+        <tr><td class="primary">Snapshot date</td><td>2026-05-20</td></tr>
+        <tr><td class="primary">Baseline</td><td>2026-05-19</td></tr>
+        <tr><td class="primary">Cadence</td><td>Monday 8 AM weekly</td></tr>
+        <tr><td class="primary">Output file</td><td>outputs/linkedin_snapshots/snapshot_2026-05-20.md</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+  const PW = 'LEX2026'; // <-- update this
+  const SESSION_KEY = 'lex_linkedin_auth';
+
+  function checkGate() {
+    const input = document.getElementById('pw-input').value;
+    if (input === PW) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      document.getElementById('gate').style.display = 'none';
+    } else {
+      document.getElementById('gate-error').textContent = 'Incorrect password.';
+    }
+  }
+
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkGate();
+  });
+
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    document.getElementById('gate').style.display = 'none';
+  }
+</script>
+</body>
+</html>

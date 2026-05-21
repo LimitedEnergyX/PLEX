@@ -62,6 +62,19 @@
   status = 410
   force = true
 
+# ─── Private dashboards — noindex via headers ────────────────────────────────
+[[headers]]
+  for = "/analytics.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/linkedin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
 # ─── Canonical host enforcement ──────────────────────────────────────────────
 # Send www → apex so canonical URLs are clean.
 

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics · limitedenergy.net</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy-deep:  #0E1B30;
+      --navy-mid:   #162338;
+      --navy-light: #1E3260;
+      --red:        #C8102E;
+      --red-dim:    #a00d24;
+      --text:       #EDF1F8;
+      --text-muted: #B8C5D8;
+      --text-dim:   #6B7C95;
+      --border:     #1E3260;
+      --border-dim: #162338;
+      --green:      #2ecc71;
+      --yellow:     #f1c40f;
+      --font-head:  'Oswald', sans-serif;
+      --font-body:  'Barlow', sans-serif;
+      --font-mono:  'Space Mono', monospace;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--navy-deep); color:var(--text); font-family:var(--font-body); font-size:16px; line-height:1.6; min-height:100vh; }
+
+    /* NAV */
+    nav { position:sticky; top:0; z-index:200; background:var(--navy-deep); border-bottom:1px solid var(--border-dim); display:flex; justify-content:space-between; align-items:center; padding:0 2.5rem; height:64px; }
+    .nav-brand { display:flex; align-items:baseline; gap:0.75rem; text-decoration:none; }
+    .nav-brand .lex { font-family:var(--font-head); font-weight:700; font-size:1.5rem; letter-spacing:0.2em; color:var(--red); }
+    .nav-brand .tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.12em; color:var(--text-dim); text-transform:uppercase; }
+    .nav-back { font-family:var(--font-head); font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); text-decoration:none; }
+    .nav-back:hover { color:var(--red); }
+
+    /* GATE */
+    #gate { position:fixed; inset:0; z-index:999; background:var(--navy-deep); display:flex; align-items:center; justify-content:center; }
+    .gate-box { background:var(--navy-mid); border:1px solid var(--border); padding:2.5rem; width:340px; text-align:center; }
+    .gate-box h2 { font-family:var(--font-head); font-size:1.4rem; letter-spacing:0.15em; color:var(--red); margin-bottom:0.5rem; }
+    .gate-box p { font-size:0.85rem; color:var(--text-dim); margin-bottom:1.5rem; }
+    .gate-box input { width:100%; background:var(--navy-deep); border:1px solid var(--border); color:var(--text); font-family:var(--font-mono); font-size:0.9rem; padding:0.6rem 0.8rem; margin-bottom:0.75rem; outline:none; }
+    .gate-box input:focus { border-color:var(--red); }
+    .gate-box button { width:100%; background:var(--red); color:#fff; border:none; font-family:var(--font-head); font-size:0.9rem; letter-spacing:0.15em; text-transform:uppercase; padding:0.65rem; cursor:pointer; }
+    .gate-box button:hover { background:var(--red-dim); }
+    .gate-error { font-size:0.8rem; color:var(--red); margin-top:0.5rem; min-height:1.2em; }
+
+    /* MAIN */
+    main { max-width:1000px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
+    .page-header { margin-bottom:2rem; border-bottom:1px solid var(--border-dim); padding-bottom:1rem; }
+    .page-header h1 { font-family:var(--font-head); font-size:1.6rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; }
+    .page-header .sub { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-dim); margin-top:0.25rem; }
+
+    /* SECTION */
+    .section { margin-bottom:2.5rem; }
+    .section-title { font-family:var(--font-head); font-size:0.8rem; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-dim); border-bottom:1px solid var(--border-dim); padding-bottom:0.4rem; margin-bottom:1rem; }
+
+    /* STAT CARDS */
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+    .card { background:var(--navy-mid); border:1px solid var(--border-dim); padding:1.25rem; }
+    .card-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.4rem; }
+    .card-value { font-family:var(--font-head); font-size:2rem; font-weight:600; color:var(--text); }
+    .card-note { font-size:0.78rem; color:var(--text-dim); margin-top:0.25rem; }
+    .card-value.green { color:var(--green); }
+    .card-value.red { color:var(--red); }
+
+    /* CHART */
+    .chart-wrap { background:var(--navy-mid); border:1px solid var(--border-dim); padding:1.25rem; }
+    .chart-bars { display:flex; align-items:flex-end; gap:6px; height:120px; margin-bottom:0.5rem; }
+    .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
+    .bar { width:100%; background:var(--navy-light); transition:background 0.2s; position:relative; }
+    .bar.peak { background:var(--red); }
+    .bar:hover { background:var(--red-dim); }
+    .bar-label { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-dim); }
+    .bar-val { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-muted); }
+
+    /* TABLE */
+    table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    thead tr { border-bottom:1px solid var(--border); }
+    th { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); padding:0.5rem 0.75rem; text-align:left; font-weight:400; }
+    td { padding:0.6rem 0.75rem; color:var(--text-muted); border-bottom:1px solid var(--border-dim); font-family:var(--font-mono); font-size:0.8rem; }
+    tr:last-child td { border-bottom:none; }
+    td.primary { color:var(--text); }
+    td.share-cell { display:flex; align-items:center; gap:0.5rem; }
+    .share-bar { height:6px; background:var(--red); display:inline-block; }
+
+    /* INSIGHT */
+    .insight { background:var(--navy-mid); border-left:3px solid var(--red); padding:0.85rem 1rem; margin-bottom:0.75rem; font-size:0.875rem; color:var(--text-muted); }
+    .insight strong { color:var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>LEX ANALYTICS</h2>
+    <p>Private dashboard — limitedenergy.net</p>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
+    <button onclick="checkGate()">ENTER</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <span class="lex">LEX</span>
+    <span class="tagline">Limited Energy eXperts</span>
+  </a>
+  <a class="nav-back" href="/">← Home</a>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>Netlify Analytics</h1>
+    <div class="sub">limitedenergy.net · 7-day snapshot · window: May 12 → May 19, 2026 · refreshed May 19 @ 9:18 AM local</div>
+  </div>
+
+  <!-- LIVE STATUS -->
+  <div class="section">
+    <div class="section-title">Live Project Status</div>
+    <div class="cards">
+      <div class="card"><div class="card-label">Access</div><div class="card-value green">Public</div><div class="card-note">Open to web</div></div>
+      <div class="card"><div class="card-label">Forms</div><div class="card-value">Off</div><div class="card-note">Unclaimed</div></div>
+      <div class="card"><div class="card-label">Plan</div><div class="card-value" style="font-size:1.3rem">Starter</div><div class="card-note">$9/mo · Analytics included</div></div>
+      <div class="card"><div class="card-label">Credits Used</div><div class="card-value" style="font-size:1.3rem">~90<span style="font-size:1rem;color:var(--text-dim)">/1,000</span></div><div class="card-note">Current billing period</div></div>
+    </div>
+  </div>
+
+  <!-- TRAFFIC -->
+  <div class="section">
+    <div class="section-title">7-Day Traffic — May 12 to May 19</div>
+    <div class="cards">
+      <div class="card"><div class="card-label">Pageviews</div><div class="card-value">496</div><div class="card-note">~70/day average</div></div>
+      <div class="card"><div class="card-label">Unique Visitors</div><div class="card-value">272</div><div class="card-note">Includes bots/crawlers</div></div>
+      <div class="card"><div class="card-label">Bandwidth</div><div class="card-value">11 MB</div><div class="card-note">Across 7 days</div></div>
+      <div class="card"><div class="card-label">Peak Day</div><div class="card-value red">124</div><div class="card-note">Sun May 17 · 61 visitors</div></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="section">
+    <div class="section-title">Pageviews by Day</div>
+    <div class="chart-wrap">
+      <div class="chart-bars" id="chart"></div>
+    </div>
+  </div>
+
+  <!-- TOP PAGES -->
+  <div class="section">
+    <div class="section-title">Top Pages</div>
+    <table>
+      <thead><tr><th>Page</th><th>Pageviews</th><th>Share</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">/</td><td>378</td><td><span class="share-bar" style="width:76px"></span> 76%</td></tr>
+        <tr><td class="primary">/plex</td><td>117</td><td><span class="share-bar" style="width:24px;background:var(--green)"></span> 24%</td></tr>
+        <tr><td class="primary">/plex.html</td><td>1</td><td>&lt;1%</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:0.75rem" class="insight">PLEX drives 1 in 4 pageviews — strong engagement for a deep utility tool.</div>
+  </div>
+
+  <!-- TOP SOURCES -->
+  <div class="section">
+    <div class="section-title">Top Sources</div>
+    <table>
+      <thead><tr><th>Source</th><th>Referrals</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">Direct</td><td>275</td><td>Real visitors + bots with no referrer</td></tr>
+        <tr><td class="primary">linkedin.com</td><td>13</td><td>LinkedIn web</td></tr>
+        <tr><td class="primary">com.linkedin.android</td><td>5</td><td>LinkedIn mobile · 18 total LinkedIn</td></tr>
+        <tr><td class="primary">txt.texas.gov</td><td>4</td><td>TX state telecom/IT professional</td></tr>
+        <tr><td class="primary">statics.teams.cdn.office.net</td><td>3</td><td>Shared in MS Teams chat</td></tr>
+        <tr><td class="primary">baidu.com</td><td>1</td><td>Baidu crawler</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GEOGRAPHY -->
+  <div class="section">
+    <div class="section-title">Geography</div>
+    <table>
+      <thead><tr><th>Country</th><th>Pageviews</th><th>Share</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="primary">United States</td><td>365</td><td>74%</td><td></td></tr>
+        <tr><td class="primary">Singapore</td><td>34</td><td>7%</td><td style="color:var(--text-dim)">Likely bot</td></tr>
+        <tr><td class="primary">China</td><td>16</td><td>3%</td><td style="color:var(--text-dim)">Likely bot</td></tr>
+        <tr><td class="primary">France</td><td>11</td><td>2%</td><td></td></tr>
+        <tr><td class="primary">Japan</td><td>11</td><td>2%</td><td></td></tr>
+        <tr><td class="primary">Germany</td><td>11</td><td>2%</td><td></td></tr>
+        <tr><td class="primary">Sweden</td><td>10</td><td>2%</td><td></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:0.75rem" class="insight">Real visitor estimate <strong>~100–150 / 7 days</strong> after stripping bot traffic (Singapore + China + scanner activity).</div>
+  </div>
+
+  <!-- ISSUES -->
+  <div class="section">
+    <div class="section-title">Outstanding Items</div>
+    <div class="insight"><strong>/sw.js — 131 requests</strong> · Service worker check — harmless, not worth fixing.</div>
+    <div class="insight" style="border-left-color:var(--green)"><strong>May 19 patch resolved:</strong> favicon, apple-touch-icon, robots.txt, scanner blocks (.env, .git, wp-admin, xmlrpc) — all cleaned up.</div>
+  </div>
+
+</main>
+
+<script>
+  // Password gate — change PW here to update
+  const PW = 'LEX2026'; // <-- update this
+  const SESSION_KEY = 'lex_analytics_auth';
+
+  function checkGate() {
+    const input = document.getElementById('pw-input').value;
+    if (input === PW) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      document.getElementById('gate').style.display = 'none';
+    } else {
+      document.getElementById('gate-error').textContent = 'Incorrect password.';
+    }
+  }
+
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkGate();
+  });
+
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    document.getElementById('gate').style.display = 'none';
+  }
+
+  // Chart
+  const data = [
+    { day:'May 12', val:38 },
+    { day:'May 13', val:35 },
+    { day:'May 14', val:32 },
+    { day:'May 15', val:85 },
+    { day:'May 16', val:78 },
+    { day:'May 17', val:124, peak:true },
+    { day:'May 18', val:85 },
+    { day:'May 19', val:10 },
+  ];
+  const max = Math.max(...data.map(d=>d.val));
+  const chart = document.getElementById('chart');
+  data.forEach(d => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const pct = Math.round((d.val/max)*100);
+    col.innerHTML = `
+      <span class="bar-val">${d.val}</span>
+      <div class="bar${d.peak?' peak':''}" style="height:${pct}%"></div>
+      <span class="bar-label">${d.day.replace('May ','')}</span>`;
+    chart.appendChild(col);
+  });
+</script>
+</body>
+</html>
