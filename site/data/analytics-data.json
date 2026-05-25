@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "windowFrom": "May 18",
+    "windowTo": "May 25, 2026",
+    "refreshed": "May 25 @ 2:29 PM local"
+  },
+  "liveStatus": [
+    { "label": "Access", "value": "Public", "valueClass": "green", "note": "Open to web · SSL active · force HTTPS on" },
+    { "label": "Forms", "value": "On", "valueClass": "green", "note": "Claimed & active · use_forms enabled" },
+    { "label": "Plan", "value": "Pro Dev", "valueStyle": "font-size:1.3rem", "note": "nf_team_dev · Analytics included · account: LEX" },
+    { "label": "Last Deploy", "value": "May 25", "valueStyle": "font-size:1.3rem", "note": "via CLI · deploy time 2s · state: ready" }
+  ],
+  "traffic": [
+    { "label": "Pageviews", "value": "541", "note": "~77/day average" },
+    { "label": "Unique Visitors", "value": "298", "note": "Includes bots/crawlers" },
+    { "label": "Bandwidth", "value": "13 MB", "note": "Across 7 days" },
+    { "label": "Peak Day", "value": "138", "valueClass": "red", "note": "Wed May 20 · 74 visitors" }
+  ],
+  "dailyChart": [
+    { "day": "18", "val": 62 },
+    { "day": "19", "val": 84 },
+    { "day": "20", "val": 138, "peak": true },
+    { "day": "21", "val": 97 },
+    { "day": "22", "val": 79 },
+    { "day": "23", "val": 55 },
+    { "day": "24", "val": 21 },
+    { "day": "25", "val": 5 }
+  ],
+  "topPages": [
+    { "page": "/", "views": 406, "share": "75%", "shareWidth": 75, "shareColor": "red" },
+    { "page": "/plex", "views": 132, "share": "24%", "shareWidth": 24, "shareColor": "green" },
+    { "page": "/analytics", "views": 2, "share": "<1%", "shareWidth": 0 },
+    { "page": "/plex.html", "views": 1, "share": "<1%", "shareWidth": 0 }
+  ],
+  "pageInsight": "PLEX holds steady at 1 in 4 pageviews — consistent deep engagement with the utility tool week over week.",
+  "topSources": [
+    { "source": "Direct", "referrals": 301, "note": "Real visitors + bots with no referrer" },
+    { "source": "linkedin.com", "referrals": 18, "note": "LinkedIn web" },
+    { "source": "com.linkedin.android", "referrals": 7, "note": "LinkedIn mobile · 25 total LinkedIn" },
+    { "source": "txt.texas.gov", "referrals": 5, "note": "TX state telecom/IT professional" },
+    { "source": "statics.teams.cdn.office.net", "referrals": 4, "note": "Shared in MS Teams chat" },
+    { "source": "baidu.com", "referrals": 2, "note": "Baidu crawler" }
+  ],
+  "geography": [
+    { "country": "United States", "views": 401, "share": "74%", "note": "" },
+    { "country": "Singapore", "views": 38, "share": "7%", "note": "Likely bot" },
+    { "country": "China", "views": 19, "share": "4%", "note": "Likely bot" },
+    { "country": "France", "views": 14, "share": "3%", "note": "" },
+    { "country": "Germany", "views": 13, "share": "2%", "note": "" },
+    { "country": "Japan", "views": 12, "share": "2%", "note": "" },
+    { "country": "Sweden", "views": 11, "share": "2%", "note": "" }
+  ],
+  "geoInsight": "Real visitor estimate ~110–165 / 7 days after stripping bot traffic (Singapore + China + scanner activity).",
+  "outstanding": [
+    { "text": "<strong>/sw.js — 144 requests</strong> · Service worker check — harmless, not worth fixing.", "color": "red" },
+    { "text": "<strong>May 25 deploy confirmed ready:</strong> CLI deploy in 2s · SSL active · site state current · pretty URLs enabled · all prior patches holding.", "color": "green" },
+    { "text": "<strong>Forms now claimed &amp; active</strong> — use_forms flag enabled. Confirm form endpoints are wired before promoting publicly.", "color": "yellow" }
+  ]
+}

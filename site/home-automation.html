@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEX | Smart Home Design</title>
+  <meta name="description" content="Limited Energy eXperts — Smart home system design and programming. Local-first. No subscriptions. No vendor lock-in. Engineered for the way you actually live.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-deep:    #0E1B30;
+      --navy-mid:     #162338;
+      --navy-light:   #1E3260;
+      --red:          #C8102E;
+      --text:         #EDF1F8;
+      --text-muted:   #B8C5D8;
+      --text-dim:     #6B7C95;
+      --border:       #1E3260;
+      --border-dim:   #162338;
+      --font-head:    'Oswald', sans-serif;
+      --font-body:    'Barlow', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--navy-deep); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; min-height: 100vh; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--navy-deep); border-bottom: 1px solid var(--border-dim); display: flex; justify-content: space-between; align-items: center; padding: 0 2.5rem; height: 64px; }
+    .nav-brand { display: flex; align-items: baseline; gap: 0.75rem; text-decoration: none; }
+    .nav-brand .lex { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.2em; color: var(--red); }
+    .nav-brand .tagline { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; }
+    .nav-right { display: flex; align-items: center; gap: 2rem; }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+    @media (max-width: 860px) { .nav-links { display: none; } }
+    .nav-links a { font-family: var(--font-head); font-weight: 400; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--red); }
+    .nav-cta { font-family: var(--font-head); font-weight: 500; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); text-decoration: none; border: 1px solid var(--red); padding: 0.4rem 0.85rem; border-radius: 2px; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .nav-cta:hover { background: var(--red); color: var(--text); }
+    .hamburger { display: flex; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; width: 32px; height: 32px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: all 0.25s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--navy-mid); border-bottom: 1px solid var(--border-dim); z-index: 199; padding: 1.5rem 2rem; flex-direction: column; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: var(--font-head); font-weight: 400; font-size: 1rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; padding: 0.85rem 0; border-bottom: 1px solid var(--border-dim); transition: color 0.2s; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-cta { color: var(--red) !important; font-weight: 600 !important; margin-top: 0.5rem; }
+
+    /* SHARED SECTION */
+    .section { padding: 5rem 2.5rem; max-width: 960px; margin: 0 auto; border-bottom: 1px solid var(--border-dim); }
+    .section-kicker { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .section-kicker::before { content: ''; display: inline-block; width: 1.5rem; height: 2px; background: var(--red); flex-shrink: 0; }
+    .section-heading { font-family: var(--font-head); font-weight: 600; font-size: clamp(1.6rem, 3.5vw, 2.25rem); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); margin-bottom: 0.75rem; }
+    .section-sub { font-family: var(--font-body); font-size: 0.95rem; color: var(--text-muted); max-width: 620px; line-height: 1.8; margin-bottom: 3rem; }
+
+    /* HERO */
+    .page-hero { background: var(--navy-mid); border-bottom: 1px solid var(--border-dim); padding: 5rem 2.5rem; }
+    .page-hero-inner { max-width: 960px; margin: 0 auto; }
+    .page-hero-kicker { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+    .page-hero-kicker::before { content: ''; display: inline-block; width: 2rem; height: 2px; background: var(--red); }
+    .page-hero-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.5rem); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); margin-bottom: 0.5rem; line-height: 1.05; }
+    .page-hero-title span { color: var(--red); }
+    .page-hero-sub { font-family: var(--font-body); font-size: 1.1rem; color: var(--text-muted); max-width: 540px; line-height: 1.7; margin-bottom: 2.5rem; margin-top: 1rem; }
+    .page-hero-divider { width: 3rem; height: 3px; background: var(--red); margin-bottom: 2rem; }
+    .page-hero-lead { font-family: var(--font-body); font-style: italic; font-size: 1.1rem; color: var(--text); line-height: 1.75; max-width: 620px; border-left: 3px solid var(--red); padding-left: 1.25rem; }
+
+    /* SERVICE CARDS */
+    .service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--border-dim); border: 1px solid var(--border-dim); margin-bottom: 0; }
+    .service-card { background: var(--navy-mid); padding: 2rem 1.75rem; transition: background 0.2s; }
+    .service-card:hover { background: var(--navy-light); }
+    .service-card-icon { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 0.85rem; }
+    .service-card-name { font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.65rem; }
+    .service-card-desc { font-family: var(--font-body); font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* SYSTEMS GRID */
+    .systems-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+    .system-card { background: var(--navy-mid); border: 1px solid var(--border-dim); padding: 1.75rem; transition: border-color 0.2s; }
+    .system-card:hover { border-color: var(--red); }
+    .system-card-platform { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.5rem; }
+    .system-card-name { font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.65rem; }
+    .system-card-desc { font-family: var(--font-body); font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* PHILOSOPHY BLOCK */
+    .philosophy-block { max-width: 720px; }
+    .philosophy-block p { font-family: var(--font-body); font-size: 0.95rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 1.25rem; }
+    .philosophy-block p strong { color: var(--text); font-weight: 600; }
+    .philosophy-block p:last-child { margin-bottom: 0; }
+    .philosophy-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+    .philosophy-pill { font-family: var(--font-head); font-weight: 400; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 0.4rem 0.85rem; border-radius: 2px; }
+
+    /* AUDIENCE */
+    .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-dim); border: 1px solid var(--border-dim); max-width: 760px; }
+    @media (max-width: 600px) { .audience-grid { grid-template-columns: 1fr; } }
+    .audience-card { background: var(--navy-mid); padding: 2rem; }
+    .audience-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .audience-name { font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.75rem; }
+    .audience-desc { font-family: var(--font-body); font-size: 0.88rem; color: var(--text-muted); line-height: 1.75; }
+
+    /* STACK SHOWCASE */
+    .stack-callout { background: var(--navy-mid); border-left: 3px solid var(--red); padding: 1.5rem 1.75rem; margin-bottom: 2rem; max-width: 720px; }
+    .stack-callout p { font-family: var(--font-body); font-size: 0.92rem; color: var(--text-muted); line-height: 1.85; margin-bottom: 0.85rem; }
+    .stack-callout p:last-child { margin-bottom: 0; }
+    .stack-callout strong { color: var(--text); font-weight: 600; }
+    .stack-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }
+    .stack-tag { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border-dim); padding: 0.2rem 0.5rem; border-radius: 2px; }
+    .dashboard-note { font-family: var(--font-body); font-size: 0.85rem; color: var(--text-dim); font-style: italic; margin-top: 1.5rem; max-width: 620px; line-height: 1.7; }
+
+    /* CTA */
+    .cta-block { background: var(--navy-mid); border: 1px solid var(--border-dim); padding: 2.5rem; max-width: 620px; }
+    .cta-block-title { font-family: var(--font-head); font-weight: 600; font-size: 1.4rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 0.75rem; }
+    .cta-block-body { font-family: var(--font-body); font-size: 0.92rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem; }
+    .cta-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-head); font-weight: 500; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); text-decoration: none; border: 1px solid var(--red); padding: 0.55rem 1.1rem; border-radius: 2px; transition: background 0.2s, color 0.2s; }
+    .cta-link:hover { background: var(--red); color: var(--text); }
+
+    /* SCREENSHOT SHOWCASE */
+    .showcase-banner {
+      border-top: 1px solid var(--border-dim);
+      border-bottom: 1px solid var(--border-dim);
+      background: #080e1a;
+    }
+    .showcase-banner img {
+      width: 100%; height: auto; display: block;
+      max-height: 460px; object-fit: cover; object-position: center 100%;
+    }
+    .showcase-caption {
+      max-width: 960px; margin: 0 auto; padding: 0.7rem 2.5rem;
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim);
+    }
+    .screenshot-wrap {
+      width: 100%; overflow-x: auto;
+      border: 1px solid var(--border-dim); background: #080e1a;
+      margin: 2.5rem 0 0.4rem;
+    }
+    .screenshot-wrap img { display: block; width: 100%; height: auto; min-width: 640px; }
+    .screenshot-label {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 1rem;
+    }
+    @media (max-width: 600px) {
+      .showcase-caption { padding: 0.7rem 1.25rem; }
+    }
+
+    /* DISCLAIMER */
+    .disclaimer { font-family: var(--font-body); font-size: 0.75rem; color: var(--text-dim); line-height: 1.7; max-width: 620px; padding-top: 1.25rem; border-top: 1px solid var(--border-dim); margin-top: 1.25rem; }
+
+    /* FOOTER */
+    footer { padding: 2rem 2.5rem 1rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-dim); flex-wrap: wrap; gap: 1rem; }
+    .footer-brand { font-family: var(--font-head); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1.25rem; }
+      .page-hero { padding: 3rem 1.25rem; }
+      .section { padding: 3rem 1.25rem; }
+      footer { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="top">
+  <a href="/" class="nav-brand">
+    <span class="lex">LEX</span>
+    <span class="tagline">Limited Energy eXperts</span>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#sectors">Sectors</a></li>
+      <li><a href="/#credentials">Credentials</a></li>
+      <li><a href="/#tools">Tools</a></li>
+      <li><a href="/home-automation" class="active">Home Automation</a></li>
+      <li><a href="/estimate">Estimator</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <a href="/plex" class="nav-cta">Launch PLEX &nbsp;→</a>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mob">
+  <a href="/#about">About</a>
+  <a href="/#sectors">Sectors</a>
+  <a href="/#credentials">Credentials</a>
+  <a href="/#tools">Tools</a>
+  <a href="/home-automation">Home Automation</a>
+  <a href="/estimate">Estimator</a>
+  <a href="/#contact">Contact</a>
+  <a href="/plex" class="mobile-cta">Launch PLEX →</a>
+</div>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-kicker">Smart Home Design</div>
+    <h1 class="page-hero-title">Your home.<br><span>Your system.</span><br>Our design.</h1>
+    <div class="page-hero-divider"></div>
+    <p class="page-hero-sub">Engineered for the way you actually live.</p>
+    <p class="page-hero-lead">LEX is a consultative smart home design firm. We don't sell hardware. We don't do installation. What we do is design systems that actually work — and provide the programming support that turns good equipment into a great system.</p>
+  </div>
+</div>
+
+<!-- WORKSTATION SHOWCASE -->
+<div class="showcase-banner">
+  <img src="/ha-workstation.jpg" alt="Home automation and AI stack — multi-display workstation with live Grafana dashboards and Home Assistant running on a dedicated local server">
+  <div class="showcase-caption">Private home automation stack in operation — live Grafana dashboards, Home Assistant, and energy monitoring across a dedicated local server build.</div>
+</div>
+
+<!-- WHO WE ARE -->
+<section class="section" id="about">
+  <div class="section-kicker">Who We Are</div>
+  <h2 class="section-heading">Consultative by Design</h2>
+  <p class="section-sub">Whether you're a homeowner trying to make sense of a dozen different devices, or a contractor looking for a design partner who speaks your language, LEX delivers the intelligence layer your project needs.</p>
+
+  <div class="service-grid">
+    <div class="service-card">
+      <div class="service-card-icon">01 · Design</div>
+      <div class="service-card-name">System Design</div>
+      <p class="service-card-desc">We assess your space, devices, and goals, then produce a clear design that maps every system to every outcome. No guessing. No retrofitting decisions that should have been made on paper first.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-card-icon">02 · Integration</div>
+      <div class="service-card-name">Programming &amp; Integration</div>
+      <p class="service-card-desc">We configure your smart home platform to connect your HVAC, security cameras, sensors, and appliances into one unified, local-first system. One interface. One logic layer. Everything working together.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-card-icon">03 · Support</div>
+      <div class="service-card-name">Consultative Support</div>
+      <p class="service-card-desc">Not sure what you need? We help you make informed decisions before you spend a dollar on hardware. No commission on equipment. No preferred vendor relationships that compromise the recommendation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section" id="philosophy">
+  <div class="section-kicker">Design Philosophy</div>
+  <h2 class="section-heading">Local-First. Always.</h2>
+  <p class="section-sub">Every LEX design is built to run in your home, on your hardware — whether the internet is up or not.</p>
+
+  <div class="philosophy-block">
+    <p>
+      <strong>Cloud services are optional integrations — not the foundation.</strong> The dominant smart home model is built on vendor clouds: your device checks in with a server in another state, gets its instruction, and comes back. That server can go down. That company can be acquired. That product can be discontinued. Your home ends up holding the bag.
+    </p>
+    <p>
+      We design around a local hub running on hardware you own. Automations execute locally. Sensors report locally. The internet going out doesn't mean your lights stop responding. You're not dependent on a company's uptime or product roadmap to live in your own home.
+    </p>
+    <p>
+      <strong>No monthly fees. No vendor lock-in. No surprise deprecations.</strong> The system we design today runs the same way five years from now. Your investment is in hardware and design — not a recurring subscription that evaporates when you cancel.
+    </p>
+    <div class="philosophy-pills">
+      <span class="philosophy-pill">Local Hub</span>
+      <span class="philosophy-pill">No Cloud Dependency</span>
+      <span class="philosophy-pill">No Monthly Fees</span>
+      <span class="philosophy-pill">No Vendor Lock-In</span>
+      <span class="philosophy-pill">Open Protocols</span>
+      <span class="philosophy-pill">Your Hardware</span>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEMS -->
+<section class="section" id="systems">
+  <div class="section-kicker">Platform Coverage</div>
+  <h2 class="section-heading">Systems We Work With</h2>
+  <p class="section-sub">Chosen for reliability, local capability, and field-proven performance — not marketing.</p>
+
+  <div class="systems-grid">
+
+    <div class="system-card">
+      <div class="system-card-platform">Climate Control</div>
+      <div class="system-card-name">HVAC &amp; Climate</div>
+      <p class="system-card-desc">Modern HVAC systems — variable speed, heat pump, multi-zone — generate a rich data stream. Where a manufacturer allows integration, we capture that data and put it to work: temperature history, runtime analysis, efficiency trends, and real-time alerts. No thermostat swap required. Platform: <strong style="color:var(--text)">Resideo / Honeywell Home</strong>.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">Z-Wave · Open Protocol</div>
+      <div class="system-card-name">Door &amp; Window Contacts</div>
+      <p class="system-card-desc">Z-Wave is our primary contact sensor protocol: no cloud dependency, encrypted mesh, and battery life measured in years. We design for scale — 25+ sensors in a single system isn't uncommon. Budget-conscious options bring per-unit cost down to around $15 without sacrificing reliability.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">Ring · Preferred Platform</div>
+      <div class="system-card-name">Security Cameras</div>
+      <p class="system-card-desc">Ring is our preferred camera platform for its proven integration, wide product line, and field-proven reliability. We design motion automations, doorbell alerts, and notification routing as part of every security scope. Budget alternatives are available where applicable.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">YoLink · LoRa Mesh</div>
+      <div class="system-card-name">Leak &amp; Water Detection</div>
+      <p class="system-card-desc">YoLink is our preferred leak detection platform — long range, local MQTT capable, and purpose-built for sensors that have to work every single time. Garage, HVAC drain pan, laundry, bathrooms — every risk point covered. YoLink's LoRa protocol reaches where Wi-Fi doesn't.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">Samsung SmartThings</div>
+      <div class="system-card-name">Appliances</div>
+      <p class="system-card-desc">We work with Samsung SmartThings as a compatible integration layer. Your washer, dryer, and refrigerator aren't just appliances — they're nodes in your automation system. Left the fridge door open? You'll know. Laundry done? You'll know that too.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">ntfy · Self-Hosted</div>
+      <div class="system-card-name">Notifications</div>
+      <p class="system-card-desc">We use ntfy as the notification backbone — self-hosted, fast, and free. Every alert your system generates routes through a single, privacy-respecting push notification stack. No third-party apps required. No ads. No data harvesting.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">Aladdin Connect</div>
+      <div class="system-card-name">Garage Access</div>
+      <p class="system-card-desc">Aladdin Connect provides open/close state, last-event timestamps, and full automation integration. Know when the garage opened, who triggered it, and set automations that close it automatically at a set time or when the house enters an away state.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">Tesla Powerwall</div>
+      <div class="system-card-name">Energy Monitoring</div>
+      <p class="system-card-desc">Tesla Powerwall integration surfaces grid power, solar production, battery charge state, and per-circuit load data through Grafana dashboards backed by InfluxDB time-series storage. Real-time energy intelligence: generation vs. consumption, cost tracking, and historical trend analysis.</p>
+    </div>
+
+    <div class="system-card">
+      <div class="system-card-platform">TP-Link Kasa</div>
+      <div class="system-card-name">Lighting</div>
+      <p class="system-card-desc">Kasa smart switches and plugs operate entirely on the local LAN — no cloud account needed for automation. Fast response, reliable scheduling, and full integration with the home automation hub via Node.js services on the local network.</p>
+    </div>
+
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="/ha-energy.jpg" alt="Grafana energy monitoring dashboards — Powerwall, solar, battery, and financial tracking">
+  </div>
+  <p class="screenshot-label">Live energy dashboards — Powerwall charge state, solar production, grid draw, battery flow, and real-time cost tracking against TXU Solar Buyback Plus.</p>
+
+</section>
+
+<!-- IN PRACTICE / HOME AUTOMATION STACK -->
+<section class="section" id="stack">
+  <div class="section-kicker">In Practice</div>
+  <h2 class="section-heading">The Home Automation Stack</h2>
+  <p class="section-sub">These systems aren't theoretical. They run on a dedicated on-premise home server that powers both the private tooling stack and the home automation platform for this residence.</p>
+
+  <div class="stack-callout">
+    <p>
+      <strong>Home Assistant with Lovelace UI</strong> is the automation hub — handling device states, automations, scenes, and presence detection. The UI is fully custom: JSON and HTML configuration throughout, with every dashboard panel purpose-built for the actual use case rather than a generic template.
+    </p>
+    <p>
+      <strong>Node.js integration services</strong> bridge manufacturer APIs directly — Kasa lighting, YoLink sensor data via MQTT, SmartThings appliance states, Resideo thermostat, Tesla Powerwall energy data, and Aladdin Connect garage access. No cloud middleware. Data flows from device to local service to hub.
+    </p>
+    <p>
+      <strong>Grafana dashboards backed by InfluxDB</strong> provide time-series visibility across the whole system — energy production and consumption (grid/solar/battery), environmental sensors (temperature, humidity, air quality), appliance states, and security events. The energy dashboard tracks per-session cost, daily kWh totals, and Powerwall charge percentage in real time.
+    </p>
+    <p>
+      <strong>Tailscale VPN</strong> provides secure remote access to the entire stack — monitoring and control from anywhere, with no ports exposed to the public internet.
+    </p>
+  </div>
+
+  <div class="stack-tags">
+    <span class="stack-tag">Docker on WSL2</span>
+    <span class="stack-tag">Home Assistant</span>
+    <span class="stack-tag">Lovelace UI</span>
+    <span class="stack-tag">Node.js</span>
+    <span class="stack-tag">Grafana</span>
+    <span class="stack-tag">InfluxDB</span>
+    <span class="stack-tag">MQTT</span>
+    <span class="stack-tag">Tailscale VPN</span>
+    <span class="stack-tag">Tesla API</span>
+    <span class="stack-tag">YoLink LoRa</span>
+    <span class="stack-tag">Z-Wave</span>
+    <span class="stack-tag">JSON / HTML</span>
+    <span class="stack-tag">SmartThings API</span>
+    <span class="stack-tag">Kasa LAN API</span>
+    <span class="stack-tag">Resideo API</span>
+  </div>
+
+  <div class="screenshot-wrap">
+    <img src="/ha-grafana.jpg" alt="Grafana dashboards — Powerwall control panel, energy flow detail, and weather forecast">
+  </div>
+  <p class="screenshot-label">Powerwall control dashboard, energy flow v2 (solar / home / battery / grid), and 10-day weather forecast — all running on-premise, 24/7.</p>
+
+</section>
+
+<!-- WHO WE SERVE -->
+<section class="section" id="audience">
+  <div class="section-kicker">Who We Serve</div>
+  <h2 class="section-heading">Homeowners &amp; Contractors</h2>
+  <p class="section-sub">Two different clients. The same commitment to clean design and honest advice.</p>
+
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-label">Primary</div>
+      <div class="audience-name">Homeowners</div>
+      <p class="audience-desc">You want a smart home that works without a monthly subscription or a tech degree. LEX gives you a system designed around your life, not a vendor's ecosystem. You tell us how you live. We design around that — not around what's easiest to sell.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-label">Trade Partner</div>
+      <div class="audience-name">Contractors &amp; Integrators</div>
+      <p class="audience-desc">You need a design partner with real-world engineering experience who can hand off clean, documented system designs you can execute with confidence. We've built systems like this from scratch across dozens of platforms. We know what fails, what lasts, and what matters — and we document it well enough that you're never guessing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="contact">
+  <div class="section-kicker">Ready to Design</div>
+  <h2 class="section-heading">Get in Touch</h2>
+  <p class="section-sub">Professional inquiries, project consultations, and trade partnerships welcome.</p>
+
+  <div class="cta-block">
+    <div class="cta-block-title">Start a Conversation</div>
+    <p class="cta-block-body">
+      Describe your space, your devices, and your goals. We'll tell you what a real design looks like — before you commit to any hardware.
+    </p>
+    <a href="mailto:stovey@limitedenergy.net" class="cta-link">stovey@limitedenergy.net →</a>
+  </div>
+
+  <p class="disclaimer">
+    The views, tools, and content on this site are personal and independent. They do not represent the positions, products, or work product of any current or former employer. No warranty is expressed or implied regarding the accuracy, completeness, or fitness for purpose of any design, configuration, or recommendation presented here. All output is provided for preliminary planning only and must be reviewed by a qualified professional before implementation. No liability is accepted for errors, omissions, or downstream use.
+  </p>
+</section>
+
+<footer>
+  <span class="footer-brand">LEX</span>
+  <span class="footer-copy">Limited Energy eXperts &nbsp;·&nbsp; Shawn C. Tovey, RCDD &nbsp;·&nbsp; Built for the craft.</span>
+</footer>
+
+<script>
+  const ham = document.getElementById('ham');
+  const mob = document.getElementById('mob');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    mob.classList.toggle('open');
+  });
+  mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    ham.classList.remove('open');
+    mob.classList.remove('open');
+  }));
+</script>
+
+</body>
+</html>

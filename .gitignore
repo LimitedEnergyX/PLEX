@@ -1,2 +1,21 @@
-# Local Netlify folder
+# Netlify
 .netlify
+
+# Node
+scripts/node_modules/
+
+# Browser session profile (LinkedIn login)
+scripts/linkedin-profile/
+
+# Logs
+scripts/logs/
+
+# Claude IDE
+.claude/
+
+# Backup files
+*.bak.*
+site/*.bak.*
+
+# Source/working assets (large originals)
+site/HAAutomationBanner.JPEG

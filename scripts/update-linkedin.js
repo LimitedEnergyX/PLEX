@@ -19,7 +19,7 @@ const { execSync } = require('child_process');
 
 // ── Paths ──────────────────────────────────────────────────────────────────
 const ROOT         = path.resolve(__dirname, '..');
-const HTML_FILE    = path.join(ROOT, 'site', 'linkedin.html');
+const DATA_FILE    = path.join(ROOT, 'site', 'data', 'linkedin-data.json');
 const PROFILE_DIR  = path.join(__dirname, 'linkedin-profile');
 const LOG_FILE     = path.join(__dirname, 'logs', `${today()}.log`);
 
@@ -99,28 +99,26 @@ async function scrape() {
   return results;
 }
 
-// ── Parse + Regenerate HTML ────────────────────────────────────────────────
-async function regenerateHTML(scraped) {
+// ── Parse + Regenerate JSON ────────────────────────────────────────────────
+async function regenerateData(scraped) {
   if (!process.env.ANTHROPIC_API_KEY) die('ANTHROPIC_API_KEY not set.');
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  const currentHTML = fs.readFileSync(HTML_FILE, 'utf8');
+  const schema  = fs.readFileSync(DATA_FILE, 'utf8');
 
-  log('Calling Claude to parse data and regenerate HTML...');
+  log('Calling Claude to parse data and regenerate JSON...');
 
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 8000,
     messages: [{
       role: 'user',
-      content: `Update this LinkedIn analytics dashboard HTML with fresh data. 
-Preserve ALL styling, CSS, password gate, and structure exactly.
-Update only: metrics, dates, percentages, Interesting Viewers table, insights section.
-Tag viewers: NEW=first appearance, RECRUITER=recruiting role, RCDD=credentialed peer, EXANTE=Exante360 colleague.
-Today: ${today()}. Return ONLY complete HTML, no explanation.
+      content: `Extract fresh LinkedIn analytics data and return it as JSON matching this schema exactly.
+Tag viewers: NEW=first appearance this period, RECRUITER=recruiting role, RCDD=credentialed peer, EXANTE=Exante360 colleague.
+Today: ${today()}. Return ONLY valid JSON, no explanation, no markdown fences.
 
-CURRENT HTML (preserve structure/style):
-${currentHTML}
+SCHEMA (match this structure exactly):
+${schema}
 
 OVERVIEW:
 ${scraped.overview.slice(0, 1500)}
@@ -133,14 +131,9 @@ ${scraped.content.slice(0, 1500)}`
     }]
   });
 
-  const newHTML = response.content[0].text.trim();
-
-  // Sanity check — must look like HTML
-  if (!newHTML.startsWith('<!DOCTYPE') && !newHTML.startsWith('<html')) {
-    die('Claude did not return valid HTML. Aborting to protect existing file.');
-  }
-
-  return newHTML;
+  const raw = response.content[0].text.trim().replace(/^```json|```$/g, '').trim();
+  try { JSON.parse(raw); } catch(e) { die('Claude did not return valid JSON. Aborting: ' + e.message); }
+  return raw;
 }
 
 // ── Deploy ─────────────────────────────────────────────────────────────────
@@ -188,15 +181,15 @@ async function setup() {
   const hasData = Object.values(scraped).some(v => v.length > 200);
   if (!hasData) die('All pages returned empty. Aborting.');
 
-  const newHTML = await regenerateHTML(scraped);
+  const newData = await regenerateData(scraped);
 
-  // Backup existing file
-  const backup = HTML_FILE.replace('.html', `.bak.${today()}.html`);
-  fs.copyFileSync(HTML_FILE, backup);
+  // Backup existing data file
+  const backup = DATA_FILE.replace('.json', `.bak.${today()}.json`);
+  fs.copyFileSync(DATA_FILE, backup);
   log(`Backed up to ${backup}`);
 
-  fs.writeFileSync(HTML_FILE, newHTML, 'utf8');
-  log('linkedin.html updated.');
+  fs.writeFileSync(DATA_FILE, newData, 'utf8');
+  log('linkedin-data.json updated.');
 
   deploy();
 

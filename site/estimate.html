@@ -311,6 +311,25 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 </style>
 </head>
 <body>
+<style>
+#lex-sitenav{background:var(--navy);border-bottom:1px solid rgba(200,16,46,0.2);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:38px;position:sticky;top:0;z-index:9999;}
+#lex-sitenav .lsn-brand{font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:0.2em;color:var(--red);text-decoration:none;}
+#lex-sitenav .lsn-links{display:flex;gap:1.5rem;align-items:center;}
+#lex-sitenav .lsn-links a{font-family:var(--label);font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;transition:color 0.15s;}
+#lex-sitenav .lsn-links a:hover{color:var(--white);}
+#lex-sitenav .lsn-links a.lsn-active{color:var(--red);}
+@media(max-width:640px){#lex-sitenav .lsn-links a.lsn-hide{display:none;}}
+</style>
+<div id="lex-sitenav">
+  <a href="/" class="lsn-brand">LEX</a>
+  <div class="lsn-links">
+    <a href="/" class="lsn-hide">Home</a>
+    <a href="/plex" class="lsn-hide">PLEX</a>
+    <a href="/estimate" class="lsn-active">Estimator</a>
+    <a href="/home-automation" class="lsn-hide">Home Automation</a>
+    <a href="/#contact" class="lsn-hide">Contact</a>
+  </div>
+</div>
 <div id="header">
   <div class="header-inner">
     <div class="header-brand">

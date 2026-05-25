@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "subtitle": "Shawn C. Tovey, RCDD · Designer II @ Exante360 · Week of 2026-05-25 · vs baseline 2026-05-21 · PREMIUM half-price through ~Jul 19",
+    "contentEngagementPeriod": "May 19–25"
+  },
+  "keyMetrics": [
+    { "label": "Profile Viewers (90d)", "value": "557", "deltas": [{"text": "Δ −12 WoW", "cls": "down"}, {"text": "↓14.7% vs prior 7d", "cls": "down"}] },
+    { "label": "Post Impressions (7d)", "value": "1,915", "deltas": [{"text": "+62.2% WoW", "cls": "up"}], "note": "biggest move this week" },
+    { "label": "Followers", "value": "3,017", "deltas": [{"text": "+0.1% WoW", "cls": "up"}], "note": "Connections: updated" },
+    { "label": "Search Appearances (7d)", "value": "99", "deltas": [{"text": "0% WoW", "cls": "flat"}], "note": "May 12–18 vs May 5–11" }
+  ],
+  "engagement": [
+    { "label": "Post Impressions", "value": "1,915", "note": "↑62.2% vs prior 7 days", "noteClass": "up" },
+    { "label": "Members Reached", "value": "772", "note": "Unique members · May 19–25" },
+    { "label": "Social Engagements", "value": "60", "note": "50 reactions · 9 comments · 0 reposts · 1 save" },
+    { "label": "Search Appearances (7d)", "value": "99", "note": "0% vs May 5–11", "noteClass": "flat" }
+  ],
+  "recruiterWatch": [
+    { "label": "Total Recruiters (visible)", "value": "18", "valueStyle": "color:var(--yellow)", "note": "Δ 0 · same banner count as prior week" },
+    { "label": "Named This Week", "value": "1+", "note": "KPG99 INC named · Anthropic implicit (prior)" },
+    { "label": "Anonymous Recruiter Lite", "value": "17+", "note": "Behind the badge — 'From KPG99 INC and other companies'" }
+  ],
+  "viewers": [
+    { "name": "Executive Director — Cairo", "tags": ["NEW"], "role": "Anonymous — Wholesale Furniture and Home Furnishings industry, Cairo", "tier": "—", "mutuals": "—", "when": "31m ago" },
+    { "name": "Rina Sato", "tags": ["NEW"], "role": "Compliance Management | Regulatory Strategy | Risk Assessment", "tier": "3rd", "mutuals": "—", "when": "12h ago" },
+    { "name": "Someone at The Bancorp", "tags": ["NEW"], "role": "Anonymous — The Bancorp", "tier": "—", "mutuals": "—", "when": "1d ago" },
+    { "name": "Andriy Tsinyk", "tags": [], "role": "Business Development - Gallagher Security - The Americas", "tier": "1st", "mutuals": "—", "when": "1d ago" },
+    { "name": "Jonathan Floyd", "tags": [], "role": "Cluster Security Leader | Former Law Enforcement", "tier": "1st", "mutuals": "—", "when": "1d ago" },
+    { "name": "Scott Storms", "tags": [], "role": "Lead Specialist at Convergint Technologies", "tier": "1st", "mutuals": "—", "when": "1d ago" },
+    { "name": "Someone at BridgeCable.com", "tags": ["NEW"], "role": "Anonymous — BridgeCable.com - Philadelphia Network Cabling", "tier": "—", "mutuals": "—", "when": "1d ago" },
+    { "name": "Founder — Atlanta", "tags": ["NEW"], "role": "Anonymous — Business Consulting and Services, Atlanta Metropolitan Area", "tier": "—", "mutuals": "—", "when": "1d ago" },
+    { "name": "Hunter Petrie, RCDD", "tags": ["RCDD"], "role": "Assistant Director | ICT & Telecommunications Infrastructure | Campus Network Design | OSP / ISP | Fiber Optic Engineering | RCDD", "tier": "1st", "mutuals": "—", "when": "2d ago" },
+    { "name": "Aaron Nowak", "tags": ["NEW"], "role": "Embedded AI Engineer, Spheron GmbH", "tier": "1st", "mutuals": "—", "when": "2d ago" },
+    { "name": "KPG99 INC", "tags": ["RECRUITER"], "role": "Anonymous — KPG99 INC (recruiter banner)", "tier": "—", "mutuals": "—", "when": "2d ago" },
+    { "name": "Thomas Dodd", "tags": ["NEW"], "role": "Security Integrator | IP Camera Installation | Commercial PM | Axis Certified | Atlanta → Southeast", "tier": "1st", "mutuals": "—", "when": "2d ago" },
+    { "name": "School Teacher — Vigo County", "tags": ["NEW"], "role": "Anonymous — Vigo County School Corporation", "tier": "—", "mutuals": "—", "when": "3d ago" },
+    { "name": "Nafiz Ur Rahman", "tags": ["NEW"], "role": "Telecom cybersecurity professional with diverse experience in telco core network, roaming & cybersecurity", "tier": "2nd", "mutuals": "1", "when": "3d ago" },
+    { "name": "Ivan Schwartz", "tags": ["NEW"], "role": "Director of Consultant Relations at AtlasIED", "tier": "2nd", "mutuals": "72", "when": "3d ago" },
+    { "name": "Jonathan Blank", "tags": [], "role": "I2G Systems", "tier": "1st", "mutuals": "—", "when": "3d ago" },
+    { "name": "Power Design", "tags": ["NEW"], "role": "Anonymous — Power Design", "tier": "—", "mutuals": "—", "when": "4d ago" },
+    { "name": "KISHOR KUMAR K", "tags": [], "role": "Student at Sathyabama Institute of Science & Technology, Chennai", "tier": "3rd+", "mutuals": "—", "when": "5d ago" },
+    { "name": "Nate Lum, RCDD", "tags": ["RCDD"], "role": "Communications Infrastructure | Territory Sales Manager at Dura-Line", "tier": "2nd", "mutuals": "32", "when": "6d ago" },
+    { "name": "Exante360 colleague", "tags": ["EXANTE"], "role": "Anonymous — Exante360, Inc.", "tier": "—", "mutuals": "—", "when": "1w ago" },
+    { "name": "Lima Metro Area", "tags": ["NEW"], "role": "Anonymous (Lima Metropolitan Area, Peru)", "tier": "—", "mutuals": "—", "when": "1w ago" }
+  ],
+  "surfaceMix": [
+    { "surface": "Comments", "share": "~est.", "wow": "est.", "note": "19 comments logged this period — 3x profile view multiplier active" },
+    { "surface": "Posts", "share": "~est.", "wow": "est.", "note": "4 posts · 1,915 impressions · vibe coding post top performer at 545 impressions" },
+    { "surface": "Network recommendations", "share": "~5%", "wow": "flat", "note": "\"People you may know\"" },
+    { "surface": "Search", "share": "~2%", "wow": "flat", "note": "99 appearances · 0% WoW change" }
+  ],
+  "contentEngagement": [
+    { "metric": "Total Impressions", "count": "1,915", "detail": "Cumulative 7d · May 19–25", "wow": "+62.2%", "wowClass": "up" },
+    { "metric": "Members Reached", "count": "772", "detail": "Unique profiles", "wow": "—" },
+    { "metric": "Reactions", "count": "50", "detail": "Of 60 total engagements", "wow": "—" },
+    { "metric": "Comments", "count": "9", "detail": "Of 60 total engagements", "wow": "—" },
+    { "metric": "Reposts", "count": "0", "detail": "Of 60 total engagements", "wow": "—" },
+    { "metric": "Saves", "count": "1", "detail": "Of 60 total engagements", "wow": "—" },
+    { "metric": "Sends on LinkedIn", "count": "0", "detail": "Of 60 total engagements", "wow": "—" },
+    { "metric": "Top Post #1", "count": "545 impr.", "detail": "Vibe coding with Claude / Anthropic · 19 engagements", "wow": "—" },
+    { "metric": "Top Post #2", "count": "346 impr.", "detail": "PLEX — Power Load EXaminer tool announcement · 12 engagements", "wow": "—" }
+  ],
+  "insights": [
+    { "num": "1 of 6", "title": "Post impressions +62.2% WoW — second consecutive week of double-digit growth.", "body": "1,915 impressions this week vs. 1,453 last week (est.). Two consecutive weeks of strong growth signal algorithmic momentum. The vibe coding / Anthropic post (545 impressions, 19 engagements) outperformed the PLEX post (346 impressions, 12 engagements) this cycle. Authentic behind-the-scenes content is matching or exceeding structured tool announcements. Post cadence of 4 posts this week is above LinkedIn's recommended once-per-week threshold — maintain but watch engagement rate per post." },
+    { "num": "2 of 6", "title": "Profile viewers dipped to 557 (−14.7% vs prior 7d) despite impression surge.", "body": "This divergence — impressions up, profile views down — is normal when content reaches outside your core network. New audiences engage with posts without clicking through to profiles. Not a concern. Watch whether the Cairo Executive Director, Bancorp, or BridgeCable anonymous views convert to named viewers next week. The 72-mutual Ivan Schwartz view (AtlasIED) from 3d ago is the highest-quality inbound this snapshot." },
+    { "num": "3 of 6", "title": "18 recruiter views banner holds — KPG99 INC named, Anthropic carry-over.", "body": "KPG99 INC remains named on the recruiter banner. Anthropic from prior week is no longer in the visible viewer list but was confirmed last snapshot. 17+ remain anonymous. Profile continues to surface in Recruiter Lite searches. Stable banner count across two consecutive weeks suggests consistent indexing in recruiter search results. No action needed — maintain keyword density in headline and About section." },
+    { "num": "4 of 6", "title": "Hunter Petrie, RCDD — credentialed peer view at 2d ago.", "body": "1st-degree RCDD with Assistant Director title in ICT/Telecommunications infrastructure. Campus network and fiber engineering background. This is a high-signal peer view — RCDDs visiting RCDDs often represent collaboration interest, referral network activity, or competitive benchmarking. No action required but worth noting if a connection request arrives." },
+    { "num": "5 of 6", "title": "Vibe coding post outperformed PLEX — authenticity is matching utility content.", "body": "545 impressions and 19 engagements for a casual 'rainy day vibe coding with Claude' post vs. 346 impressions and 12 engagements for the structured PLEX tool announcement. This suggests your audience responds to personality + tool combination more than structured announcements alone. Recommendation: combine both formats — lead with a relatable moment, then reveal the tool or output. Test this hybrid format on the next post." },
+    { "num": "6 of 6", "title": "Premium decision point: ~July 19. Signal quality remains strong.", "body": "Ivan Schwartz (AtlasIED, 72 mutuals), Hunter Petrie RCDD (1st degree), Nate Lum RCDD (32 mutuals), KPG99 INC recruiter named — all visible this snapshot. Two consecutive weeks of 60%+ impression growth and consistent named recruiter visibility at $30/mo is tracking as justified. Key variable: does Anthropic, AtlasIED, or another named viewer initiate contact before July? If yes, Premium has paid for itself. If no contact by late June, reassess." }
+  ],
+  "captureMethod": {
+    "method": "Claude in Chrome — DOM extraction via LinkedIn analytics pages",
+    "snapshotDate": "2026-05-25",
+    "baseline": "2026-05-21",
+    "cadence": "Monday 8 AM weekly",
+    "outputFile": "outputs/linkedin_snapshots/snapshot_2026-05-25.md"
+  }
+}

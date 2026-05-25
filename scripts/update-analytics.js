@@ -18,7 +18,7 @@ const { execSync } = require('child_process');
 // ── Config ─────────────────────────────────────────────────────────────────
 const SITE_ID   = 'ed2f9096-6254-41af-8d01-6a1c144c5eb2';
 const ROOT      = path.resolve(__dirname, '..');
-const HTML_FILE = path.join(ROOT, 'site', 'analytics.html');
+const DATA_FILE = path.join(ROOT, 'site', 'data', 'analytics-data.json');
 const LOG_FILE  = path.join(__dirname, 'logs', `${today()}.log`);
 const MODEL     = 'claude-sonnet-4-6';
 const API_BASE  = 'https://api.netlify.com/api/v1';
@@ -113,38 +113,35 @@ async function fetchAnalytics() {
   };
 }
 
-// ── Regenerate HTML ─────────────────────────────────────────────────────────
-async function regenerateHTML(data) {
+// ── Regenerate JSON ──────────────────────────────────────────────────────────
+async function regenerateData(data) {
   if (!process.env.ANTHROPIC_API_KEY) die('ANTHROPIC_API_KEY not set.');
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  const currentHTML = fs.readFileSync(HTML_FILE, 'utf8');
+  const schema = fs.readFileSync(DATA_FILE, 'utf8');
 
-  log('Calling Claude to regenerate analytics.html...');
+  log('Calling Claude to regenerate analytics-data.json...');
 
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 8000,
     messages: [{
       role: 'user',
-      content: `Update this Netlify analytics dashboard HTML with fresh data.
-Preserve ALL styling, CSS, password gate, nav, and structure exactly.
-Update all metrics, dates, charts, tables with the new data below.
+      content: `Transform this Netlify analytics API data into JSON matching this schema exactly.
 Today: ${today()}. Window: ${data.window.from} to ${data.window.to}.
-Return ONLY complete HTML, no explanation, no markdown fences.
+Generate insights and outstanding items based on the data patterns.
+Return ONLY valid JSON, no explanation, no markdown fences.
 
-CURRENT HTML:
-${currentHTML}
+SCHEMA (match this structure exactly):
+${schema}
 
-FRESH NETLIFY DATA (JSON):
+FRESH NETLIFY DATA:
 ${JSON.stringify(data, null, 2).slice(0, 6000)}`
     }]
   });
 
-  const newHTML = response.content[0].text.trim();
-  if (!newHTML.startsWith('<!DOCTYPE') && !newHTML.startsWith('<html')) {
-    die('Claude did not return valid HTML. Aborting.');
-  }
-  return newHTML;
+  const raw = response.content[0].text.trim().replace(/^```json|```$/g, '').trim();
+  try { JSON.parse(raw); } catch(e) { die('Claude did not return valid JSON. Aborting: ' + e.message); }
+  return raw;
 }
 
 // ── Deploy ──────────────────────────────────────────────────────────────────
@@ -163,14 +160,14 @@ function deploy() {
   log('=== Netlify analytics update started ===');
 
   const data = await fetchAnalytics();
-  const newHTML = await regenerateHTML(data);
+  const newData = await regenerateData(data);
 
-  const backup = HTML_FILE.replace('.html', `.bak.${today()}.html`);
-  fs.copyFileSync(HTML_FILE, backup);
+  const backup = DATA_FILE.replace('.json', `.bak.${today()}.json`);
+  fs.copyFileSync(DATA_FILE, backup);
   log(`Backed up to ${backup}`);
 
-  fs.writeFileSync(HTML_FILE, newHTML, 'utf8');
-  log('analytics.html updated.');
+  fs.writeFileSync(DATA_FILE, newData, 'utf8');
+  log('analytics-data.json updated.');
 
   deploy();
   log('=== Netlify analytics update complete ===');

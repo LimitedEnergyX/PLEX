@@ -1,0 +1,13 @@
+{
+  "name": "lex-scripts",
+  "version": "1.0.0",
+  "description": "LEX automation scripts",
+  "scripts": {
+    "linkedin": "node update-linkedin.js",
+    "linkedin:setup": "node update-linkedin.js --setup"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.97.1",
+    "playwright": "^1.52.0"
+  }
+}
