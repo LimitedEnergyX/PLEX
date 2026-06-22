@@ -1,0 +1,15 @@
+/* TEAM */
+Owner / Engineer: Shawn C. Tovey, RCDD
+Contact: stovey [at] limitedenergy.net
+LinkedIn: https://www.linkedin.com/in/mctovey/
+Location: United States
+
+/* THANKS */
+BICSI — for the RCDD credential program
+Netlify — hosting and edge delivery
+Anthropic — Claude, AI tooling and automation
+
+/* SITE */
+Last update: 2026-05-25
+Language: English
+Doctype: HTML5

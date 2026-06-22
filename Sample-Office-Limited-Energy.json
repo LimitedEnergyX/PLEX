@@ -1,0 +1,665 @@
+{
+  "_lex_est": {
+    "signature": "LEX-EST",
+    "version": "1.2",
+    "exported": "2026-05-20T12:00:00.000Z"
+  },
+  "_credit": "Compiled by Limited Energy eXperts · limitedenergy.net · Open reuse permitted with credit.",
+  "project": {
+    "name": "Sample Office Building — Limited Energy Systems",
+    "client": "Sample Client",
+    "location": "Anytown, USA",
+    "estimator": "Shawn C. Tovey, RCDD",
+    "proposalDate": "2026-05-20",
+    "validUntil": "2026-06-20",
+    "scope": "Furnish, install, terminate, test, and certify all limited energy infrastructure including structured cabling, fiber backbone, and physical security rough-in as described herein. Work includes one Equipment Room (ER) and one Telecom Room (TR). Contractor scope: all cable, terminations, certification, labeling, rack buildout, fiber backbone including fusion splicing, camera mounting, cable routing, and connectivity verification. Cameras pointed in general direction of intended coverage area.",
+    "exclusions": "Network electronics and IT equipment (provided, installed, and programmed by Owner's IT).\nPoE switching for cameras (Owner's IT or security VAR).\nIP cameras and VMS server (furnished by Owner's security VAR).\nCamera programming, final aiming, and commissioning (Owner's security VAR).\nBuilding ground connection to PBB (by Electrical Contractor / GC).\nConduit unless specifically noted.",
+    "notes": "Average horizontal run: 175 ft including vertical drops and routing slack. Fiber backbone: 300 ft assumed. Pulling productivity: 8 hrs per 1,000 ft of ethernet; 16 hrs per 1,000 ft of fiber. Termination includes both ends (outlet and patch panel). 1-ft color-matched patch cables at headend; 3-meter color-matched patch cables at all device locations. No labor doubling: WBS items carry all labor, materials tab carries hardware only."
+  },
+  "schedule": {
+    "targetWorkingDays": 30,
+    "workweekPattern": "5x8",
+    "workweek": {
+      "hoursPerDay": 8,
+      "daysPerWeek": 5,
+      "overtimeMode": "federal",
+      "overtimeMultiplier": 1.5,
+      "doubletimeMultiplier": 2.0
+    },
+    "baselineCrew": 3
+  },
+  "jobType": {
+    "mode": "local",
+    "remote": {
+      "travelDaysEachWay": 1,
+      "perDiemPerTechPerDay": 75,
+      "hotelPerTechPerNight": 150,
+      "airfarePerTechRoundTrip": 0
+    }
+  },
+  "crew": {
+    "field": [
+      {"id": 1, "role": "Lead Tech",  "costRate": 60, "sellRate": 95},
+      {"id": 2, "role": "Tech II",    "costRate": 50, "sellRate": 80},
+      {"id": 3, "role": "Tech I",     "costRate": 40, "sellRate": 70},
+      {"id": 4, "role": "Helper",     "costRate": 35, "sellRate": 55}
+    ],
+    "mgmt": [
+      {"id": 6, "role": "Project Manager",   "costRate": 85, "sellRate": 145},
+      {"id": 7, "role": "Project Engineer",  "costRate": 95, "sellRate": 175},
+      {"id": 8, "role": "Foreman",           "costRate": 65, "sellRate": 105}
+    ],
+    "vehicleAdder": {"perHour": 10, "description": "Truck / tools"}
+  },
+  "settings": {
+    "overheadPct": 0.15,
+    "marginPct": 0.20,
+    "inflationFactor": 1.10
+  },
+  "wbs": {
+    "sections": [
+      {
+        "id": "000", "name": "Mobilization", "collapsed": false,
+        "items": [
+          {
+            "id": 1, "description": "Site mobilization, equipment staging, owner coordination meeting",
+            "labor": {"qty": 1, "hoursEach": 8, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "First-day walkthrough, pathway identification, foreman orientation"
+          },
+          {
+            "id": 2, "description": "Pre-construction coordination — submittals, RFIs, drawings review",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 6},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "PM reviews plans, submits product submittals, coordinates with GC and EE"
+          }
+        ]
+      },
+      {
+        "id": "100", "name": "Supports", "collapsed": false,
+        "items": [
+          {
+            "id": 3, "description": "J-hook installation — horizontal cable pathway, ER side",
+            "labor": {"qty": 1, "hoursEach": 16, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Drop ceiling, open plenum, and above-ceiling runs feeding ER"
+          },
+          {
+            "id": 4, "description": "J-hook installation — horizontal cable pathway, TR side",
+            "labor": {"qty": 1, "hoursEach": 8, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Runs feeding TR and in-room cable management"
+          },
+          {
+            "id": 5, "description": "Firestop sleeves and penetration sealing",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Fire-rated wall and floor penetrations per AHJ"
+          },
+          {
+            "id": 6, "description": "Foreman supervision — supports",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 8},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Foreman oversight of pathway installation and firestop coordination"
+          }
+        ]
+      },
+      {
+        "id": "200", "name": "Copper Backbone", "collapsed": false,
+        "items": []
+      },
+      {
+        "id": "300", "name": "Fiber Backbone", "collapsed": false,
+        "items": [
+          {
+            "id": 7, "description": "Pull OS2 12-strand plenum armored fiber — ER to TR (~300 ft)",
+            "labor": {"qty": 1, "hoursEach": 5, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "300 ft x 16 hrs/1000 ft = 4.8 hrs, rounded to 5. Tech I pulls; Lead Tech supervises fiber pull."
+          },
+          {
+            "id": 8, "description": "Fusion splice OS2 strands at ER FDU (per strand)",
+            "labor": {"qty": 12, "hoursEach": 0.5, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "LC pigtail splice-on. OTDR verified after splicing."
+          },
+          {
+            "id": 9, "description": "Fusion splice OS2 strands at TR FDU (per strand)",
+            "labor": {"qty": 12, "hoursEach": 0.5, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "LC pigtail splice-on. OTDR verified after splicing."
+          },
+          {
+            "id": 10, "description": "Lead Tech oversight — fiber pull setup and splice equipment staging",
+            "labor": {"qty": 1, "hoursEach": 3, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Setup of pulling equipment, coordination of pull with Tech I, splice machine calibration"
+          }
+        ]
+      },
+      {
+        "id": "400", "name": "Horizontal", "collapsed": false,
+        "items": [
+          {
+            "id": 11, "description": "PULL — Blue CAT6 plenum, ER data drops (120 runs x 175 ft avg)",
+            "labor": {"qty": 120, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "175 ft / 1000 x 8 hrs/1000ft = 1.4 hrs/run. Tech I pulls; Helper assists on longer runs."
+          },
+          {
+            "id": 12, "description": "PULL — Orange CAT6A plenum, ER WAP drops (10 runs x 175 ft avg)",
+            "labor": {"qty": 10, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Same pull rate as CAT6. Maintain bend radius for CAT6A throughout."
+          },
+          {
+            "id": 13, "description": "PULL — Purple CAT6 plenum, ER camera drops (10 runs x 175 ft avg)",
+            "labor": {"qty": 10, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "5 indoor + 5 outdoor camera locations served from ER"
+          },
+          {
+            "id": 14, "description": "PULL — Blue CAT6 plenum, TR data drops (56 runs x 175 ft avg)",
+            "labor": {"qty": 56, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "175 ft / 1000 x 8 hrs/1000ft = 1.4 hrs/run"
+          },
+          {
+            "id": 15, "description": "PULL — Orange CAT6A plenum, TR WAP drops (6 runs x 175 ft avg)",
+            "labor": {"qty": 6, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Maintain pair geometry through all bends for CAT6A performance"
+          },
+          {
+            "id": 16, "description": "PULL — Purple CAT6 plenum, TR camera drops (10 runs x 175 ft avg)",
+            "labor": {"qty": 10, "hoursEach": 1.4, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "5 indoor + 5 outdoor camera locations served from TR"
+          },
+          {
+            "id": 17, "description": "TERMINATE — Blue CAT6, ER data drops (both ends per run)",
+            "labor": {"qty": 120, "hoursEach": 0.4, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "~24 min/run both ends. Keystone jack at outlet, 110 IDC punch at patch panel. Label both ends."
+          },
+          {
+            "id": 18, "description": "TERMINATE — Orange CAT6A, ER WAP drops (both ends per run)",
+            "labor": {"qty": 10, "hoursEach": 0.75, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "CAT6A termination requires extra care — pair untwist <13mm, geometry maintained to jack body"
+          },
+          {
+            "id": 19, "description": "TERMINATE — Purple CAT6, ER camera drops (both ends per run)",
+            "labor": {"qty": 10, "hoursEach": 0.4, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Keystone or pigtail at camera end; 110 IDC at patch panel. Label per camera ID."
+          },
+          {
+            "id": 20, "description": "TERMINATE — Blue CAT6, TR data drops (both ends per run)",
+            "labor": {"qty": 56, "hoursEach": 0.4, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Keystone jack at outlet, 110 IDC punch at patch panel. Label both ends."
+          },
+          {
+            "id": 21, "description": "TERMINATE — Orange CAT6A, TR WAP drops (both ends per run)",
+            "labor": {"qty": 6, "hoursEach": 0.75, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "CAT6A termination — pair geometry critical"
+          },
+          {
+            "id": 22, "description": "TERMINATE — Purple CAT6, TR camera drops (both ends per run)",
+            "labor": {"qty": 10, "hoursEach": 0.4, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Label per camera ID. Patch panel end punched; camera end keystoned or pigtailed."
+          },
+          {
+            "id": 23, "description": "Foreman supervision — horizontal cabling (pull and terminate)",
+            "labor": {"qty": 1, "hoursEach": 40, "roleId": 8},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Foreman oversight of all pulling crews and termination quality. ~10% of section labor."
+          }
+        ]
+      },
+      {
+        "id": "500", "name": "TR Buildout", "collapsed": false,
+        "items": [
+          {
+            "id": 24, "description": "Install 42U open-frame equipment rack — TR",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Level, plumb, and anchor to floor"
+          },
+          {
+            "id": 25, "description": "Install 24-port CAT6 keystone patch panels — TR (x2)",
+            "labor": {"qty": 2, "hoursEach": 1.5, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "72 active ports. Punch down and label all ports per project naming convention."
+          },
+          {
+            "id": 26, "description": "Install 1U fiber distribution unit (FDU/LIU) — TR",
+            "labor": {"qty": 1, "hoursEach": 2.0, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Install FDU, insert LC SM adapter panel, dress pigtails into splice tray"
+          },
+          {
+            "id": 27, "description": "Dress, route, and manage all cables to rack — TR",
+            "labor": {"qty": 1, "hoursEach": 8, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Velcro bundling by color group, side dressing, patch panel fanout"
+          },
+          {
+            "id": 28, "description": "Install 1U horizontal cable managers / brush guards — TR",
+            "labor": {"qty": 3, "hoursEach": 0.25, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "One above each patch panel row"
+          },
+          {
+            "id": 29, "description": "Install 1-ft color-matched patch cables at headend — TR (72 total)",
+            "labor": {"qty": 72, "hoursEach": 0.05, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "56 blue + 6 orange + 10 purple. Patch panel to Owner's switch. Tech I installs."
+          },
+          {
+            "id": 30, "description": "Foreman supervision — TR buildout",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 8},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Foreman oversight of rack installation, cable dressing, and headend appearance"
+          }
+        ]
+      },
+      {
+        "id": "600", "name": "ER Buildout", "collapsed": false,
+        "items": [
+          {
+            "id": 31, "description": "Install 42U open-frame equipment rack — ER",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Level, plumb, anchor. Coordinate with Owner's IT for VMS server clearance."
+          },
+          {
+            "id": 32, "description": "Install 24-port CAT6 keystone patch panels — ER (x4)",
+            "labor": {"qty": 4, "hoursEach": 1.5, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "140 active ports. Punch down and label all ports per project naming convention."
+          },
+          {
+            "id": 33, "description": "Install 1U fiber distribution unit (FDU/LIU) — ER",
+            "labor": {"qty": 1, "hoursEach": 2.0, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Install FDU, insert LC SM adapter panel, dress pigtails into splice tray"
+          },
+          {
+            "id": 34, "description": "Dress, route, and manage all cables to rack — ER",
+            "labor": {"qty": 1, "hoursEach": 12, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Higher cable density than TR. Velcro bundling by color, side dressing, patch panel fanout."
+          },
+          {
+            "id": 35, "description": "Install 1U horizontal cable managers / brush guards — ER",
+            "labor": {"qty": 5, "hoursEach": 0.25, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "One above each patch panel row"
+          },
+          {
+            "id": 36, "description": "Install 1-ft color-matched patch cables at headend — ER (140 total)",
+            "labor": {"qty": 140, "hoursEach": 0.05, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "120 blue + 10 orange + 10 purple. Patch panel to Owner's switch. Tech I installs."
+          },
+          {
+            "id": 37, "description": "Foreman supervision — ER buildout",
+            "labor": {"qty": 1, "hoursEach": 6, "roleId": 8},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Higher supervision hours due to larger cable volume and 4-panel rack density"
+          }
+        ]
+      },
+      {
+        "id": "700", "name": "Testing", "collapsed": false,
+        "items": [
+          {
+            "id": 38, "description": "CAT6 cable certification — all horizontal data and camera runs (216 total)",
+            "labor": {"qty": 216, "hoursEach": 0.25, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "120+10+10 ER + 56+10 TR = 216 runs. TIA-568 CAT6 pass/fail. PDF test reports by ID."
+          },
+          {
+            "id": 39, "description": "CAT6A cable certification — WAP drops (16 total)",
+            "labor": {"qty": 16, "hoursEach": 0.3, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "10+6 WAP drops. TIA-568 CAT6A / 10GBase-T. Alien crosstalk checked. PDF reports."
+          },
+          {
+            "id": 40, "description": "Fiber OTDR testing — OS2 12-strand, both directions (24 strand-directions)",
+            "labor": {"qty": 24, "hoursEach": 0.25, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "12 strands x 2 directions. Splice loss and end-to-end IL documented."
+          },
+          {
+            "id": 41, "description": "Labeling verification and test report compilation",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Verify all labels match test IDs. Compile PDF report package for Owner."
+          }
+        ]
+      },
+      {
+        "id": "800", "name": "Ancillary", "collapsed": false,
+        "items": [
+          {
+            "id": 42, "description": "Mount and connect indoor IP cameras — mount provided hardware, terminate cable tail, verify PoE link",
+            "labor": {"qty": 10, "hoursEach": 1.5, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "5 to ER, 5 to TR. Camera hardware and mount provided by Owner's security VAR. Contractor mounts device, terminates cable, verifies link light and PoE. General pointing only — final aiming and programming by VAR."
+          },
+          {
+            "id": 43, "description": "Mount and connect outdoor IP cameras — mount provided hardware, weatherproof cable entry, verify PoE link",
+            "labor": {"qty": 10, "hoursEach": 2.0, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "5 to ER, 5 to TR. Camera hardware and mount provided by Owner's security VAR. Contractor mounts device, seals cable entry, verifies link. General pointing only."
+          },
+          {
+            "id": 44, "description": "Install 3-meter color-matched patch cables at all device locations (204 total)",
+            "labor": {"qty": 204, "hoursEach": 0.05, "roleId": 3},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "120 blue (data ER) + 5 orange (WAPs ER) + 10 purple (cameras ER) + 56 blue (data TR) + 3 orange (WAPs TR) + 10 purple (cameras TR) = 204. Color-matched to horizontal cable."
+          }
+        ]
+      },
+      {
+        "id": "900", "name": "Bonding / Grounding", "collapsed": false,
+        "items": [
+          {
+            "id": 45, "description": "Install Primary Bonding Busbar (PBB / TGB) — ER",
+            "labor": {"qty": 1, "hoursEach": 2.0, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Wall-mounted TGB per BICSI TDMM and NEC Article 800. EC/GC responsible for connection to building ground."
+          },
+          {
+            "id": 46, "description": "Install Primary Bonding Busbar (PBB / TGB) — TR",
+            "labor": {"qty": 1, "hoursEach": 1.5, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Wall-mounted TGB. EC/GC responsible for connection to building ground."
+          },
+          {
+            "id": 47, "description": "Install Secondary Bonding Busbar (SBB) at rack — ER",
+            "labor": {"qty": 1, "hoursEach": 1.0, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Rack-mounted busbar. Equipment and rack bonded to SBB; SBB bonded to PBB."
+          },
+          {
+            "id": 48, "description": "Install Secondary Bonding Busbar (SBB) at rack — TR",
+            "labor": {"qty": 1, "hoursEach": 1.0, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Rack-mounted busbar. Equipment and rack bonded to SBB; SBB bonded to PBB."
+          },
+          {
+            "id": 49, "description": "Install bonding conductors — rack to SBB, SBB to PBB, both rooms",
+            "labor": {"qty": 1, "hoursEach": 2.0, "roleId": 1},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "#6 AWG min or per EE specification. EC/GC provides and connects building ground to PBB."
+          }
+        ]
+      },
+      {
+        "id": "1000", "name": "Demobilization", "collapsed": false,
+        "items": [
+          {
+            "id": 50, "description": "Site cleanup and debris removal",
+            "labor": {"qty": 1, "hoursEach": 8, "roleId": 2},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "All cable scraps, packaging, and job waste removed. Rooms left broom clean."
+          },
+          {
+            "id": 51, "description": "Field as-built markup and punchlist walk",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 8},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Foreman marks up drawings with actual cable routes and outlet IDs. Punchlist items noted."
+          },
+          {
+            "id": 52, "description": "As-built drawings and record document preparation",
+            "labor": {"qty": 1, "hoursEach": 8, "roleId": 7},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "Project Engineer converts Foreman markups to CAD as-builts. Cable schedule, outlet schedule, and fiber document updated."
+          },
+          {
+            "id": 53, "description": "Submittal package, warranty documentation, and project closeout",
+            "labor": {"qty": 1, "hoursEach": 4, "roleId": 6},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "PM compiles final submittal package: test reports, warranties, as-builts, O&M. Delivered to Owner."
+          },
+          {
+            "id": 54, "description": "Final billing and project closeout",
+            "labor": {"qty": 1, "hoursEach": 2, "roleId": 6},
+            "materials": {"qty": 0, "unitCost": 0},
+            "notes": "PM prepares final invoice, confirms scope completion with Owner/GC, issues lien waiver."
+          }
+        ]
+      }
+    ]
+  },
+  "odc": {
+    "rentals": [],
+    "subcontractors": []
+  },
+  "materials": {
+    "items": [
+      {
+        "id": 1, "category": "Cable / Horizontal",
+        "description": "CAT6 Plenum — Blue (data drops, ER + TR combined)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 0.30, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ft", "hoursEach": 0, "roleId": 2,
+        "qty": 35500,
+        "notes": "(120+56) runs x 175 ft avg x 1.15 waste = 35,420 ft. Rounded to 35,500."
+      },
+      {
+        "id": 2, "category": "Cable / Horizontal",
+        "description": "CAT6A Plenum — Orange (WAP drops, ER + TR combined)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 0.65, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ft", "hoursEach": 0, "roleId": 2,
+        "qty": 3300,
+        "notes": "(10+6) runs x 175 ft avg x 1.15 waste = 3,220 ft. Rounded to 3,300."
+      },
+      {
+        "id": 3, "category": "Cable / Horizontal",
+        "description": "CAT6 Plenum — Purple (camera drops, ER + TR combined)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 0.30, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ft", "hoursEach": 0, "roleId": 2,
+        "qty": 4100,
+        "notes": "20 camera runs x 175 ft avg x 1.15 waste = 4,025 ft. Rounded to 4,100."
+      },
+      {
+        "id": 4, "category": "Cable / Backbone",
+        "description": "OS2 12-Strand Plenum Armored — ER to TR backbone",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 1.92, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ft", "hoursEach": 0, "roleId": 1,
+        "qty": 350,
+        "notes": "~300 ft run + slack loops at each FDU + contingency"
+      },
+      {
+        "id": 5, "category": "Patch Panels",
+        "description": "24-Port CAT6 Keystone Patch Panel (ER x4, TR x2)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 75.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 6,
+        "notes": "4 in ER (140 active ports), 2 in TR (72 active ports)"
+      },
+      {
+        "id": 6, "category": "Fiber Hardware",
+        "description": "1U Fiber Distribution Unit (FDU / LIU) — one per room",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 250.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 1,
+        "qty": 2,
+        "notes": "ER + TR"
+      },
+      {
+        "id": 7, "category": "Fiber Hardware",
+        "description": "LC Adapter Panel 12-Strand SM (OS2) — one per FDU",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 89.62, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 1,
+        "qty": 2,
+        "notes": "One per FDU (ER + TR)"
+      },
+      {
+        "id": 8, "category": "Fiber Hardware",
+        "description": "LC Pigtail SM 12-Strand 1m (fusion splice assemblies)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 211.62, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 1,
+        "qty": 2,
+        "notes": "One 12-strand pigtail assembly per end (ER + TR). Price = 2x 6-strand baseline."
+      },
+      {
+        "id": 9, "category": "Fiber Hardware",
+        "description": "Fusion Splice Tray — one per FDU",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 250.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 1,
+        "qty": 2,
+        "notes": "ER + TR"
+      },
+      {
+        "id": 10, "category": "Connectors & Jacks",
+        "description": "CAT6 Keystone Jack — data drops and camera locations",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 4.91, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 216,
+        "notes": "120+56 data drops + 10+10 camera drops = 216 jacks"
+      },
+      {
+        "id": 11, "category": "Connectors & Jacks",
+        "description": "CAT6A Keystone Jack — WAP drops (orange)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 8.87, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 16,
+        "notes": "10+6 WAP drops = 16 jacks"
+      },
+      {
+        "id": 12, "category": "Faceplates & Boxes",
+        "description": "Single-Gang 2-Port Faceplate — data locations",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 2.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 100,
+        "notes": "Confirm qty from outlet schedule. Estimate for 176-drop scope."
+      },
+      {
+        "id": 13, "category": "Faceplates & Boxes",
+        "description": "Surface-Mount Biscuit Plenum — camera locations",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 2.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 20,
+        "notes": "One per camera. Cable service loop and strain relief."
+      },
+      {
+        "id": 14, "category": "Patch Cables",
+        "description": "CAT6 Patch Cable 1ft — Blue (headend, data drops)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 3.23, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 176,
+        "notes": "120 ER + 56 TR. Patch panel to Owner's switch. Color-matched."
+      },
+      {
+        "id": 15, "category": "Patch Cables",
+        "description": "CAT6A Patch Cable 1ft — Orange (headend, WAP drops)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 4.50, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 16,
+        "notes": "10 ER + 6 TR. Patch panel to Owner's PoE switch."
+      },
+      {
+        "id": 16, "category": "Patch Cables",
+        "description": "CAT6 Patch Cable 1ft — Purple (headend, camera drops)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 3.23, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 20,
+        "notes": "10 ER + 10 TR. Patch panel to Owner's camera PoE switch."
+      },
+      {
+        "id": 17, "category": "Patch Cables",
+        "description": "CAT6 Patch Cable 3m — Blue (device side, data drops)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 5.95, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 176,
+        "notes": "One per data outlet. Faceplate to PC/phone/printer. Color-matched."
+      },
+      {
+        "id": 18, "category": "Patch Cables",
+        "description": "CAT6A Patch Cable 3m — Orange (device side, WAPs)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 8.20, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 8,
+        "notes": "One per WAP (5 ER + 3 TR = 8 total). Outlet to WAP."
+      },
+      {
+        "id": 19, "category": "Patch Cables",
+        "description": "CAT6 Patch Cable 3m — Purple (device side, cameras)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 5.95, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 3,
+        "qty": 20,
+        "notes": "One per camera (10 indoor + 10 outdoor). Biscuit to camera. Color-matched."
+      },
+      {
+        "id": 20, "category": "Cable Management",
+        "description": "J-Hook 2\" (cable pathway supports)",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 1.20, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 400,
+        "notes": "Estimate for horizontal pathway. Adjust from field takeoff."
+      },
+      {
+        "id": 21, "category": "Cable Management",
+        "description": "1U Horizontal Cable Manager / Brush Guard",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 35.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 8,
+        "notes": "4 ER (above each panel) + 3 TR (above each panel) + 1 spare"
+      },
+      {
+        "id": 22, "category": "Misc",
+        "description": "Primary Bonding Busbar (PBB / TGB) — wall-mounted, per room",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 85.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 1,
+        "qty": 2,
+        "notes": "One per room (ER + TR). EC/GC connects to building ground. Contractor installs busbar and bonds equipment."
+      },
+      {
+        "id": 23, "category": "Misc",
+        "description": "Secondary Bonding Busbar (SBB) — rack-mounted, per room",
+        "manufacturer": "", "model": "", "partNumber": "",
+        "sourcePrice": 45.00, "sourceYear": 2023, "markup": 1.33,
+        "unit": "ea", "hoursEach": 0, "roleId": 2,
+        "qty": 2,
+        "notes": "One per rack (ER + TR). Equipment bonded to SBB; SBB bonded to PBB via #6 AWG or per EE spec."
+      }
+    ]
+  },
+  "summary": {
+    "finalPrice": 0, "directCostSubtotal": 0, "directSellSubtotal": 0,
+    "overheadCost": 0, "overheadSell": 0, "marginAmount": 0,
+    "totalCost": 0, "totalProfit": 0, "effectiveMargin": 0,
+    "totalHours": 0, "totalDays": 0, "requiredCrew": 0,
+    "isAccelerated": false, "otPremiumCost": 0, "otPremiumSell": 0,
+    "dtPremiumCost": 0, "dtPremiumSell": 0, "remoteODC": 0,
+    "perSection": []
+  }
+}

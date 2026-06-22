@@ -1,0 +1,17 @@
+{
+  "name": "Limited Energy eXperts",
+  "short_name": "LEX",
+  "description": "Free engineering tools for Division 27/28 low-voltage design by Shawn C. Tovey, RCDD.",
+  "start_url": "/plex",
+  "display": "standalone",
+  "background_color": "#0E1B30",
+  "theme_color": "#0E1B30",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

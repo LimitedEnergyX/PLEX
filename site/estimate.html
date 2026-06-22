@@ -9,16 +9,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ECRHM5MP0Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ECRHM5MP0Y');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Estimator v1.25 — Limited Energy Job Estimation | Limited Energy eXperts</title>
 <meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
 <meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
 <meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
 <meta property="og:type" content="website">
-<meta name="robots" content="noindex">
+<meta property="og:url" content="https://limitedenergy.net/estimate">
+<meta property="og:site_name" content="Limited Energy eXperts">
+<meta property="og:image" content="https://limitedenergy.net/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Estimator — Limited Energy Job Estimation">
+<meta name="twitter:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Built by an RCDD for Division 27/28 estimating.">
+<meta name="twitter:image" content="https://limitedenergy.net/og-image.png">
+<link rel="canonical" href="https://limitedenergy.net/estimate">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "The Estimator",
+  "alternateName": "Limited Energy Job Estimator",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web Browser",
+  "url": "https://limitedenergy.net/estimate",
+  "description": "Schedule-driven crew sizing and job estimation for Division 27/28 low-voltage work. BICSI-coded scope, federal and California overtime math, local and remote cost variants. Client-side JSON save/load.",
+  "version": "1.25",
+  "featureList": ["Schedule-driven crew sizing", "BICSI-coded scope items", "Federal and California overtime calculation", "Local and remote cost variants", "Client-side JSON save/load", "Division 27/28 estimating"],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Shawn C. Tovey", "honorificSuffix": "RCDD", "url": "https://limitedenergy.net" },
+  "publisher": { "@type": "Organization", "name": "Limited Energy eXperts", "url": "https://limitedenergy.net" }
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0A1628">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@500;600&family=Oswald:wght@300;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -314,21 +350,36 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 <style>
 #lex-sitenav{background:var(--navy);border-bottom:1px solid rgba(200,16,46,0.2);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:38px;position:sticky;top:0;z-index:9999;}
 #lex-sitenav .lsn-brand{font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:0.2em;color:var(--red);text-decoration:none;}
-#lex-sitenav .lsn-links{display:flex;gap:1.5rem;align-items:center;}
-#lex-sitenav .lsn-links a{font-family:var(--label);font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;transition:color 0.15s;}
-#lex-sitenav .lsn-links a:hover{color:var(--white);}
-#lex-sitenav .lsn-links a.lsn-active{color:var(--red);}
-@media(max-width:640px){#lex-sitenav .lsn-links a.lsn-hide{display:none;}}
+#lex-sitenav .lsn-right{display:flex;align-items:center;gap:0.75rem;}
+.lsn-nav-cta{font-family:var(--label);font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);text-decoration:none;border:1px solid var(--red);padding:0.3rem 0.75rem;border-radius:2px;transition:background 0.15s,color 0.15s;white-space:nowrap;}
+.lsn-nav-cta:hover{background:var(--red);color:var(--white);}
+.lsn-ham{display:flex;flex-direction:column;justify-content:center;gap:4px;background:none;border:none;cursor:pointer;padding:3px;width:28px;height:28px;}
+.lsn-ham span{display:block;width:18px;height:2px;background:var(--gray-mid);border-radius:2px;transition:all 0.25s;}
+.lsn-ham.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.lsn-ham.open span:nth-child(2){opacity:0;}
+.lsn-ham.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.lsn-mob{display:none;position:fixed;top:38px;left:0;right:0;background:var(--navy-mid);border-bottom:1px solid rgba(200,16,46,0.2);z-index:9998;padding:1.25rem 1.5rem;flex-direction:column;}
+.lsn-mob.open{display:flex;}
+.lsn-mob a{font-family:var(--label);font-weight:600;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;padding:0.7rem 0;border-bottom:1px solid var(--border);transition:color 0.15s;}
+.lsn-mob a:last-child{border-bottom:none;}
+.lsn-mob a:hover{color:var(--white);}
 </style>
 <div id="lex-sitenav">
   <a href="/" class="lsn-brand">LEX</a>
-  <div class="lsn-links">
-    <a href="/" class="lsn-hide">Home</a>
-    <a href="/plex" class="lsn-hide">PLEX</a>
-    <a href="/estimate" class="lsn-active">Estimator</a>
-    <a href="/home-automation" class="lsn-hide">Home Automation</a>
-    <a href="/#contact" class="lsn-hide">Contact</a>
+  <div class="lsn-right">
+    <a href="/plex" class="lsn-nav-cta">Launch PLEX &nbsp;→</a>
+    <button class="lsn-ham" id="lsn-ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
+</div>
+<div class="lsn-mob" id="lsn-mob">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/plex">PLEX</a>
+  <a href="/estimate">The Estimator</a>
+  <a href="/home-automation">Home Automation</a>
+  <a href="/#contact">Contact</a>
 </div>
 <div id="header">
   <div class="header-inner">
@@ -595,6 +646,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
         <button class="hbtn" id="printInternalBtn">🖨 Print Internal</button>
       </div>
       <div style="font-family:var(--body);font-size:10px;color:var(--gray-mid);line-height:1.4;max-width:260px;text-align:right">Customer proposal hides cost and margin data. Internal bid report includes confidential cost, markup, margin, bid health, and risk data.</div>
+      <a href="/plex" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;transition:color 0.2s;text-align:right;" onmouseover="this.style.color='#C8102E'" onmouseout="this.style.color='var(--gray-mid)'">← Size the loads with PLEX</a>
     </div>
   </div>
   <div id="internal-watermark" style="display:none;background:rgba(245,158,11,0.12);border:1px solid var(--warn);color:var(--warn);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-align:center;padding:8px 12px;margin-bottom:14px;border-radius:4px;font-weight:700">⚠ INTERNAL BID REPORT &mdash; CONTAINS COST &amp; MARGIN &mdash; DO NOT SHARE WITH CUSTOMER</div>
@@ -2428,6 +2480,7 @@ function bindAll(){
 
   // Print — customer
   v('printBtn').addEventListener('click', () => {
+    gtag('event', 'tool_run', {tool_name: 'estimator', action: 'print_customer'});
     summaryView = 'customer';
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
@@ -2439,6 +2492,7 @@ function bindAll(){
 
   // Print — internal
   v('printInternalBtn').addEventListener('click', () => {
+    gtag('event', 'tool_run', {tool_name: 'estimator', action: 'print_internal'});
     summaryView = 'internal';
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
@@ -2819,6 +2873,14 @@ if(!state.project.proposalDate) state.project.proposalDate = new Date().toISOStr
 bindAll();
 render();
 updateSavedIndicator();
+const lsnHam = document.getElementById('lsn-ham');
+const lsnMob = document.getElementById('lsn-mob');
+lsnHam.addEventListener('click', () => { lsnHam.classList.toggle('open'); lsnMob.classList.toggle('open'); });
+document.addEventListener('click', e => { if (!lsnHam.contains(e.target) && !lsnMob.contains(e.target)) { lsnHam.classList.remove('open'); lsnMob.classList.remove('open'); } });
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('a[href^="mailto:"]');
+  if (a) gtag('event', 'email_click', {link_url: a.href});
+});
 </script>
 </body>
 </html>
