@@ -1,21 +1,19 @@
-# Netlify
-.netlify
+# PLEX — .gitignore
 
-# Node
-scripts/node_modules/
+# macOS
+.DS_Store
 
-# Browser session profile (LinkedIn login)
-scripts/linkedin-profile/
-
-# Logs
-scripts/logs/
-
-# Claude IDE
-.claude/
+# Windows
+Thumbs.db
 
 # Backup files
 *.bak.*
-site/*.bak.*
 
-# Source/working assets (large originals)
-site/HAAutomationBanner.JPEG
+# Node
+node_modules/
+
+# Netlify
+.netlify/
+
+# Claude Code
+.claude/
