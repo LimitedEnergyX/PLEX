@@ -200,7 +200,7 @@ input[type=checkbox]{width:auto;cursor:pointer;accent-color:var(--red);}
 .circuit-breaker{font-family:var(--mono);color:var(--red);font-weight:700;}
 .import-status{padding:10px;border-radius:4px;font-size:12px;margin-top:10px;font-family:var(--mono);}
 #intro-block{max-width:1200px;margin:18px auto 8px;padding:0 24px;font-family:var(--body);font-size:13px;color:var(--gray-light);line-height:1.7;}
-#intro-block .intro-lead{color:var(--white);font-size:14px;margin-bottom:10px;}
+#intro-block .intro-lead{color:var(--white);font-size:15px;margin-bottom:10px;text-align:center;}
 #intro-block .intro-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
 .intro-badge{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:4px 10px;border-radius:4px;background:transparent;cursor:pointer;transition:background 0.15s,color 0.15s;position:relative;}
 .intro-badge:hover{background:rgba(200,16,46,0.12);}
@@ -471,7 +471,6 @@ body{background:white !important;color:black !important;font-size:9pt;}
       </div>
     </div>
     <div class="header-actions">
-      <a href="/" style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;padding-right:0.75rem;border-right:1px solid var(--border2);margin-right:0.25rem;" onmouseover="this.style.color='#C8102E'" onmouseout="this.style.color='var(--gray-mid)'">← LEX</a>
       <span class="saved-indicator" id="savedInd">Unsaved</span>
       <button class="hbtn" id="newBtn">🗒 New</button>
       <button class="hbtn" id="templatesBtn">📋 Templates</button>
@@ -489,7 +488,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
 </div>
 <div id="intro-block">
   <div class="intro-lead">
-    PLEX sizes telecom room and equipment room infrastructure &mdash; power, UPS, generator, and cooling load &mdash; from a list of devices you actually plan to install. Add presets, edit quantities, review the summary, export a portable <code>.plex</code> file or print to PDF.
+    PLEX calculates power, UPS, generator, and cooling loads for telecom rooms and equipment rooms &mdash; built from the real devices you plan to install. Add equipment from the library or enter custom loads, review the full load summary, then export a portable <code>.plex</code> project file or print a design report.
   </div>
   <div class="intro-badges">
     <button class="intro-badge" id="badge-scope" onclick="toggleBadge('badge-scope')">
