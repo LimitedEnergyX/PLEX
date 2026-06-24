@@ -1186,7 +1186,7 @@ const TEMPLATES=[
   {id:9,name:"Operator Workstation",w:300,u:0,qty:2,v:120,loc:"wall",category:"Workstations (Wall)",poeC:false,poeS:false,poeP:0,poeB:0,cW:0,cVA:0,rtMin:0,ups:false,upsBacking:'none',circuitNotes:"",level:""}
 ]},
 {name:"Large SER",desc:"12 PoE switches · 2 ACS + 4 VMS servers · dual storage · dual UPS — 20–40+ kW",facilityType:'unknown',
- project:{name:'',room:'SER-1',building:'',floor:'',designer:'',date:'',notes:'Airport, hospital campus, or major government facility. Dual UPS and extended runtime are recommended for this facility type. Current model does not include A/B redundant rack feeds.',scheduleTitle:'SER Power Consumption & Circuit Schedule',rooms:[{type:'ser'}]},
+ project:{name:'',room:'SER-1',building:'',floor:'',designer:'',date:'',notes:'Airport, hospital campus, or major government facility. Dual UPS and extended runtime are recommended for this facility type.',scheduleTitle:'SER Power Consumption & Circuit Schedule',rooms:[{type:'ser'}]},
  settings:{powerFactor:0.9,ambientGain:10,demandFactor:1.00,growthFactor:1.35,upsLoadTarget:80,upsType:'security',runtimeTarget:60,inverterEfficiency:90},
  racks:[
   {id:1,label:'Rack 1 — Security Switching A / ACS',sizeU:42,voltage:208,notes:'4 PoE switches, ACS servers, UPS A',redundant:false,level:'',outletType:'NEMA L6-30R',circuitNum:''},
@@ -2367,8 +2367,8 @@ function exportDesignReport(_skipPrint){
         </div>
         <div>
           <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Est. UPS Runtime</div>
-          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.runtimeMin!=null?Math.round(s.runtimeMin)+' min':'&mdash;'}</div>
-          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.runtimeMin!=null?(s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; '+(sets.runtimeTarget||15)+'-min target met':'&#9888; '+(sets.runtimeTarget||15)+'-min target not met'):'No UPS load'}</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.runtimeMin!=null?(sets.growthFactor>1?Math.round(s.runtimeMin)+' min current / '+Math.round(s.runtimeAtGrowthMin)+' min growth':Math.round(s.runtimeMin)+' min'):'&mdash;'}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.runtimeMin!=null?(sets.growthFactor>1?((s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; Current target met':'&#9888; Current below target')+(s.runtimeAtGrowthMin<(sets.runtimeTarget||15)?'; &#9888; Growth below '+(sets.runtimeTarget||15)+'-min target':'; &#10003; Growth target met')):(s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; '+(sets.runtimeTarget||15)+'-min target met':'&#9888; '+(sets.runtimeTarget||15)+'-min target not met')):'No UPS load'}</div>
         </div>
         <div>
           <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Cooling Required</div>
@@ -2444,8 +2444,8 @@ function exportDesignReport(_skipPrint){
   );
   // Section 5 — Cooling
   const s5=sec('Section 5 &mdash; Cooling Estimates',
-    row('IT Equipment Heat (BTU/hr)',Math.round(s.itBtu).toLocaleString()+' BTU/hr')+
-    row('Design Load (1.25&#215; buffer + '+sets.ambientGain+'% ambient)',Math.round(s.recBtu).toLocaleString()+' BTU/hr')+
+    row('IT Equipment Heat, Diversity-Adjusted',Math.round(s.itBtu).toLocaleString()+' BTU/hr')+
+    row('Design Cooling Load (1.25&#215; buffer + '+sets.ambientGain+'% ambient allowance)',Math.round(s.recBtu).toLocaleString()+' BTU/hr')+
     row('Design Cooling Capacity',s.recTons.toFixed(2)+' tons')+
     row('Room W/U (density indicator)',s.roomWperU!=null?s.roomWperU.toFixed(1)+' W/U':'N/A')+
     (fp.coolingNote?row('Cooling Strategy Note',esc(fp.coolingNote)):'')+
@@ -2463,12 +2463,12 @@ function exportDesignReport(_skipPrint){
   // Section 7 — Equipment Schedule
   // Section 7 — Equipment Schedule (Excel-style LOAD + CIRCUITS)
   const s7=(()=>{
-    const thS='style="background:#1a2942;color:#fff;padding:3pt 5pt;font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-align:center;border:0.5pt solid #8a9db5;white-space:nowrap;"';
-    const tdS='style="padding:3pt 5pt;font-size:7pt;border:0.5pt solid #ddd;vertical-align:middle;"';
-    const tdN='style="padding:3pt 5pt;font-size:7pt;border:0.5pt solid #ddd;text-align:right;vertical-align:middle;font-family:monospace;"';
-    const grpS='style="background:#dce4ee;font-weight:700;font-size:7.5pt;padding:4pt 6pt;border:0.5pt solid #aab;letter-spacing:0.03em;"';
-    const subS='style="background:#eaeff5;font-weight:700;font-size:7pt;padding:3pt 5pt;border:0.5pt solid #bbc;text-align:right;"';
-    const totS='style="background:#1a2942;color:#fff;font-weight:700;font-size:8pt;padding:5pt 6pt;border:0.5pt solid #8a9db5;text-align:right;"';
+    const thS='style="background:#1a2942;color:#fff;padding:2px 3px;font-size:6pt;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-align:center;border:0.5pt solid #8a9db5;white-space:normal;line-height:1.05;"';
+    const tdS='style="padding:2px 3px;font-size:6.5pt;border:0.5pt solid #ddd;vertical-align:middle;line-height:1.05;"';
+    const tdN='style="padding:2px 3px;font-size:6.5pt;border:0.5pt solid #ddd;text-align:right;vertical-align:middle;font-family:monospace;white-space:nowrap;line-height:1.05;"';
+    const grpS='style="background:#dce4ee;font-weight:700;font-size:7pt;padding:2px 4px;border:0.5pt solid #aab;letter-spacing:0.03em;"';
+    const subS='style="background:#eaeff5;font-weight:700;font-size:6.5pt;padding:2px 3px;border:0.5pt solid #bbc;text-align:right;"';
+    const totS='style="background:#1a2942;color:#fff;font-weight:700;font-size:7.5pt;padding:3px 4px;border:0.5pt solid #8a9db5;text-align:right;"';
     let tbodies='';let gW=0;let gBtu=0;
     Object.values(s.perRack).forEach(rk=>{
       const r=rk.rack;let rkW=0;let rkRows='';
@@ -2541,13 +2541,14 @@ function exportDesignReport(_skipPrint){
       <td colspan="4" ${totS}></td>
     </tr></tbody>`;
     return sec('Section 7 &mdash; Power Consumption, Circuits &amp; Cooling Schedule',
-      '<div style="font-size:7pt;color:#666;margin-bottom:6pt;line-height:1.5;">Connected load includes UPS charger/input allowance (shown per rack). Watts = nameplate. A = W/V single-phase. Breaker at 125% per NEC 215.2. BTU/hr = W x 3.412.</div>'+
-      '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:7pt;">'+
+      '<div style="font-size:7pt;color:#666;margin-bottom:6pt;line-height:1.5;">Connected load includes UPS charger/input allowance (shown per rack). Watts = nameplate. A = W/V single-phase. Breaker values shown are preliminary planning values based on a 125% continuous-load allowance. Final branch circuit, feeder, conductor, and overcurrent protection sizing shall be by Electrical/EOR. BTU/hr = W × 3.412.</div>'+
+      '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:6.5pt;line-height:1.05;">'+
+      '<colgroup><col style="width:4%"><col style="width:13%"><col style="width:20%"><col style="width:4%"><col style="width:6%"><col style="width:5%"><col style="width:4%"><col style="width:7%"><col style="width:5%"><col style="width:8%"><col style="width:10%"><col style="width:8%"><col style="width:3%"><col style="width:3%"></colgroup>'+
       '<thead><tr>'+
       `<th ${thS}>Level</th><th ${thS}>Location</th><th ${thS}>Equipment</th>`+
       `<th ${thS}>V</th><th ${thS}>W/Unit</th><th ${thS}>A/Unit</th><th ${thS}>Qty</th>`+
       `<th ${thS}>Max W</th><th ${thS}>Max A</th><th ${thS}>BTU/hr</th>`+
-      `<th ${thS}>Outlet/Notes</th><th ${thS}>Circuit</th>`+
+      `<th ${thS}>Outlet</th><th ${thS}>CKT</th>`+
       `<th ${thS}>UPS</th><th ${thS}>GEN</th>`+
       `</tr></thead>${tbodies}</table></div>`
     );
@@ -2558,7 +2559,7 @@ function exportDesignReport(_skipPrint){
   if(s.upsBackedW===0&&s.totalW>0)autoNotes.push('No devices are tagged as UPS-backed. UPS sizing is not possible until devices are assigned backup status.');
   if(s.roomWperU>100)autoNotes.push(`High rack density (${s.roomWperU.toFixed(0)} W/U) requires coordination with MEP engineer for supplemental cooling.`);
   if(s.runtimeMin!=null&&s.runtimeMin<(sets.runtimeTarget||15)){const _rtN=sets.runtimeTarget||15;const _critN=(_rtN>=60||(state.project.intent?.recoveryObjective==='continuous'))&&s.runtimeMin<(_rtN*0.5);if(_critN){autoNotes.push(`Selected UPS battery capacity (${s.effectiveBatteryWh!=null?s.effectiveBatteryWh.toFixed(0):'—'} Wh) is insufficient to meet the ${_rtN}-minute runtime objective (estimated ${Math.round(s.runtimeMin)} min at planning load). Coordination with the electrical engineer and UPS vendor is required before design completion.`);}else{autoNotes.push(`Battery runtime shortfall of ${Math.abs(s.batteryDeltaWh||0).toFixed(0)} Wh. Additional battery capacity is required to meet the ${_rtN}-minute runtime target.`);}}
-  if(p.notes&&p.notes.toLowerCase().includes('dual ups')&&!state.racks.some(r=>r.redundant)){autoNotes.push('Project notes reference Dual UPS but no racks are flagged as Redundant in the current model. Enable the Redundant flag on appropriate racks after A/B UPS distribution is assigned.');}
+  if(p.notes&&p.notes.toLowerCase().includes('dual ups')&&!state.racks.some(r=>r.redundant)){autoNotes.push('Current model does not include A/B redundant rack feeds. Enable the Redundant flag on appropriate racks only after A/B UPS distribution is assigned.');}
   const noteHtml=p.notes?`<div class="rpt-notes-paragraph">${esc(p.notes).replace(/\n/g,'<br>')}</div>`:'';
   const autoHtml=autoNotes.length?`<ul style="font-size:8.5pt;color:#444;line-height:1.8;padding-left:14pt;">${autoNotes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:'';
   const s8=sec('Section 8 &mdash; Consultant Notes &amp; Assumptions',
@@ -2566,7 +2567,8 @@ function exportDesignReport(_skipPrint){
     `<div style="margin-top:10pt;"><div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#666;margin-bottom:4pt;">Designer Notes (handwritten):</div><div class="rpt-notes-box"></div></div>`+
     `<div class="rpt-disclaimer">This report was prepared using PLEX v2.68, a preliminary planning tool. All values are estimates based on entered equipment data and planning factors. Results must be verified against manufacturer specifications, coordinated MEP drawings, and applicable codes prior to construction document issuance. This document does not constitute an engineered design and shall not be used as a basis for construction without review and stamp from the Engineer of Record.<br><br>Prepared by: Shawn Tovey, ICT Design Consultant &amp; Physical Security Systems Designer &mdash; Limited Energy eXperts (limitedenergy.net)</div>`
   );
-  v('view-report').innerHTML=cover+s1+s2+s3+s4+s5+s6+s7+s8+`<div class="rpt-footer">PLEX v2.68 &mdash; Limited Energy eXperts &mdash; limitedenergy.net &mdash; Preliminary Planning Document &mdash; ${today}</div>`;
+  const s9=sec('Section 9 — Model Scope & Limitations','<p style="font-size:9pt;line-height:1.6;color:#333;">PLEX models ICT/ESS planning loads, UPS capacity, runtime, heat load, and preliminary circuit coordination values. It does not replace electrical engineering, selective coordination, available fault current analysis, conductor sizing, voltage-drop calculations, short-circuit calculations, or stamped construction documents. Final design shall be verified by the Electrical Engineer / Engineer of Record.</p>');
+  v('view-report').innerHTML=cover+s1+s2+s3+s4+s5+s6+s7+'<div style="break-before:page;page-break-before:always;">'+s8+s9+'</div>'+`<div class="rpt-footer">PLEX v2.68 &mdash; Limited Energy eXperts &mdash; limitedenergy.net &mdash; Preliminary Planning Document &mdash; ${today}</div>`;
   document.body.classList.add('print-report');
   if(!_skipPrint){window.addEventListener('afterprint',()=>{document.body.classList.remove('print-report');v('view-report').innerHTML='';},{once:true});setTimeout(()=>window.print(),200);}
 }
