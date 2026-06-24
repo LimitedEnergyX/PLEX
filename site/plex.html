@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  PLEX v2.64 — Power Load EXaminer
+  PLEX v2.65 — Power Load EXaminer
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary engineering and coordination only.
@@ -427,7 +427,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
       <img src="/dude.png" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:2px solid var(--teal);display:block;box-shadow:0 4px 24px rgba(20,184,166,0.25);" alt="PLEX — Power Load EXaminer">
       <div class="landing-text">
         <div class="landing-title" style="font-size:42px;">PLEX</div>
-        <div class="landing-ver">v2.64 &mdash; Power Load EXaminer</div>
+        <div class="landing-ver">v2.65 &mdash; Power Load EXaminer</div>
       </div>
     </div>
     <p class="landing-body">Power, UPS &amp; Cooling Planning for ICT and Security Systems. Tell me what you&rsquo;re building and I&rsquo;ll help estimate power, UPS, generator, PoE, and cooling requirements.</p>
@@ -466,7 +466,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
     <div class="header-brand">
       <div class="header-mark">⚡</div>
       <div>
-        <div class="header-title">PLEX <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v2.64</span></div>
+        <div class="header-title">PLEX <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v2.65</span></div>
         <div class="header-sub">POWER LOAD EXaminer &nbsp;·&nbsp; TR/ER INFRASTRUCTURE SIZING</div>
       </div>
     </div>
@@ -757,7 +757,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
     </div>
   </div>
   <div id="print-credit">
-    PLEX v2.64 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    PLEX v2.65 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
 </div>
 </div>
@@ -1407,7 +1407,7 @@ function render(){
   v('sc-watts').textContent=s.totalW.toFixed(0)+' W';v('sc-va').textContent=s.totalVA.toFixed(0)+' VA';
   v('sc-btu').textContent=s.btu.toFixed(0)+' BTU/hr';v('sc-tons').textContent=s.tons.toFixed(2)+' tons';
   v('sc-gen').textContent=s.generatorKW.toFixed(2)+' kW';
-  {const rks=Object.values(s.perRack);const rtTgt=state.settings.runtimeTarget||15;const html=rks.map(rk=>{const hU=rk.upsItems.length>0;const hB=rk.upsBackedW>0;if(!hU&&!hB)return '';const rtPct=(rk.upsRuntime!==null&&rtTgt>0)?(rk.upsRuntime/rtTgt*100):0;let st=(!hU&&hB)?'over':(!hB)?'ok':(rk.upsRuntime===null)?'warn':(rtPct>=100)?'ok':(rtPct>=90)?'warn':(rtPct>=75)?'orange':'over';const lbl=esc(rk.rack.label||('Rack '+rk.rack.id));const col=st==='ok'?'var(--green)':st==='warn'?'var(--warn)':st==='orange'?'var(--orange)':'var(--danger)';if(!hU)return '<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;color:var(--gray-light)">'+lbl+'</span><span style="font-size:10px;color:var(--danger)">No UPS &mdash; '+Math.round(rk.upsBackedW)+'W unprotected</span></div></div>';const capPct=rk.upsCapW>0?Math.min(rk.upsBackedW/rk.upsCapW*100,100).toFixed(1):'0';return '<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;gap:8px"><span style="font-size:10px;color:var(--gray-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">'+lbl+'</span><span style="font-size:10px;color:'+col+';white-space:nowrap;flex-shrink:0">'+rtPct.toFixed(0)+'% &middot; '+Math.round(rk.upsRuntime)+' min</span></div><div class="gauge-track"><div class="gauge-fill" style="width:'+capPct+'%;background:'+col+'"></div></div></div>';}).join('');const gRt=s.runtimeMin;const gPct=(gRt!==null&&rtTgt>0)?(gRt/rtTgt*100):0;const wSt=s.upsBackedW===0?'none':gRt===null?'warn':gPct>=100?'ok':gPct>=90?'warn':gPct>=75?'orange':'over';v('ups-per-rack').innerHTML=html||'<span style="color:var(--gray-dark)">No UPS-backed loads</span>';setPill('pill-ups',wSt);}
+  {const rks=Object.values(s.perRack);const rtTgt=state.settings.runtimeTarget||15;const html=rks.map(rk=>{const hU=rk.upsItems.length>0;const hB=rk.upsBackedW>0;if(!hU&&!hB)return '';const rtPct=(rk.upsRuntime!==null&&rtTgt>0)?(rk.upsRuntime/rtTgt*100):0;let st=(!hU&&hB)?'over':(!hB)?'ok':(rk.upsRuntime===null)?'warn':(rtPct>=100)?'ok':(rtPct>=90)?'warn':(rtPct>=75)?'orange':'over';const lbl=esc(rk.rack.label||('Rack '+rk.rack.id));const col=st==='ok'?'var(--green)':st==='warn'?'var(--warn)':st==='orange'?'var(--orange)':'var(--danger)';if(!hU)return '<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;color:var(--gray-light)">'+lbl+'</span><span style="font-size:10px;color:var(--danger)">No UPS &mdash; '+Math.round(rk.upsBackedW)+'W unprotected</span></div></div>';const capPct=rk.upsCapW>0?Math.min(rk.upsBackedW/rk.upsCapW*100,100).toFixed(1):'0';return '<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;gap:8px"><span style="font-size:10px;color:var(--gray-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">'+lbl+'</span><span style="font-size:10px;color:'+col+';white-space:nowrap;flex-shrink:0">'+Math.round(parseFloat(capPct))+'% &middot; '+Math.round(rk.upsRuntime)+' min'+(rtPct>=100?' &#10003;':'')+'</span></div><div class="gauge-track"><div class="gauge-fill" style="width:'+capPct+'%;background:'+col+'"></div></div></div>';}).join('');const gRt=s.runtimeMin;const gPct=(gRt!==null&&rtTgt>0)?(gRt/rtTgt*100):0;const wSt=s.upsBackedW===0?'none':gRt===null?'warn':gPct>=100?'ok':gPct>=90?'warn':gPct>=75?'orange':'over';v('ups-per-rack').innerHTML=html||'<span style="color:var(--gray-dark)">No UPS-backed loads</span>';setPill('pill-ups',wSt);}
 
     renderRackTabs();renderRack(s);renderWall(s);renderSummary(s);renderAssistant(s);
 }
@@ -2172,7 +2172,7 @@ function buildSpecGenPrompt(){
   const lines=[];
   lines.push(hr);
   lines.push('PLEX SPECGEN — SECTION 27 11 00 INJECTION PROMPT');
-  lines.push('Generated by PLEX v2.64 · Limited Energy eXperts · limitedenergy.net');
+  lines.push('Generated by PLEX v2.65 · Limited Energy eXperts · limitedenergy.net');
   lines.push(hr);
   lines.push('');
   lines.push('HOW TO USE THIS PROMPT:');
@@ -2336,7 +2336,7 @@ function exportDesignReport(){
   const sec=(title,content)=>`<div class="rpt-section"><div class="rpt-section-title">${title}</div>${content}</div>`;
   // Cover page
   const cover=`<div class="report-cover">
-    <div class="rpt-header"><div class="rpt-logo">PLEX<span style="font-weight:300;opacity:0.5;margin-left:6pt;">v2.64</span></div><div class="rpt-sub">Power &amp; Cooling Planning Tool &mdash; Limited Energy eXperts &middot; limitedenergy.net</div></div>
+    <div class="rpt-header"><div class="rpt-logo">PLEX<span style="font-weight:300;opacity:0.5;margin-left:6pt;">v2.65</span></div><div class="rpt-sub">Power &amp; Cooling Planning Tool &mdash; Limited Energy eXperts &middot; limitedenergy.net</div></div>
     <div class="cover-title">ICT Infrastructure Design Report</div>
     <div class="cover-subtitle">${esc(p.room||'Unnamed Room')}${p.building?' &mdash; '+esc(p.building):''}${p.name?' &mdash; '+esc(p.name):''}</div>
     <hr class="rpt-hr">
@@ -2352,7 +2352,42 @@ function exportDesignReport(){
       <div class="cover-grid-item"><div class="cover-grid-label">Schedule Title</div><div class="cover-grid-val">${esc(p.scheduleTitle||'ICT Equipment Schedule')}</div></div>
     </div>
     <hr class="rpt-hr-light">
-    <div class="cover-tool-block">Report generated ${today} using PLEX v2.64, a preliminary planning tool developed by<br>Limited Energy eXperts &mdash; ICT Design and Consulting Practice<br>Shawn Tovey, ICT Design Consultant &amp; Physical Security Systems Designer</div>
+    <div style="background:#f8f8f8;border:0.75pt solid #ddd;border-radius:3pt;padding:12pt 14pt;margin:8pt 0 12pt;">
+      <div style="font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9E0B23;margin-bottom:10pt;">Key Metrics Summary</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8pt 14pt;">
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Connected Load</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${Math.round(s.totalW).toLocaleString()} W</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${Math.round(s.totalVA).toLocaleString()} VA &middot; PF ${sets.powerFactor.toFixed(2)}</div>
+        </div>
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Recommended UPS</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.recUpsVA?s.recUpsVA.toLocaleString()+' VA':'&mdash;'}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.recUpsVA?s.upsLoadPct.toFixed(0)+'% planning load':'Tag devices to size'}</div>
+        </div>
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Est. UPS Runtime</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.runtimeMin!=null?Math.round(s.runtimeMin)+' min':'&mdash;'}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.runtimeMin!=null?(s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; '+(sets.runtimeTarget||15)+'-min target met':'&#9888; '+(sets.runtimeTarget||15)+'-min target not met'):'No UPS load'}</div>
+        </div>
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Cooling Required</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.recTons.toFixed(2)} tons</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${Math.round(s.recBtu).toLocaleString()} BTU/hr</div>
+        </div>
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Generator</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.generatorKW>0?s.generatorKW.toFixed(1)+' kW':'&mdash;'}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.generatorKW>0?standardGenerator(s.generatorKW)+' standard size':'Verify applicability'}</div>
+        </div>
+        <div>
+          <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Scope</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${state.racks.length} rack${state.racks.length!==1?'s':''}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${state.items.length} device${state.items.length!==1?'s':''} total</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-tool-block">Report generated ${today} using PLEX v2.65, a preliminary planning tool developed by<br>Limited Energy eXperts &mdash; ICT Design and Consulting Practice<br>Shawn Tovey, ICT Design Consultant &amp; Physical Security Systems Designer</div>
     <div class="cover-disclaimer">${esc(matD)}</div>
   </div>`;
   // Section 1 — Basis of Design
@@ -2438,9 +2473,9 @@ function exportDesignReport(){
   const s8=sec('Section 8 &mdash; Consultant Notes &amp; Assumptions',
     noteHtml+autoHtml+
     `<div style="margin-top:10pt;"><div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#666;margin-bottom:4pt;">Designer Notes (handwritten):</div><div class="rpt-notes-box"></div></div>`+
-    `<div class="rpt-disclaimer">This report was prepared using PLEX v2.64, a preliminary planning tool. All values are estimates based on entered equipment data and planning factors. Results must be verified against manufacturer specifications, coordinated MEP drawings, and applicable codes prior to construction document issuance. This document does not constitute an engineered design and shall not be used as a basis for construction without review and stamp from the Engineer of Record.<br><br>Prepared by: Shawn Tovey, ICT Design Consultant &amp; Physical Security Systems Designer &mdash; Limited Energy eXperts (limitedenergy.net)</div>`
+    `<div class="rpt-disclaimer">This report was prepared using PLEX v2.65, a preliminary planning tool. All values are estimates based on entered equipment data and planning factors. Results must be verified against manufacturer specifications, coordinated MEP drawings, and applicable codes prior to construction document issuance. This document does not constitute an engineered design and shall not be used as a basis for construction without review and stamp from the Engineer of Record.<br><br>Prepared by: Shawn Tovey, ICT Design Consultant &amp; Physical Security Systems Designer &mdash; Limited Energy eXperts (limitedenergy.net)</div>`
   );
-  v('view-report').innerHTML=cover+s1+s2+s3+s4+s5+s6+s7+s8+`<div class="rpt-footer">PLEX v2.64 &mdash; Limited Energy eXperts &mdash; limitedenergy.net &mdash; Preliminary Planning Document &mdash; ${today}</div>`;
+  v('view-report').innerHTML=cover+s1+s2+s3+s4+s5+s6+s7+s8+`<div class="rpt-footer">PLEX v2.65 &mdash; Limited Energy eXperts &mdash; limitedenergy.net &mdash; Preliminary Planning Document &mdash; ${today}</div>`;
   document.body.classList.add('print-report');
   window.addEventListener('afterprint',()=>{document.body.classList.remove('print-report');v('view-report').innerHTML='';},{once:true});
   setTimeout(()=>window.print(),200);
