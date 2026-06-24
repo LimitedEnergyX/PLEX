@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  PLEX v2.70 — Power Load EXaminer
+  PLEX v2.71 — Power Load EXaminer
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary engineering and coordination only.
@@ -286,7 +286,7 @@ body.print-report .rpt-table th{background:#1a2035;color:white;padding:4pt 5pt;t
 body.print-report .rpt-table td{padding:3pt 5pt;border-bottom:0.5pt solid #ddd;font-size:8pt;color:#222;}
 body.print-report .rpt-table tr.rpt-total td{background:#f5f5f5;font-weight:700;border-top:1pt solid #aaa;}
 body.print-report .rpt-notes-paragraph{font-size:9.5pt;line-height:1.7;color:#111;margin:8pt 0;}
-body.print-report .rpt-notes-box{border:1pt solid #999;min-height:60pt;margin-top:10pt;padding:6pt;font-size:9pt;color:#888;}
+body.print-report .rpt-notes-box{border:1pt solid #999;min-height:120pt;margin-top:10pt;padding:6pt;font-size:9pt;color:#888;}
 body.print-report .rpt-disclaimer{font-size:8.5pt;color:#555;border-top:0.5pt solid #ccc;padding-top:8pt;margin-top:8pt;line-height:1.6;}
 body.print-report .rpt-footer{position:fixed;bottom:0;left:0;right:0;font-size:7.5pt;color:#888;border-top:0.5pt solid #ccc;padding:4pt 0;text-align:center;background:white;}
 body.print-report a{color:inherit;text-decoration:none;}
@@ -426,10 +426,10 @@ body{background:white !important;color:black !important;font-size:9pt;}
 <div id="view-landing" style="min-height:calc(100vh - 38px);display:flex;align-items:center;justify-content:center;padding:48px 24px;background:var(--navy);">
   <div class="landing-inner">
     <div class="landing-hero">
-      <img src="/dude.png" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:2px solid var(--teal);display:block;box-shadow:0 4px 24px rgba(20,184,166,0.25);" alt="PLEX — Power Load EXaminer">
+      <img src="dude.png" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:2px solid var(--teal);display:block;box-shadow:0 4px 24px rgba(20,184,166,0.25);" alt="PLEX — Power Load EXaminer">
       <div class="landing-text">
         <div class="landing-title" style="font-size:42px;">PLEX</div>
-        <div class="landing-ver">v2.70 &mdash; Power Load EXaminer</div>
+        <div class="landing-ver">v2.71 &mdash; Power Load EXaminer</div>
       </div>
     </div>
     <p class="landing-body">Power, UPS &amp; Cooling Planning for ICT and Security Systems. Tell me what you&rsquo;re building and I&rsquo;ll help estimate power, UPS, generator, PoE, and cooling requirements.</p>
@@ -468,7 +468,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
     <div class="header-brand">
       <div class="header-mark">⚡</div>
       <div>
-        <div class="header-title">PLEX <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v2.70</span></div>
+        <div class="header-title">PLEX <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v2.71</span></div>
         <div class="header-sub">POWER LOAD EXaminer &nbsp;·&nbsp; TR/ER INFRASTRUCTURE SIZING</div>
       </div>
     </div>
@@ -759,14 +759,14 @@ body{background:white !important;color:black !important;font-size:9pt;}
     </div>
   </div>
   <div id="print-credit">
-    PLEX v2.70 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    PLEX v2.71 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
 </div>
 </div>
 </div><!-- /calc-main-col -->
 <button id="assistant-toggle" onclick="toggleAssistant()">TIPS</button>
 <div id="plex-assistant">
-  <div class="panel-label teal" style="margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:8px;display:flex;align-items:center;gap:8px;"><img src="/dude.png" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--teal);flex-shrink:0;" alt="">THE DUDE</div>
+  <div class="panel-label teal" style="margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:8px;display:flex;align-items:center;gap:8px;"><img src="dude.png" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--teal);flex-shrink:0;" alt="">THE DUDE</div>
   <div id="assistant-messages"><div class="assist-msg"><span class="assist-icon">&#9654;</span><span>Add equipment to see planning guidance.</span></div></div>
   <div class="assist-footer">Preliminary estimates only. Verify with manufacturer data and engineer of record.</div>
 </div>
@@ -879,7 +879,7 @@ body{background:white !important;color:black !important;font-size:9pt;}
 <div class="modal-overlay" id="dudeIntroModal">
   <div class="modal-box" style="max-width:420px;">
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-      <img src="/dude.png" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--teal);flex-shrink:0;" alt="The Dude — PLEX Design Guide">
+      <img src="dude.png" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--teal);flex-shrink:0;" alt="The Dude — PLEX Design Guide">
       <div>
         <div style="font-size:19px;font-weight:700;color:var(--teal);letter-spacing:0.03em;">The Dude</div>
         <div style="font-size:12px;color:var(--gray-mid);margin-top:2px;">Your ICT Design Guide</div>
@@ -2108,7 +2108,7 @@ function renderDashboard(){
   const hsBg={red:'rgba(200,16,46,0.12)',yellow:'rgba(255,200,0,0.08)',green:'rgba(34,197,94,0.08)',gray:'rgba(255,255,255,0.04)'};
   const hsBorder={red:'var(--red)',yellow:'#f5c518',green:'var(--green)',gray:'var(--border)'};
   const healthCard=`<div style="background:${hsBg[hs.level]};border:1px solid ${hsBorder[hs.level]};border-radius:8px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:14px;"><div style="font-size:28px;">${hs.icon}</div><div><div style="font-size:14px;color:var(--white);font-weight:700;">${hs.label}</div><div style="font-size:11px;color:var(--gray-mid);margin-top:2px;">${hs.desc}</div></div></div>`;
-  const assistCard=msgs.length?card('<span style="display:flex;align-items:center;gap:8px;"><img src="/dude.png" style="width:20px;height:20px;border-radius:50%;border:1px solid var(--teal);" alt=""> THE DUDE</span>',msgs.map(m=>`<div style="display:flex;gap:8px;padding:4px 0;${m.warn?'color:var(--warn);':'color:var(--gray-light);'}"><span>${m.icon}</span><span style="font-size:12px;line-height:1.5;">${m.text}</span></div>`).join('')):'';
+  const assistCard=msgs.length?card('<span style="display:flex;align-items:center;gap:8px;"><img src="dude.png" style="width:20px;height:20px;border-radius:50%;border:1px solid var(--teal);" alt=""> THE DUDE</span>',msgs.map(m=>`<div style="display:flex;gap:8px;padding:4px 0;${m.warn?'color:var(--warn);':'color:var(--gray-light);'}"><span>${m.icon}</span><span style="font-size:12px;line-height:1.5;">${m.text}</span></div>`).join('')):'';
   const scope=formatRoomScope(p.rooms||[]);
   const projCard=card('PROJECT SUMMARY',kv('Room / Space',p.room||'—')+kv('Facility Type',fp.label)+(scope!=='Not specified'?kv('Room Scope',scope):'')+kv('Design Phase',{conceptual:'Conceptual',schematic:'Schematic Design',dd:'Design Development',cd:'Construction Documents',record:'Record/As-Built'}[p.maturity||'schematic']||'Schematic Design'));
   const upsCard=s.upsBackedW>0?card('UPS RECOMMENDATION',kv('UPS-Backed Load',Math.round(s.upsBackedW)+' W')+kv('Recommended UPS',s.recUpsVA?(s.recUpsVA.toLocaleString()+' VA'):'Calculating...')+kv('Load at Rec. UPS',s.upsLoadPct.toFixed(1)+'%')+kv('Est. Runtime',s.runtimeMin!=null?Math.round(s.runtimeMin)+' min':'—')+kv('Runtime Target',sets.runtimeTarget+' min')):'';
@@ -2174,7 +2174,7 @@ function buildSpecGenPrompt(){
   const lines=[];
   lines.push(hr);
   lines.push('PLEX SPECGEN — SECTION 27 11 00 INJECTION PROMPT');
-  lines.push('Generated by PLEX v2.70 · Limited Energy eXperts · limitedenergy.net');
+  lines.push('Generated by PLEX v2.71 · Limited Energy eXperts · limitedenergy.net');
   lines.push(hr);
   lines.push('');
   lines.push('HOW TO USE THIS PROMPT:');
@@ -2369,8 +2369,8 @@ function exportDesignReport(_skipPrint){
         </div>
         <div>
           <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Est. UPS Runtime</div>
-          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.runtimeMin!=null?(sets.growthFactor>1?Math.round(s.runtimeMin)+' min current / '+Math.round(s.runtimeAtGrowthMin)+' min growth':Math.round(s.runtimeMin)+' min'):'&mdash;'}</div>
-          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.runtimeMin!=null?(sets.growthFactor>1?((s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; Current target met':'&#9888; Current below target')+(s.runtimeAtGrowthMin<(sets.runtimeTarget||15)?'; &#9888; Growth below '+(sets.runtimeTarget||15)+'-min target':'; &#10003; Growth target met')):(s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; '+(sets.runtimeTarget||15)+'-min target met':'&#9888; '+(sets.runtimeTarget||15)+'-min target not met')):'No UPS load'}</div>
+          <div style="font-size:13pt;font-weight:700;color:#111;line-height:1.15;">${s.runtimeMin!=null?(sets.growthFactor>1?Math.round(s.runtimeMin)+' min current<br>'+Math.round(s.runtimeAtGrowthMin)+' min growth':Math.round(s.runtimeMin)+' min'):'&mdash;'}</div>
+          <div style="font-size:7.5pt;color:#555;margin-top:1pt;">${s.runtimeMin!=null?(sets.growthFactor>1?((s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; Current target met':'&#9888; Current below target')+(s.runtimeAtGrowthMin<(sets.runtimeTarget||15)?'<br>&#9888; Growth below '+(sets.runtimeTarget||15)+'-min target':'<br>&#10003; Growth target met')):(s.runtimeMin>=(sets.runtimeTarget||15)?'&#10003; '+(sets.runtimeTarget||15)+'-min target met':'&#9888; '+(sets.runtimeTarget||15)+'-min target not met')):'No UPS load'}</div>
         </div>
         <div>
           <div style="font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1pt;">Cooling Required</div>
@@ -2468,7 +2468,7 @@ function exportDesignReport(_skipPrint){
     const thS='style="background:#1a2942;color:#fff;padding:2px 3px;font-size:6pt;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;text-align:center;border:0.5pt solid #8a9db5;white-space:normal;line-height:1.05;"';
     const tdS='style="padding:2px 3px;font-size:6.5pt;border:0.5pt solid #ddd;vertical-align:middle;line-height:1.05;"';
     const tdN='style="padding:2px 3px;font-size:6.5pt;border:0.5pt solid #ddd;text-align:right;vertical-align:middle;font-family:monospace;white-space:nowrap;line-height:1.05;"';
-    const grpS='style="background:#dce4ee;font-weight:700;font-size:7pt;padding:2px 4px;border:0.5pt solid #aab;letter-spacing:0.03em;"';
+    const grpS='style="background:#dce4ee;font-weight:700;font-size:7pt;padding:2px 4px;border:0.5pt solid #aab;letter-spacing:0.03em;text-align:center;"';
     const subS='style="background:#eaeff5;font-weight:700;font-size:6.5pt;padding:2px 3px;border:0.5pt solid #bbc;text-align:right;"';
     const totS='style="background:#1a2942;color:#fff;font-weight:700;font-size:7.5pt;padding:3px 4px;border:0.5pt solid #8a9db5;text-align:right;"';
     let tbodies='';let gW=0;let gBtu=0;
@@ -2566,7 +2566,7 @@ function exportDesignReport(_skipPrint){
   const autoHtml=autoNotes.length?`<ul style="font-size:8.5pt;color:#444;line-height:1.8;padding-left:14pt;">${autoNotes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:'';
   const s8=sec('Section 8 &mdash; Consultant Notes &amp; Assumptions',
     noteHtml+autoHtml+
-    `<div style="margin-top:10pt;"><div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#666;margin-bottom:4pt;">Designer Notes (handwritten):</div><div class="rpt-notes-box"></div></div>`+
+    `<div style="margin-top:10pt;"><div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#666;margin-bottom:4pt;">Designer Notes:</div><div class="rpt-notes-box"></div></div>`+
     `<div class="rpt-disclaimer">This report was prepared using PLEX, a preliminary planning tool. All values are estimates based on entered equipment data and planning factors.</div>`
   );
   const s9=sec('Section 9 — Model Scope & Limitations','<p style="font-size:9pt;line-height:1.6;color:#333;">PLEX models ICT/ESS planning loads, UPS capacity, runtime, heat load, and preliminary circuit coordination values. It does not replace electrical engineering, selective coordination, available fault current analysis, conductor sizing, voltage-drop calculations, short-circuit calculations, or stamped construction documents. Final design shall be verified by the Electrical Engineer / Engineer of Record.</p>');
