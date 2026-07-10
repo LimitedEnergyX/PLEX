@@ -1623,10 +1623,12 @@ function calc(){
   const otMult = +sched.workweek.overtimeMultiplier||1.5;
   const dtMult = +sched.workweek.doubletimeMultiplier||2.0;
   const requiredCrew = fieldHours > 0 ? Math.max(1, Math.ceil(fieldHours / (hpd * target))) : 0;
-  const weeksRequired = target / dpw;
+  // Duration is derived from the crew actually assigned, not echoed back from the target input —
+  // otherwise "Target Duration" never moves when crew size, workweek pattern, or hours change.
+  const workingDaysAtRequiredCrew = requiredCrew > 0 ? fieldHours / (requiredCrew * hpd) : 0;
+  const weeksRequired = requiredCrew > 0 ? workingDaysAtRequiredCrew / dpw : 0;
   const plannedWorkweeks = weeksRequired;
   const estimatedCalendarDays = Math.round(plannedWorkweeks * 7);
-  const workingDaysAtRequiredCrew = requiredCrew > 0 ? fieldHours / (requiredCrew * hpd) : 0;
   const baselineCrew = Math.max(1, +sched.baselineCrew||4);
   const isAccelerated = requiredCrew > baselineCrew;
 
