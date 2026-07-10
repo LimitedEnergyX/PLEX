@@ -356,7 +356,12 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
      stay together via their own rules below; long list panels flow across pages. */
   .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:auto;margin-bottom:4pt;padding:5pt 8pt;}
   /* Keep compact, high-value cards intact where they fit */
-  #sum-timeline-panel,#sum-signature{page-break-inside:avoid !important;}
+  /* Timeline can have 10+ phase nodes — forcing it whole onto one page pushed a small
+     scope/exclusions tail onto its own near-blank page. Let it flow; keep individual
+     phase nodes and the (short) signature block intact. */
+  #sum-timeline-panel{page-break-inside:auto !important;}
+  .phase-node{page-break-inside:avoid !important;}
+  #sum-signature{page-break-inside:avoid !important;}
   .headline-card{background:white !important;border:1px solid #128D98 !important;page-break-inside:avoid;margin-bottom:8pt;padding:10pt 14pt;}
   .headline-card .price{font-size:26pt !important;}
   .panel-label{color:#0E6E76 !important;font-weight:700;font-size:8pt;margin-bottom:4pt;}
@@ -793,8 +798,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <button class="hbtn" id="preflightBtn" style="background:var(--accent);color:#071522;border-color:var(--accent)">✓ Run Preflight Check</button>
     <span style="font-family:var(--mono);font-size:10px;color:var(--gray-mid)">Validates the estimate before printing or sending</span>
   </div>
-  <div id="legacy-pricing-banner" style="display:none;border:2px solid var(--red);background:rgba(200,16,46,0.08);color:var(--red);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">⚠ Legacy v1.25 Pricing Mode — Overhead and margin stack on top of sell-rate profit. Switch to Cost-Plus or Rate Card in Settings.</div>
-  <div id="preflight-results" style="display:none;margin-bottom:12px"></div>
+  <div id="legacy-pricing-banner" class="no-print" style="display:none;border:2px solid var(--red);background:rgba(200,16,46,0.08);color:var(--red);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">⚠ Legacy v1.25 Pricing Mode — Overhead and margin stack on top of sell-rate profit. Switch to Cost-Plus or Rate Card in Settings.</div>
+  <div id="preflight-results" class="no-print" style="display:none;margin-bottom:12px"></div>
 
   <!-- Proposal hero (customer cover) — hidden in internal view -->
   <div id="sum-hero" class="proposal-hero" style="display:none">
@@ -848,10 +853,11 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel" id="sum-risk-flags-panel"><div class="panel-label">RISK FLAGS</div><div id="sum-risk-flags"></div></div>
 
   <div class="panel" id="sum-acceptance">
-    <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
+    <div class="panel-label" id="sum-acceptance-title">TESTING &amp; ACCEPTANCE CRITERIA</div>
     <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--white)">
       <li id="test-copper"><strong>Copper.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits.</li>
       <li id="test-fiber"><strong>Fiber.</strong> All fiber strands shall be certified with results per strand in the closeout package.</li>
+      <li id="test-coax" style="display:none"></li>
       <li id="test-closeout"><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
     </ul>
   </div>
@@ -862,12 +868,12 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <li><strong>Working hours.</strong> Work is scheduled during normal business hours (Mon–Fri, 7 AM–5 PM local time). After-hours or weekend work required by Owner will be authorized by written change order prior to performance.</li>
       <li><strong>Site access.</strong> Owner shall provide safe, unobstructed access to all work areas, including above-ceiling pathways and equipment rooms. Delays caused by restricted access may result in a schedule and cost change order.</li>
       <li><strong>Concealed conditions.</strong> Pricing assumes accessible pathways per contract documents. Obstructed or undisclosed field conditions will be documented and resolved by written change order.</li>
-      <li><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
+      <li id="clar-changeorders"><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
       <li id="clar-camera"><strong>Camera scope.</strong> Camera infrastructure — cable installation, termination, PoE link verification, and installation of Owner-furnished standard mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
       <li><strong>Permit &amp; tax.</strong> Proposal price excludes applicable sales tax and permit fees, which will be added as direct pass-through costs if required.</li>
       <li id="clar-validity"><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
       <li id="clar-payment"><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
-      <li><strong>Basis of proposal.</strong> Proposal is based on quantities, assumptions, and scope information available as of the proposal date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, or Owner requirements change.</li>
+      <li id="clar-basis"><strong>Basis of proposal.</strong> Proposal is based on quantities, assumptions, and scope information available as of the proposal date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, or Owner requirements change.</li>
       <li><strong>Sealed design.</strong> This proposal is not a sealed design document and does not replace engineered drawings, specifications, code review, or AHJ requirements.</li>
       <li><strong>Warranty.</strong> One-year workmanship warranty from date of substantial completion. Manufacturer warranties pass through to Owner.</li>
     </ul>
@@ -2488,8 +2494,8 @@ function renderSummary(s){
   const pmHdl = s.pricingMode || 'rateCard';
   v('hdl-price').textContent = fmtMoney(s.finalPrice);
   if(pmHdl === 'costPlus'){
-    v('hdl-direct-lbl').textContent = 'DIRECT COST';
-    v('hdl-direct').textContent = fmtMoney(s.directCostSubtotal);
+    v('hdl-direct-lbl').textContent = s.contingencyInCost > 0 ? 'DIRECT COST (INCL. CONTINGENCY)' : 'DIRECT COST';
+    v('hdl-direct').textContent = fmtMoney(s.directCostWithContingency);
     v('hdl-oh').textContent = fmtMoney(s.overheadCost);
   } else {
     v('hdl-direct-lbl').textContent = 'DIRECT SELL';
@@ -2510,12 +2516,14 @@ function renderSummary(s){
   if(lpb) lpb.style.display = s.pricingMode === 'legacyV125' ? '' : 'none';
 
   // Project info — customerNotes customer-visible; notes internal-only
+  const dtEarly = (p.documentType || 'Proposal').toUpperCase();
+  const isBudgetTypeEarly = dtEarly === 'ROM' || dtEarly === 'BUDGETARY';
   const projRows = [
     sumRow('Project Name', esc(p.name || '—')),
     sumRow('Client', esc(p.client || '—')),
     sumRow('Location', esc(p.location || '—')),
     sumRow('Estimator', esc(p.estimator || '—')),
-    sumRow('Proposal Date', esc(p.proposalDate || '—')),
+    sumRow(isBudgetTypeEarly ? 'Estimate Date' : 'Proposal Date', esc(p.proposalDate || '—')),
     sumRow('Valid Until', esc(p.validUntil || '—')),
     sumRow('Document Type', esc(p.documentType || 'Proposal')),
   ];
@@ -2644,13 +2652,27 @@ function renderSummary(s){
 
   // ROM wording — a budgetary ROM is not an acceptance-ready contract, so strip
   // proposal/payment/authorization language and reword to budget-basis wording.
-  const noteBase = 'includes labor, materials, applicable burden, overhead, profit, consumables, tools, warranty allowance, and standard project administration.';
+  const noteBase = 'includes labor, materials, applicable burden, overhead, consumables, tools, warranty allowance, and standard project administration.';
   const totalWord = isROM ? 'Budgetary ROM total ' : isBudgetary ? 'Budgetary Estimate total ' : 'Proposal total ';
   v('hdl-price-note').innerHTML = totalWord + noteBase;
   { const cp = v('clar-payment'); if(cp) cp.style.display = isBudgetType ? 'none' : ''; }
+  // Validity day count is computed from the actual dates so the text never drifts from the stated period.
+  let validityDays = 30;
+  if(p.proposalDate && p.validUntil){
+    const d1 = new Date(p.proposalDate + 'T00:00:00'), d2 = new Date(p.validUntil + 'T00:00:00');
+    const diff = Math.round((d2 - d1) / 86400000);
+    if(isFinite(diff) && diff > 0) validityDays = diff;
+  }
   { const cv = v('clar-validity'); if(cv) cv.innerHTML = isBudgetType
-      ? '<strong>Budget validity.</strong> This budgetary figure is valid for 30 days from the date shown. Material cost volatility and RFI resolution may change the figure.'
-      : '<strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.'; }
+      ? `<strong>Budget validity.</strong> This budgetary figure is valid for ${validityDays} days from the estimate date shown. Material cost volatility and RFI resolution may change the figure.`
+      : `<strong>Proposal validity.</strong> Pricing is valid for ${validityDays} days from the proposal date. Material cost volatility may require adjustment after expiration.`; }
+  { const sat = v('sum-acceptance-title'); if(sat) sat.textContent = isBudgetType ? 'ANTICIPATED TESTING & CLOSEOUT REQUIREMENTS' : 'TESTING & ACCEPTANCE CRITERIA'; }
+  { const cb = v('clar-basis'); if(cb) cb.innerHTML = isBudgetType
+      ? '<strong>Basis of estimate.</strong> This budgetary figure is based on quantities, assumptions, and scope information available as of the estimate date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, RFI resolution, or Owner requirements change.'
+      : '<strong>Basis of proposal.</strong> Proposal is based on quantities, assumptions, and scope information available as of the proposal date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, or Owner requirements change.'; }
+  { const co = v('clar-changeorders'); if(co) co.innerHTML = isBudgetType
+      ? '<strong>Pricing adjustment assumption.</strong> This figure will be revised once open RFIs are resolved and scope is confirmed. Material and labor pricing are subject to change based on final drawings, site conditions, and Owner requirements.'
+      : '<strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.'; }
   { const tcl = v('test-closeout'); if(tcl) tcl.innerHTML = isBudgetType
       ? '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are anticipated closeout deliverables for the eventual firm scope.'
       : '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.'; }
@@ -2665,6 +2687,8 @@ function renderSummary(s){
     if(/om4/i.test(txt)) fib.push('OM4 multimode'); if(/om3/i.test(txt)) fib.push('OM3 multimode');
     const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically ' + (isBudgetType ? 'as part of project closeout.' : 'prior to final payment.'); }
     const tf=v('test-fiber'); if(tf){ tf.style.display = fib.length?'':'none'; if(fib.length) tf.innerHTML = '<strong>Fiber \u2014 '+fib.join(', ')+'.</strong> All strands certified bidirectionally (Tier 1); results per strand in the closeout package.'; }
+    const hasCoax = /\brg\s?6\b|\brg6\b|coax/i.test(txt);
+    const tcx=v('test-coax'); if(tcx){ tcx.style.display = hasCoax?'':'none'; if(hasCoax) tcx.innerHTML = '<strong>Coax (RG6).</strong> All RG6 runs shall be verified for continuity and signal sweep prior to closeout; results included in the closeout package.'; }
     const hasCamera = state.materials.items.some(m=>/camera|surveillance|cctv/i.test((m.category||'')+' '+(m.description||''))) || state.wbs.sections.some(sec=>(sec.items||[]).some(it=>/camera|cctv|surveillance|vms/i.test(it.description||'')));
     const cl=v('clar-camera'); if(cl) cl.style.display = hasCamera?'':'none';
   })();
