@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <!--
-  THE ESTIMATOR v1.25 — Limited Energy Job Estimation
+  THE ESTIMATOR v1.30 — Limited Energy Job Estimation
   Compiled by Limited Energy eXperts · limitedenergy.net
   Open reuse permitted with credit.
   For preliminary estimation and proposal use only.
@@ -18,7 +18,7 @@
   gtag('config', 'G-ECRHM5MP0Y');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Estimator v1.25 — Limited Energy Job Estimation | Limited Energy eXperts</title>
+<title>The Estimator v1.30 — Limited Energy Job Estimation | Limited Energy eXperts</title>
 <meta name="description" content="The Estimator — limited energy job estimation. Schedule-driven crew sizing, BICSI-coded scope, federal/California overtime, local/remote cost variants. Built by an RCDD for Division 27/28 estimating.">
 <meta property="og:title" content="The Estimator — Limited Energy Job Estimation">
 <meta property="og:description" content="Schedule-driven crew sizing, BICSI-coded scope, OT math, local/remote variants. Client-side JSON save/load.">
@@ -420,7 +420,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="header-brand">
       <div class="header-mark">🧮</div>
       <div>
-        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.25</span></div>
+        <div class="header-title">THE ESTIMATOR <span style="font-family:var(--mono);font-size:11px;color:var(--gray-mid);font-weight:400;margin-left:6px;letter-spacing:0.1em;">v1.30</span></div>
         <div class="header-sub">LIMITED ENERGY &nbsp;·&nbsp; JOB ESTIMATION</div>
       </div>
     </div>
@@ -489,8 +489,13 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
         <div class="field"><div class="field-label">VALID UNTIL</div><input type="date" id="proj-valid"></div>
       </div>
       <div class="field"><div class="field-label">SCOPE SUMMARY</div><textarea id="proj-scope" placeholder="Brief scope of work" rows="3"></textarea></div>
+      <div class="grid-2">
+        <div class="field"><div class="field-label">DOCUMENT TYPE</div><select id="proj-doc-type"><option value="Proposal">Proposal</option><option value="Budgetary">Budgetary</option><option value="ROM">ROM</option></select></div>
+        <div class="field"><div class="field-label">OPEN RFIs</div><input type="number" id="proj-rfi-count" min="0" step="1" value="0"></div>
+      </div>
       <div class="field"><div class="field-label">EXCLUSIONS</div><textarea id="proj-exclusions" placeholder="What is NOT included" rows="2"></textarea></div>
-      <div class="field"><div class="field-label">NOTES</div><textarea id="proj-notes" placeholder="Internal notes" rows="2"></textarea></div>
+      <div class="field"><div class="field-label" style="color:var(--green)">CUSTOMER NOTES <span style="font-size:9px;opacity:0.75">(VISIBLE ON PROPOSAL)</span></div><textarea id="proj-customer-notes" placeholder="Notes shown to the customer on the proposal" rows="2"></textarea></div>
+      <div class="field"><div class="field-label" style="color:var(--warm)">INTERNAL NOTES <span style="font-size:9px;opacity:0.75">(NOT SHOWN TO CUSTOMER)</span></div><textarea id="proj-notes" placeholder="Internal notes — never on customer proposal" rows="2"></textarea></div>
     </div>
   </div>
 
@@ -527,9 +532,9 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <div class="field"><div class="field-label">DT MULTIPLIER (CA)</div><input type="number" id="sched-dtmult" min="1" step="0.05" value="2.0"></div>
     </div>
     <div class="stat-row" id="schedStats">
-      <div class="stat-line"><span class="lbl">Total scope hours</span><span class="val" id="ss-total">0</span></div>
-      <div class="stat-line"><span class="lbl">Required crew size</span><span class="val red" id="ss-crew">—</span></div>
-      <div class="stat-line"><span class="lbl">Weeks required</span><span class="val" id="ss-weeks">—</span></div>
+      <div class="stat-line"><span class="lbl">Total scope hours (field + mgmt)</span><span class="val" id="ss-total">0</span></div>
+      <div class="stat-line"><span class="lbl">Required field crew</span><span class="val red" id="ss-crew">—</span></div>
+      <div class="stat-line"><span class="lbl">Target duration</span><span class="val" id="ss-weeks">—</span></div>
       <div class="stat-line"><span class="lbl">Regular hrs / tech / wk</span><span class="val" id="ss-reg">—</span></div>
       <div class="stat-line"><span class="lbl">OT hrs / tech / wk</span><span class="val warn" id="ss-ot">—</span></div>
       <div class="stat-line"><span class="lbl">DT hrs / tech / wk (CA)</span><span class="val warn" id="ss-dt">—</span></div>
@@ -590,13 +595,22 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 
   <!-- Settings -->
   <div class="panel">
-    <div class="panel-label">OVERHEAD &amp; MARGIN <button class="help-btn" id="marginHelpBtn">?</button></div>
-    <div class="grid-3">
-      <div class="field"><div class="field-label">OVERHEAD %</div><input type="number" id="set-overhead" min="0" max="100" step="0.5" value="15"></div>
-      <div class="field"><div class="field-label">MARGIN % (FORM, NOT MARKUP)</div><input type="number" id="set-margin" min="0" max="90" step="0.5" value="20"></div>
-      <div class="field"><div class="field-label">INFLATION FACTOR <button class="help-btn" id="inflHelpBtn">?</button></div><input type="number" id="set-inflation" min="0.5" max="3" step="0.01" value="1.10"></div>
+    <div class="panel-label">PRICING ENGINE <button class="help-btn" id="marginHelpBtn">?</button></div>
+    <div class="field" style="margin-bottom:12px">
+      <div class="field-label">PRICING MODE</div>
+      <label style="display:inline-flex;align-items:center;gap:6px;margin-right:18px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="pricingMode" id="pm-rateCard" value="rateCard"> Rate Card <span style="font-size:10px;color:var(--gray-mid)">(sell rates embed profit)</span></label>
+      <label style="display:inline-flex;align-items:center;gap:6px;margin-right:18px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="pricingMode" id="pm-costPlus" value="costPlus"> Cost-Plus <span style="font-size:10px;color:var(--gray-mid)">(cost → OH → margin)</span></label>
+      <label style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="pricingMode" id="pm-legacyV125" value="legacyV125"> Legacy v1.25 <span style="font-size:10px;color:var(--red)">(double-stacked)</span></label>
     </div>
-    <div class="callout"><strong>Inflation factor</strong> multiplies all material <em>source prices</em> at display and calc time. Default 1.10 = ~3 years of 2023-baseline inflation. Library items store their source year; this knob bulk-adjusts pricing to current dollars. Override individual items by editing source price directly.</div>
+    <div id="oh-margin-block">
+      <div class="grid-3">
+        <div class="field"><div class="field-label">CONTINGENCY %</div><input type="number" id="set-contingency" min="0" max="50" step="0.5" value="0"></div>
+        <div class="field"><div class="field-label">OVERHEAD %</div><input type="number" id="set-overhead" min="0" max="100" step="0.5" value="15"></div>
+        <div class="field"><div class="field-label">MARGIN % (FORM)</div><input type="number" id="set-margin" min="0" max="90" step="0.5" value="20"></div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:8px;max-width:260px"><div class="field-label">INFLATION FACTOR <button class="help-btn" id="inflHelpBtn">?</button></div><input type="number" id="set-inflation" min="0.5" max="3" step="0.01" value="1.10"></div>
+    <div class="callout" style="margin-top:8px"><strong>Rate Card:</strong> sell rates already embed profit — overhead/margin fields not applied. <strong>Cost-Plus:</strong> overhead on cost, then single-pass margin. <strong>Legacy v1.25:</strong> original behavior, stacks overhead and margin on sell side (may inflate margins). <strong>Contingency</strong> adds to direct cost before overhead and margin.</div>
   </div>
 
   <!-- Materials -->
@@ -685,15 +699,23 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
   <div id="internal-watermark" style="display:none;background:rgba(245,158,11,0.12);border:1px solid var(--warn);color:var(--warn);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;text-align:center;padding:8px 12px;margin-bottom:14px;border-radius:4px;font-weight:700">⚠ INTERNAL BID REPORT &mdash; CONTAINS COST &amp; MARGIN &mdash; DO NOT SHARE WITH CUSTOMER</div>
 
+  <div class="no-print" style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+    <button class="hbtn" id="preflightBtn" style="background:var(--accent);color:#071522;border-color:var(--accent)">✓ Run Preflight Check</button>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--gray-mid)">Validates the estimate before printing or sending</span>
+  </div>
+  <div id="legacy-pricing-banner" style="display:none;border:2px solid var(--red);background:rgba(200,16,46,0.08);color:var(--red);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">⚠ Legacy v1.25 Pricing Mode — Overhead and margin stack on top of sell-rate profit. Switch to Cost-Plus or Rate Card in Settings.</div>
+  <div id="preflight-results" style="display:none;margin-bottom:12px"></div>
+
   <div class="panel"><div class="panel-label">PROJECT INFORMATION</div><div id="sum-project"></div></div>
 
+  <div id="rom-banner" style="display:none;border:2px solid #c2410c;background:#fff7ed;color:#9a3412;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">&#9888; Budgetary ROM &mdash; order-of-magnitude, not for acceptance or construction. Subject to open RFIs.</div>
   <div class="headline-card">
     <div class="lbl" id="hdl-price-lbl">TOTAL PROPOSAL PRICE</div>
     <div class="price" id="hdl-price">$0</div>
     <div class="breakdown" id="hdl-breakdown">
       <div id="hdl-bd-labor">LABOR<span class="v" id="hdl-labor">$0</span></div>
       <div id="hdl-bd-mat">MATERIALS<span class="v" id="hdl-mat">$0</span></div>
-      <div id="hdl-bd-direct">DIRECT COSTS<span class="v" id="hdl-direct">$0</span></div>
+      <div id="hdl-bd-direct">DIRECT SELL<span class="v" id="hdl-direct">$0</span></div>
       <div id="hdl-bd-oh">OVERHEAD<span class="v" id="hdl-oh">$0</span></div>
       <div id="hdl-bd-margin">MARGIN<span class="v" id="hdl-margin">$0</span></div>
       <div>TOTAL HOURS / DAYS<span class="v" id="hdl-hours">0 hrs / 0 days</span></div>
@@ -716,7 +738,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel"><div class="panel-label">SCHEDULE &amp; CREW</div><div id="sum-sched"></div></div>
   <div class="panel" id="sum-labor-panel"><div class="panel-label">LABOR ROLL-UP</div><div id="sum-labor"></div></div>
   <div class="panel" id="sum-mat-panel"><div class="panel-label">MATERIALS ROLL-UP</div><div id="sum-mat"></div></div>
-  <div class="panel" id="sum-sections-panel"><div class="panel-label">PER-SECTION BREAKDOWN</div><div id="sum-sections"></div></div>
+  <div class="panel" id="sum-sections-panel"><div class="panel-label">DIRECT LABOR SELL BY SECTION <span style="font-weight:normal;text-transform:none;letter-spacing:0;font-size:10px;color:var(--gray-mid)">(labor sell only; excludes materials, ODC, overhead, margin)</span></div><div id="sum-sections"></div></div>
   <div class="panel" id="sum-odc-panel"><div class="panel-label teal">OTHER DIRECT COSTS</div><div id="sum-odc"></div></div>
   <div class="panel" id="sum-financial-panel"><div class="panel-label">FINANCIAL ROLL-UP</div><div id="sum-financial"></div></div>
   <div class="panel" id="sum-bid-health-panel"><div class="panel-label teal">BID HEALTH INDICATORS</div><div id="sum-bid-health"></div></div>
@@ -725,8 +747,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel" id="sum-acceptance">
     <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
     <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
-      <li><strong>Copper — CAT6 / CAT6A.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits. Test reports (pass/fail per link, per pair) shall be delivered electronically prior to final payment.</li>
-      <li><strong>Fiber — OS2 backbone.</strong> All fiber strands shall be certified using industry-standard fiber test equipment. Test results shall document pass/fail status and loss results per strand and shall be included in the closeout package.</li>
+      <li id="test-copper"><strong>Copper.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits.</li>
+      <li id="test-fiber"><strong>Fiber.</strong> All fiber strands shall be certified with results per strand in the closeout package.</li>
       <li><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
     </ul>
   </div>
@@ -738,7 +760,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <li><strong>Site access.</strong> Owner shall provide safe, unobstructed access to all work areas, including above-ceiling pathways and equipment rooms. Delays caused by restricted access may result in a schedule and cost change order.</li>
       <li><strong>Concealed conditions.</strong> Pricing assumes accessible pathways per contract documents. Obstructed or undisclosed field conditions will be documented and resolved by written change order.</li>
       <li><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
-      <li><strong>Camera scope.</strong> Camera infrastructure — cable installation, termination, PoE link verification, and installation of Owner-furnished standard mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
+      <li id="clar-camera"><strong>Camera scope.</strong> Camera infrastructure — cable installation, termination, PoE link verification, and installation of Owner-furnished standard mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
       <li><strong>Permit &amp; tax.</strong> Proposal price excludes applicable sales tax and permit fees, which will be added as direct pass-through costs if required.</li>
       <li><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
       <li><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
@@ -796,7 +818,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   </div>
 
   <div id="print-credit">
-    The Estimator v1.25 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
+    The Estimator v1.30 &mdash; Compiled by Limited Energy eXperts &middot; limitedenergy.net &middot; Open reuse permitted with credit.
   </div>
   <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);text-align:center;margin-top:20px;letter-spacing:0.1em;" class="no-print">Generated by The Estimator &middot; limitedenergy.net/estimate</div>
 </div>
@@ -901,6 +923,21 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
         <div style="font-size:11px;color:var(--gray-mid);margin-top:6px;">Office building — structured cabling, fiber backbone, cameras</div>
       </div>
       <div id="importStatus"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="preflightModal">
+  <div class="modal-box" style="max-width:640px;width:94%">
+    <button class="modal-close" id="preflightModalClose">×</button>
+    <div class="modal-title">PREFLIGHT CHECK</div>
+    <div class="modal-body">
+      <div id="preflight-modal-results" style="font-family:var(--mono);font-size:12px;line-height:1.8"></div>
+      <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
+        <button class="hbtn primary" id="preflightPrintCustomer">🖨 Print Customer</button>
+        <button class="hbtn" id="preflightPrintInternal">🖨 Print Internal</button>
+        <button class="hbtn" id="preflightModalClose2">Close</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1028,9 +1065,10 @@ const DEFAULT_ODC_MARKUP_RENTALS = 1.20;
 const DEFAULT_ODC_MARKUP_SUBS = 1.00;
 const DEFAULT_COST_BURDEN = 0.60; // legacy v1.1 migration: costRate = sellRate × this
 
-const STORAGE_KEY = 'lex_est_session_v1';
+const STORAGE_KEY = 'lex_est_session_v2';
 const SIG = 'LEX-EST';
-const EST_VERSION = '1.25';
+const EST_VERSION = '1.30';
+const SCHEMA_VERSION = '1.30';
 
 const WORKWEEK_PATTERNS = {
   '5x8':  {hpd:8,  dpw:5},
@@ -1309,17 +1347,14 @@ function autoSave(){
 }
 function loadSaved(){
   try{
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    let fromV1 = false;
+    if(!raw){ raw = localStorage.getItem('lex_est_session_v1'); fromV1 = !!raw; }
     if(!raw) return false;
     const p = JSON.parse(raw);
     if(!p.state) return false;
     state = p.state;
-    // Backward compat: ensure new slots exist
-    if(!state.materials) state.materials = {items:[]};
-    if(state.settings && state.settings.inflationFactor === undefined) state.settings.inflationFactor = 1.10;
-    migrateRoles(state.crew);
-    migrateMaterialItems(state.materials.items);
-    migrateOdc(state.odc);
+    applySessionMigrations(state, fromV1);
     nextWbsId = p.nextWbsId || 1;
     nextOdcId = p.nextOdcId || 1;
     nextMatId = p.nextMatId || (Math.max(0, ...state.materials.items.map(x=>x.id||0)) + 1);
@@ -1328,6 +1363,19 @@ function loadSaved(){
     lastSaveTime = p.savedAt;
     return true;
   }catch(e){return false;}
+}
+function applySessionMigrations(st, isLegacy){
+  if(!st.materials) st.materials = {items:[]};
+  if(!st.settings) st.settings = {};
+  if(st.settings.inflationFactor === undefined) st.settings.inflationFactor = 1.10;
+  if(st.project.customerNotes === undefined) st.project.customerNotes = '';
+  if(st.project.documentType === undefined) st.project.documentType = 'Proposal';
+  if(st.project.openRfiCount === undefined) st.project.openRfiCount = 0;
+  if(!st.settings.pricingMode) st.settings.pricingMode = isLegacy ? 'legacyV125' : 'rateCard';
+  if(st.settings.contingencyPct === undefined) st.settings.contingencyPct = 0;
+  migrateRoles(st.crew);
+  migrateMaterialItems(st.materials.items);
+  migrateOdc(st.odc);
 }
 function updateSavedIndicator(){
   const el = v('savedInd');
@@ -1357,6 +1405,8 @@ const fmtPct = p => (p*100).toFixed(1) + '%';
 function calc(){
   const allRoles = [...state.crew.field, ...state.crew.mgmt];
   const roleById = new Map(allRoles.map(r => [r.id, r]));
+  const fieldRoleIds = new Set(state.crew.field.map(r=>r.id));
+  let fieldHours = 0;
   const avgFieldSell = state.crew.field.length
     ? state.crew.field.reduce((s,r)=>s + (+r.sellRate||0), 0) / state.crew.field.length : 0;
   const avgFieldCost = state.crew.field.length
@@ -1380,6 +1430,7 @@ function calc(){
       // WBS materials: treat unitCost as cost; sell = cost (pass-through, no markup)
       const itMatCost = mq * mu;
       const itMatSell = itMatCost;
+      if(fieldRoleIds.has(it.labor.roleId)) fieldHours += itHours;
       h += itHours; lc += itLaborCost; ls += itLaborSell; mc += itMatCost; ms += itMatSell;
     }
     sectionTotals[sec.id] = {
@@ -1410,6 +1461,7 @@ function calc(){
     const mcost = qty * eff;
     const msell = qty * sellEach;
     matHours += hrs;
+    if(fieldRoleIds.has(mi.roleId)) fieldHours += hrs;
     matLaborCost += lcost; matLaborSell += lsell;
     matCost += mcost; matSell += msell;
     const cat = mi.category || 'Misc';
@@ -1424,15 +1476,29 @@ function calc(){
   }
   totalHours += matHours;
 
-  // Schedule
+  // Hours split: field vs. management (for separate scheduling + vehicle calc)
+  const mgmtRoleIds = new Set(state.crew.mgmt.map(r=>r.id));
+  let mgmtHours = 0;
+  for(const sec of state.wbs.sections) for(const it of sec.items){
+    const rId = it.labor.roleId;
+    if(mgmtRoleIds.has(rId)) mgmtHours += (+it.labor.qty||0)*(+it.labor.hoursEach||0);
+  }
+  for(const mi of state.materials.items){
+    if(mgmtRoleIds.has(mi.roleId)) mgmtHours += (+mi.qty||0)*(+mi.hoursEach||0);
+  }
+
+  // Schedule — crew sized from FIELD hours only; mgmt hours excluded
   const sched = state.schedule;
   const target = Math.max(1, +sched.targetWorkingDays||1);
   const hpd = Math.max(1, +sched.workweek.hoursPerDay||1);
   const dpw = Math.max(1, +sched.workweek.daysPerWeek||1);
   const otMult = +sched.workweek.overtimeMultiplier||1.5;
   const dtMult = +sched.workweek.doubletimeMultiplier||2.0;
-  const requiredCrew = totalHours > 0 ? Math.max(1, Math.ceil(totalHours / (hpd * target))) : 0;
+  const requiredCrew = fieldHours > 0 ? Math.max(1, Math.ceil(fieldHours / (hpd * target))) : 0;
   const weeksRequired = target / dpw;
+  const plannedWorkweeks = weeksRequired;
+  const estimatedCalendarDays = Math.round(plannedWorkweeks * 7);
+  const workingDaysAtRequiredCrew = requiredCrew > 0 ? fieldHours / (requiredCrew * hpd) : 0;
   const baselineCrew = Math.max(1, +sched.baselineCrew||4);
   const isAccelerated = requiredCrew > baselineCrew;
 
@@ -1461,7 +1527,7 @@ function calc(){
 
   // Vehicle adder (cost-only; passes through to sell at cost)
   const vehicleRate = +state.crew.vehicleAdder.perHour||0;
-  const vehicleCost = totalHours * vehicleRate;
+  const vehicleCost = fieldHours * vehicleRate;  // field-crew hours only (excludes PM/PE/Foreman)
   const vehicleSell = vehicleCost; // pass-through
 
   // Remote ODC auto-populate (pass-through both sides)
@@ -1500,45 +1566,77 @@ function calc(){
   const odcManualSell = odcRentalsSell + odcSubsSell;
 
   // Subtotals — COST side
-  const directLaborCost = wbsLaborCost + matLaborCost + otPremiumCost + dtPremiumCost + vehicleCost;
+  const directLaborCost = wbsLaborCost + matLaborCost + otPremiumCost + dtPremiumCost;
   const directMaterialsCost = wbsMatCost + matCost;
-  const directODCCost = odcManualCost + remote.total;
+  const directODCCost = odcManualCost + remote.total + vehicleCost;
   const directCostSubtotal = directLaborCost + directMaterialsCost + directODCCost;
 
   // Subtotals — SELL side
-  const directLaborSell = wbsLaborSell + matLaborSell + otPremiumSell + dtPremiumSell + vehicleSell;
+  const directLaborSell = wbsLaborSell + matLaborSell + otPremiumSell + dtPremiumSell;
   const directMaterialsSell = wbsMatSell + matSell;
-  const directODCSell = odcManualSell + remote.total;
+  const directODCSell = odcManualSell + remote.total + vehicleSell;
   const directSellSubtotal = directLaborSell + directMaterialsSell + directODCSell;
 
-  // Overhead — applied to both subtotals
+  // Contingency — % of direct cost, added before overhead and margin
+  const contingencyPct = Math.max(0, +state.settings.contingencyPct||0);
+  const contingencyAmt = directCostSubtotal * contingencyPct;
+  const directCostWithContingency = directCostSubtotal + contingencyAmt;
+
+  // Overhead and margin
   const overheadPct = +state.settings.overheadPct||0;
-  const overheadCost = directCostSubtotal * overheadPct;
-  const overheadSell = directSellSubtotal * overheadPct;
-  const costWithOH = directCostSubtotal + overheadCost;
-  const sellWithOH = directSellSubtotal + overheadSell;
+  const marginPct = Math.min(0.999, Math.max(0, +state.settings.marginPct||0));
+  const pricingMode = state.settings.pricingMode || 'rateCard';
 
-  // Margin form bumps SELL price further (stacked on item-level markups)
-  const marginPct = +state.settings.marginPct||0;
-  const finalPrice = marginPct < 1 ? sellWithOH / (1 - marginPct) : sellWithOH;
-  const marginAmount = finalPrice - sellWithOH;
+  let finalPrice, fullyBurdenedCost, overheadCost, overheadSell, costWithOH, sellWithOH, marginAmount;
 
-  // Profit + effective margin (cost side is "fully burdened cost")
-  const totalCost = costWithOH;
+  if(pricingMode === 'costPlus'){
+    // Single-pass: overhead then margin applied to cost basis only
+    overheadCost = directCostWithContingency * overheadPct;
+    costWithOH = directCostWithContingency + overheadCost;
+    overheadSell = overheadCost; // same value, displayed on sell side
+    finalPrice = marginPct < 1 ? costWithOH / (1 - marginPct) : costWithOH;
+    marginAmount = finalPrice - costWithOH;
+    sellWithOH = costWithOH;   // in cost-plus, sell side IS the burdened cost pre-margin
+    fullyBurdenedCost = costWithOH;
+  } else if(pricingMode === 'rateCard'){
+    // Sell rates and markups already embed margin; no additional overhead or margin
+    overheadCost = 0; overheadSell = 0;
+    costWithOH = directCostSubtotal;
+    sellWithOH = directSellSubtotal;
+    finalPrice = directSellSubtotal;
+    marginAmount = 0;
+    fullyBurdenedCost = directCostSubtotal;
+  } else {
+    // legacyV125: original behaviour — overhead on sell, then margin on sell (double-stacked)
+    overheadCost = directCostWithContingency * overheadPct;
+    overheadSell = directSellSubtotal * overheadPct;
+    costWithOH = directCostWithContingency + overheadCost;
+    sellWithOH = directSellSubtotal + overheadSell;
+    finalPrice = marginPct < 1 ? sellWithOH / (1 - marginPct) : sellWithOH;
+    marginAmount = finalPrice - sellWithOH;
+    fullyBurdenedCost = costWithOH;
+  }
+
+  // Guard against NaN / negative / impossible values
+  if(!isFinite(finalPrice) || finalPrice < 0) finalPrice = 0;
+  if(!isFinite(fullyBurdenedCost) || fullyBurdenedCost < 0) fullyBurdenedCost = 0;
+
+  const totalCost = fullyBurdenedCost;
   const totalProfit = finalPrice - totalCost;
   const effectiveMargin = finalPrice > 0 ? totalProfit / finalPrice : 0;
 
-  const totalDays = (hpd > 0 && requiredCrew > 0) ? totalHours / (hpd * requiredCrew) : 0;
+  const totalDays = (hpd > 0 && requiredCrew > 0) ? fieldHours / (hpd * requiredCrew) : 0;
 
   return {
-    totalHours,
+    totalHours, mgmtHours, fieldHours,
     // WBS & material aggregates
     wbsLaborCost, wbsLaborSell, wbsMatCost, wbsMatSell,
     matActive, matHours, matLaborCost, matLaborSell, matCost, matSell,
     sectionTotals, categoryTotals,
     inflation,
-    // Schedule
+    // Schedule (field-hours-based)
     requiredCrew, weeksRequired, targetWorkingDays:target, baselineCrew, isAccelerated,
+    plannedWorkweeks, estimatedCalendarDays, workingDaysAtRequiredCrew,
     weeklyHours, regHrsPerTechPerWk, otHrsPerTechPerWk, dtHrsPerTechPerWk,
     otHoursTotal, dtHoursTotal,
     otPremiumCost, otPremiumSell, dtPremiumCost, dtPremiumSell,
@@ -1551,9 +1649,10 @@ function calc(){
     // Subtotals & final
     directLaborCost, directLaborSell, directMaterialsCost, directMaterialsSell,
     directODCCost, directODCSell, directCostSubtotal, directSellSubtotal,
+    contingencyPct, contingencyAmt, directCostWithContingency,
     overheadPct, overheadCost, overheadSell, costWithOH, sellWithOH,
-    marginPct, marginAmount, finalPrice,
-    totalCost, totalProfit, effectiveMargin,
+    marginPct, marginAmount, finalPrice, pricingMode,
+    totalCost, fullyBurdenedCost, totalProfit, effectiveMargin,
     totalDays, isCA, otMult, dtMult, hpd, dpw
   };
 }
@@ -1571,9 +1670,19 @@ function render(){
   setIfDiff('proj-estimator', state.project.estimator);
   setIfDiff('proj-date', state.project.proposalDate);
   setIfDiff('proj-valid', state.project.validUntil);
+  setIfDiff('proj-doc-type', state.project.documentType || 'Proposal');
+  setIfDiff('proj-rfi-count', state.project.openRfiCount || 0);
   setIfDiff('proj-scope', state.project.scope);
   setIfDiff('proj-exclusions', state.project.exclusions);
+  setIfDiff('proj-customer-notes', state.project.customerNotes || '');
   setIfDiff('proj-notes', state.project.notes);
+
+  // Pricing mode radios
+  const pmVal = state.settings.pricingMode || 'rateCard';
+  ['rateCard','costPlus','legacyV125'].forEach(m=>{const el=v('pm-'+m);if(el)el.checked=(pmVal===m);});
+  // Show/hide overhead+margin block (irrelevant in pure rate-card mode)
+  const ohBlock = v('oh-margin-block');
+  if(ohBlock) ohBlock.style.opacity = pmVal === 'rateCard' ? '0.45' : '1';
 
   // Schedule
   setIfDiff('sched-days', state.schedule.targetWorkingDays);
@@ -1587,9 +1696,9 @@ function render(){
   v('customPatternRow').style.display = state.schedule.workweekPattern === 'custom' ? 'grid' : 'none';
 
   // Schedule stats
-  v('ss-total').textContent = fmtHrs(s.totalHours);
-  v('ss-crew').textContent = s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—';
-  v('ss-weeks').textContent = s.requiredCrew > 0 ? s.weeksRequired.toFixed(1) : '—';
+  v('ss-total').textContent = fmtHrs(s.totalHours) + (s.mgmtHours > 0 ? ` (field: ${fmtHrs(s.fieldHours)}, mgmt: ${fmtHrs(s.mgmtHours)})` : '');
+  v('ss-crew').textContent = s.requiredCrew > 0 ? `${s.requiredCrew} techs (from ${fmtHrs(s.fieldHours)} field hrs)` : '—';
+  v('ss-weeks').textContent = s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks (target) / ~${s.estimatedCalendarDays} calendar days` : '—';
   v('ss-reg').textContent = s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—';
   v('ss-ot').textContent  = s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—';
   v('ss-dt').textContent  = s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : (s.isCA?'0.0':'n/a (federal)');
@@ -1612,6 +1721,7 @@ function render(){
   setIfDiff('vehicle-rate', state.crew.vehicleAdder.perHour);
 
   // Settings
+  setIfDiff('set-contingency', (state.settings.contingencyPct || 0) * 100);
   setIfDiff('set-overhead', state.settings.overheadPct * 100);
   setIfDiff('set-margin', state.settings.marginPct * 100);
   setIfDiff('set-inflation', state.settings.inflationFactor);
@@ -2164,6 +2274,7 @@ function renderCategoryBars(s){
 
 function renderSummary(s){
   const p = state.project;
+  const isInternal = summaryView === 'internal';
   v('sum-title').textContent = p.name || 'Limited Energy Job Estimate';
   const sp = [];
   if(p.client) sp.push(p.client);
@@ -2184,37 +2295,47 @@ function renderSummary(s){
   if(svC) svC.checked = summaryView === 'customer';
   if(svI) svI.checked = summaryView === 'internal';
 
-  // Project info
-  v('sum-project').innerHTML = [
+  // Legacy pricing banner
+  const lpb = v('legacy-pricing-banner');
+  if(lpb) lpb.style.display = s.pricingMode === 'legacyV125' ? '' : 'none';
+
+  // Project info — customerNotes customer-visible; notes internal-only
+  const projRows = [
     sumRow('Project Name', esc(p.name || '—')),
     sumRow('Client', esc(p.client || '—')),
     sumRow('Location', esc(p.location || '—')),
     sumRow('Estimator', esc(p.estimator || '—')),
     sumRow('Proposal Date', esc(p.proposalDate || '—')),
     sumRow('Valid Until', esc(p.validUntil || '—')),
-    sumRowBlock('Scope', esc(p.scope || '—')),
-    sumRowBlock('Exclusions', esc(p.exclusions || '—')),
-    sumRowBlock('Notes', esc(p.notes || '—'))
-  ].join('');
+    sumRow('Document Type', esc(p.documentType || 'Proposal')),
+  ];
+  if(p.openRfiCount > 0) projRows.push(sumRow('Open RFIs', `<span style="color:var(--warn);font-weight:700">${p.openRfiCount} open</span>`));
+  projRows.push(sumRowBlock('Scope', esc(p.scope || '—')));
+  projRows.push(sumRowBlock('Exclusions', esc(p.exclusions || '—')));
+  if(p.customerNotes) projRows.push(sumRowBlock('Notes', esc(p.customerNotes)));
+  if(isInternal && p.notes) projRows.push(sumRowBlock('Internal Notes', `<span style="color:var(--warn)">${esc(p.notes)}</span>`));
+  v('sum-project').innerHTML = projRows.join('');
 
   // Schedule & Crew
-  v('sum-sched').innerHTML = [
+  const schedParts = [
     ['Job Type', state.jobType.mode === 'remote' ? 'Remote' : 'Local'],
-    ['Total Scope Hours', fmtHrs(s.totalHours)],
-    ['Target Working Days', `${s.targetWorkingDays}`],
-    ['Required Crew Size', s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—'],
-    ['Baseline Crew (info)', `${s.baselineCrew} techs`],
-    ['Acceleration Flag', s.isAccelerated ? `ACCELERATED (+${s.requiredCrew - s.baselineCrew} above baseline)` : 'Baseline'],
-    ['Weeks Required', s.weeksRequired.toFixed(1)],
-    ['Calendar Days', s.totalDays.toFixed(1)],
-    ['Workweek Pattern', `${s.hpd} × ${s.dpw} (${s.weeklyHours} hrs/wk)`],
-    ['OT Mode', s.isCA ? 'California (daily + weekly)' : 'Federal (40 hrs/wk)'],
-    ['Regular hrs / tech / wk', s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—'],
-    ['OT hrs / tech / wk', s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—'],
-    ['DT hrs / tech / wk', s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : 'n/a'],
-    ['Total OT hours', fmtHrs(s.otHoursTotal)],
-    ['Total DT hours', s.isCA ? fmtHrs(s.dtHoursTotal) : 'n/a']
-  ].map(r => sumRow(r[0], r[1])).join('');
+    ['Field Hours', fmtHrs(s.fieldHours)],
+  ];
+  if(s.mgmtHours > 0) schedParts.push(['Management Hours', fmtHrs(s.mgmtHours)]);
+  schedParts.push(['Total Scope Hours', fmtHrs(s.totalHours)]);
+  schedParts.push(['Required Field Crew', s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—']);
+  schedParts.push(['Baseline Crew', `${s.baselineCrew} techs`]);
+  schedParts.push(['Acceleration Flag', s.isAccelerated ? `ACCELERATED (+${s.requiredCrew - s.baselineCrew} above baseline)` : 'Baseline']);
+  schedParts.push(['Target Duration', s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks (~${s.estimatedCalendarDays} calendar days)` : '—']);
+  schedParts.push(['Working Days (field labor)', s.requiredCrew > 0 ? s.workingDaysAtRequiredCrew.toFixed(1) : '—']);
+  schedParts.push(['Workweek Pattern', `${s.hpd} × ${s.dpw} (${s.weeklyHours} hrs/wk)`]);
+  schedParts.push(['OT Mode', s.isCA ? 'California (daily + weekly)' : 'Federal (40 hrs/wk)']);
+  schedParts.push(['Regular hrs / tech / wk', s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—']);
+  schedParts.push(['OT hrs / tech / wk', s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—']);
+  schedParts.push(['DT hrs / tech / wk', s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : 'n/a']);
+  schedParts.push(['Total OT hours', fmtHrs(s.otHoursTotal)]);
+  schedParts.push(['Total DT hours', s.isCA ? fmtHrs(s.dtHoursTotal) : 'n/a']);
+  v('sum-sched').innerHTML = schedParts.map(r => sumRow(r[0], r[1])).join('');
 
   // Cost composition chart + bars
   renderCostChart(s);
@@ -2222,7 +2343,6 @@ function renderSummary(s){
   renderCategoryBars(s);
 
   // Labor roll-up — sell side (customer-visible); internal view also surfaces cost & profit
-  const isInternal = summaryView === 'internal';
 
   // Customer headline items — labor + materials sell
   v('hdl-labor').textContent = fmtMoney(s.directLaborSell);
@@ -2235,9 +2355,25 @@ function renderSummary(s){
     v(id).style.display = isInternal ? 'none' : '';
   });
   v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
-  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE' : 'TOTAL PROPOSAL PRICE';
+  const docType = (state.project.documentType || 'PROPOSAL').toUpperCase();
+  const isROM = docType === 'ROM' || docType === 'BUDGETARY';
+  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE' : (isROM ? 'BUDGETARY ROM \u2014 NOT FOR ACCEPTANCE' : 'TOTAL PROPOSAL PRICE');
   v('hdl-price-note').style.display = isInternal ? 'none' : '';
-  v('sum-signature').style.display = isInternal ? 'none' : '';
+  v('sum-signature').style.display = (isInternal || isROM) ? 'none' : '';
+  { const rb = v('rom-banner'); if(rb) rb.style.display = isROM ? '' : 'none'; }
+  // Dynamic testing categories derived from the BOM (reusable)
+  (function(){
+    const txt = state.materials.items.filter(m=>(+m.qty||0)>0).map(m=>(m.category||'')+' '+(m.description||'')).join(' ');
+    const cop=[]; if(/cat\s?3|category\s?3/i.test(txt)) cop.push('Category 3');
+    if(/cat\s?5e|category\s?5e|cat5e/i.test(txt)) cop.push('Category 5e');
+    if(/cat\s?6a|category\s?6a|cat6a/i.test(txt)) cop.push('Category 6A'); else if(/cat\s?6|category\s?6|cat6/i.test(txt)) cop.push('Category 6');
+    const fib=[]; if(/os2|single-?mode|\bsm\b/i.test(txt)) fib.push('OS2 single-mode');
+    if(/om4/i.test(txt)) fib.push('OM4 multimode'); if(/om3/i.test(txt)) fib.push('OM3 multimode');
+    const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically prior to final payment.'; }
+    const tf=v('test-fiber'); if(tf){ tf.style.display = fib.length?'':'none'; if(fib.length) tf.innerHTML = '<strong>Fiber \u2014 '+fib.join(', ')+'.</strong> All strands certified bidirectionally (Tier 1); results per strand in the closeout package.'; }
+    const hasCamera = state.materials.items.some(m=>/camera|surveillance|cctv/i.test((m.category||'')+' '+(m.description||''))) || state.wbs.sections.some(sec=>(sec.items||[]).some(it=>/camera|cctv|surveillance|vms/i.test(it.description||'')));
+    const cl=v('clar-camera'); if(cl) cl.style.display = hasCamera?'':'none';
+  })();
   v('cost-chart-card').style.display = isInternal ? '' : 'none';
   v('sum-financial-panel').style.display = isInternal ? '' : 'none';
   v('sum-bid-health-panel').style.display = isInternal ? '' : 'none';
@@ -2253,7 +2389,6 @@ function renderSummary(s){
     ['Materials labor sell', fmtMoney(s.matLaborSell)],
     ['OT premium (sell)', fmtMoney(s.otPremiumSell)],
     ['DT premium (sell)', s.isCA ? fmtMoney(s.dtPremiumSell) : 'n/a'],
-    ['Vehicle / tools adder', fmtMoney(s.vehicleCost) + ` (${fmtHrs(s.totalHours)} × $${s.vehicleRate}/hr)`],
     ['Total direct labor (sell)', fmtMoney(s.directLaborSell)],
     ...(isInternal ? [
       ['— Internal —', ''],
@@ -2294,6 +2429,7 @@ function renderSummary(s){
     odcRows.push(['Remote: hotel / lodging', fmtMoney(s.remote.hotel)]);
     odcRows.push(['Remote: travel', fmtMoney(s.remote.travel)]);
   }
+  if(s.vehicleSell > 0) odcRows.push(['Vehicle / tools adder', fmtMoney(s.vehicleSell) + ` (${fmtHrs(s.fieldHours)} field hrs × $${s.vehicleRate}/hr)`]);
   if(s.odcRentalsSell > 0) odcRows.push(['Rentals (sell)', fmtMoney(s.odcRentalsSell)]);
   if(s.odcSubsSell > 0) odcRows.push(['Subcontractors (sell)', fmtMoney(s.odcSubsSell)]);
   odcRows.push(['Total ODC (sell)', fmtMoney(s.directODCSell)]);
@@ -2306,25 +2442,31 @@ function renderSummary(s){
 
   // Financial roll-up — three visually separated sections in internal view
   const fhdr = txt => `<div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);padding:10px 0 3px;border-top:1px solid var(--border2);margin-top:4px">${txt}</div>`;
+  const pm = s.pricingMode || 'rateCard';
   const finParts = [
     fhdr('Customer-Facing Sell Summary'),
     sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
     sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
     sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
     sumRow('Direct subtotal (sell)', fmtMoney(s.directSellSubtotal)),
-    sumRow(`Overhead @ ${fmtPct(s.overheadPct)}`, fmtMoney(s.overheadSell)),
-    sumRow('Subtotal with overhead', fmtMoney(s.sellWithOH)),
-    sumRow(`Margin form @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
-    sumRow('Total sell price', `<span style="color:var(--red);font-size:18px">${fmtMoney(s.finalPrice)}</span>`),
+    ...(pm === 'rateCard' ? [sumRow('Pricing mode', 'Rate Card — profit embedded in sell rates')] : [
+      ...(s.contingencyAmt > 0 ? [sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt))] : []),
+      sumRow(`Overhead @ ${fmtPct(s.overheadPct)}`, fmtMoney(s.overheadSell)),
+      sumRow('Subtotal with overhead', fmtMoney(s.sellWithOH)),
+      sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
+    ]),
+    sumRow('Total sell price', `<span style="color:var(--warm);font-size:18px;font-weight:700">${fmtMoney(s.finalPrice)}</span>`),
     ...(isInternal ? [
       fhdr('Internal Cost Basis'),
       sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
       sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
       sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
       sumRow('Direct subtotal (cost)', fmtMoney(s.directCostSubtotal)),
+      ...(s.contingencyAmt > 0 ? [sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt))] : []),
       sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (cost)`, fmtMoney(s.overheadCost)),
       sumRow('Fully burdened cost', fmtMoney(s.totalCost)),
       fhdr('Internal Profit Analysis'),
+      sumRow('Pricing mode', pm),
       sumRow('Total project profit', `<span style="color:var(--green);font-size:16px">${fmtMoney(s.totalProfit)}</span>`),
       sumRow('Effective margin', `<span style="color:var(--green);font-size:16px">${fmtPct(s.effectiveMargin)}</span>`)
     ] : [])
@@ -2333,13 +2475,16 @@ function renderSummary(s){
 
   // Bid health indicators (internal only)
   if(isInternal){
-    const dropCount = state.materials.items
-      .filter(m => /jack|connector/i.test(m.category || ''))
+    let dropCount = state.materials.items
+      .filter(m => /faceplate|outlet|plate/i.test(m.category || ''))
       .reduce((acc, m) => acc + (m.qty || 0), 0);
+    if(dropCount === 0) dropCount = Math.round(state.materials.items
+      .filter(m => /jack|connector/i.test(m.category || ''))
+      .reduce((acc, m) => acc + (m.qty || 0), 0) / 2);
     const hrs = s.totalHours;
     const bhRows = [];
     if(dropCount > 0){
-      bhRows.push(sumRow('Outlet drop count (jacks / terminations)', String(dropCount)));
+      bhRows.push(sumRow('Outlet / drop count (faceplates)', String(dropCount)));
       bhRows.push(sumRow('Labor hours / outlet drop', (hrs / dropCount).toFixed(1) + ' hrs'));
       bhRows.push(sumRow('Material cost / outlet drop', '$' + (s.directMaterialsCost / dropCount).toFixed(0)));
       bhRows.push(sumRow('Sell price / outlet drop', '$' + (s.finalPrice / dropCount).toFixed(0)));
@@ -2364,7 +2509,8 @@ function renderSummary(s){
       const pct = hrs > 0 ? s400hrs / hrs : 0;
       if(pct > 0.45) flags.push(`High horizontal labor dependency — section 400 is ${(pct*100).toFixed(0)}% of total hours`);
     }
-    const hasCam = state.wbs.sections.some(sec => sec.id === '800' && sec.items && sec.items.length > 0);
+    const hasCam = state.materials.items.some(m => /camera|surveillance|cctv/i.test((m.category||'')+' '+(m.description||'')))
+      || state.wbs.sections.some(sec => (sec.items||[]).some(it => /camera|cctv|surveillance|vms/i.test(it.description||'')));
     if(hasCam){
       flags.push('Camera mounts are Owner-furnished — assumes backing, structure, pathway, and access are available');
       flags.push('Camera commissioning excluded — final aiming, VMS programming, and analytics by Owner\'s security integrator');
@@ -2391,6 +2537,9 @@ function bindAll(){
   v('proj-date').addEventListener('change', e=>{state.project.proposalDate=e.target.value;markDirty();});
   v('proj-valid').addEventListener('change', e=>{state.project.validUntil=e.target.value;markDirty();});
   ['scope','exclusions','notes'].forEach(f => v('proj-'+f).addEventListener('input', e=>{state.project[f]=e.target.value;markDirty();}));
+  v('proj-customer-notes').addEventListener('input', e=>{state.project.customerNotes=e.target.value;markDirty();});
+  v('proj-doc-type').addEventListener('change', e=>{state.project.documentType=e.target.value;render();markDirty();});
+  v('proj-rfi-count').addEventListener('input', e=>{state.project.openRfiCount=parseInt(e.target.value)||0;markDirty();});
 
   // Schedule
   v('sched-days').addEventListener('input', e=>{state.schedule.targetWorkingDays=parseFloat(e.target.value)||1;render();markDirty();});
@@ -2422,13 +2571,26 @@ function bindAll(){
   v('vehicle-desc').addEventListener('input', e=>{state.crew.vehicleAdder.description=e.target.value;markDirty();});
   v('vehicle-rate').addEventListener('input', e=>{state.crew.vehicleAdder.perHour=parseFloat(e.target.value)||0;render();markDirty();});
 
-  // Settings
+  // Settings — pricing mode
+  ['rateCard','costPlus','legacyV125'].forEach(m => {
+    const el = v('pm-'+m);
+    if(el) el.addEventListener('change', ()=>{state.settings.pricingMode=m;render();markDirty();});
+  });
+  v('set-contingency').addEventListener('input', e=>{state.settings.contingencyPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
   v('set-overhead').addEventListener('input', e=>{state.settings.overheadPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
   v('set-margin').addEventListener('input', e=>{state.settings.marginPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
   v('set-inflation').addEventListener('input', e=>{state.settings.inflationFactor=parseFloat(e.target.value)||1.0;render();markDirty();});
   v('inflHelpBtn').addEventListener('click', ()=>openModal('inflHelpModal'));
   v('inflHelpModalClose').addEventListener('click', ()=>closeModal('inflHelpModal'));
   v('inflHelpModal').addEventListener('click', e=>{if(e.target===v('inflHelpModal'))closeModal('inflHelpModal');});
+
+  // Preflight
+  v('preflightBtn').addEventListener('click', runPreflight);
+  v('preflightModalClose').addEventListener('click', ()=>closeModal('preflightModal'));
+  v('preflightModalClose2').addEventListener('click', ()=>closeModal('preflightModal'));
+  v('preflightModal').addEventListener('click', e=>{if(e.target===v('preflightModal'))closeModal('preflightModal');});
+  v('preflightPrintCustomer').addEventListener('click', ()=>{closeModal('preflightModal');summaryView='customer';render();setTimeout(()=>window.print(),200);});
+  v('preflightPrintInternal').addEventListener('click', ()=>{closeModal('preflightModal');summaryView='internal';render();setTimeout(()=>window.print(),200);});
 
   // Materials toolbar
   v('matHelpBtn').addEventListener('click', ()=>openModal('matHelpModal'));
@@ -2558,7 +2720,7 @@ document.addEventListener('click', e=>{
 function exportEstimate(){
   const s = calc();
   const payload = {
-    _lex_est:{signature:SIG, version:EST_VERSION, exported:new Date().toISOString()},
+    _lex_est:{signature:SIG, version:EST_VERSION, schemaVersion:SCHEMA_VERSION, exported:new Date().toISOString()},
     _prefs:{showSectionPricing},
     _credit:'Compiled by Limited Energy eXperts · limitedenergy.net · Open reuse permitted with credit.',
     project:state.project,
@@ -2580,7 +2742,12 @@ function exportEstimate(){
       totalProfit:Math.round(s.totalProfit),
       effectiveMargin:+s.effectiveMargin.toFixed(4),
       totalHours:Math.round(s.totalHours*10)/10,
+      fieldHours:Math.round(s.fieldHours*10)/10,
+      mgmtHours:Math.round(s.mgmtHours*10)/10,
       totalDays:Math.round(s.totalDays*10)/10,
+      pricingMode:s.pricingMode,
+      contingencyPct:s.contingencyPct,
+      contingencyAmt:Math.round(s.contingencyAmt),
       requiredCrew:s.requiredCrew,
       isAccelerated:s.isAccelerated,
       otPremiumCost:Math.round(s.otPremiumCost),
@@ -2623,6 +2790,7 @@ function loadSample(){
       for(const x of state.materials.items)    if(x.id>mm) mm=x.id;
       nextWbsId=mw+1; nextOdcId=mo+1; nextMatId=mm+1;
       showSectionPricing = !!(data._prefs && data._prefs.showSectionPricing);
+      applySessionMigrations(state, !data._lex_est.schemaVersion);
       render(); markDirty();
       setTimeout(()=>closeModal('importModal'), 600);
     })
@@ -2645,6 +2813,7 @@ function importEstimate(e){
         v('importStatus').innerHTML = '<div class="import-status err">✗ File structure is invalid.</div>';
         return;
       }
+      const isLegacyFile = !data._lex_est.schemaVersion;
       state = {
         project:data.project,
         schedule:data.schedule,
@@ -2655,6 +2824,7 @@ function importEstimate(e){
         odc:data.odc || {rentals:[], subcontractors:[]},
         materials:data.materials || {items:[]}
       };
+      applySessionMigrations(state, isLegacyFile);
       // Re-seed ID counters
       let mw = 0, mo = 0, mm = 0;
       for(const sec of state.wbs.sections){
@@ -2665,7 +2835,8 @@ function importEstimate(e){
       for(const x of state.materials.items) if(x.id > mm) mm = x.id;
       nextWbsId = mw + 1; nextOdcId = mo + 1; nextMatId = mm + 1;
       showSectionPricing = !!(data._prefs && data._prefs.showSectionPricing);
-      v('importStatus').innerHTML = `<div class="import-status ok">✓ Imported successfully. ${state.wbs.sections.length} sections, ${state.wbs.sections.reduce((a,s)=>a+s.items.length,0)} items.</div>`;
+      const migNote = isLegacyFile ? ' Migrated from legacy format — pricing mode set to Legacy v1.25.' : '';
+      v('importStatus').innerHTML = `<div class="import-status ok">✓ Imported. ${state.wbs.sections.length} sections, ${state.wbs.sections.reduce((a,s)=>a+s.items.length,0)} items.${migNote}</div>`;
       render(); markDirty();
       setTimeout(()=>closeModal('importModal'), 1200);
     }catch(err){
@@ -2884,6 +3055,58 @@ function addEmptyLibraryItem(){
   renderLibraryModal(); renderLibraryHealth();
 }
 
+function runPreflight(){
+  const s = calc();
+  const p = state.project;
+  const items = [];
+  const E = msg => items.push({level:'ERROR', msg});
+  const W = msg => items.push({level:'WARN',  msg});
+  const I = msg => items.push({level:'INFO',  msg});
+
+  if(!p.name)          E('No project name — required on proposal.');
+  if(!p.client)        E('No client name — required on proposal.');
+  if(s.finalPrice <= 0) E('Final price is $0 — no billable scope entered.');
+  if(s.totalProfit < 0) E(`Selling below cost — profit is ${fmtMoney(s.totalProfit)}.`);
+
+  if(!p.estimator)    W('No estimator name set.');
+  if(!p.proposalDate) W('No proposal date set.');
+  if(!p.validUntil)   W('No valid-until date — proposal validity is undefined.');
+  if(!p.scope)        W('Scope summary is empty.');
+  if(p.openRfiCount > 0) W(`${p.openRfiCount} open RFI${p.openRfiCount>1?'s':''} — resolve before final pricing.`);
+  if(s.pricingMode === 'legacyV125') W('Legacy v1.25 pricing mode active — overhead/margin may stack on sell-rate profit.');
+  if(s.effectiveMargin < 0.10 && s.finalPrice > 0) W(`Effective margin ${fmtPct(s.effectiveMargin)} is below 10%.`);
+  if(s.effectiveMargin > 0.65 && s.finalPrice > 0) W(`Effective margin ${fmtPct(s.effectiveMargin)} is unusually high — verify pricing mode.`);
+  const baseCrew = state.schedule.baselineCrew || 1;
+  if(s.requiredCrew > baseCrew * 2) W(`Required crew (${s.requiredCrew}) is more than 2× baseline (${baseCrew}) — verify OT budget.`);
+  if(state.jobType.mode === 'remote' && state.jobType.remote.perDiemPerTechPerDay === 0) W('Remote job with no per-diem modeled.');
+  const totalWbsItems = state.wbs.sections.reduce((a,sec)=>a+(sec.items||[]).length,0);
+  const activeMats = state.materials.items.filter(m=>(+m.qty||0)>0).length;
+  if(totalWbsItems === 0 && activeMats === 0) W('No WBS items and no active materials — estimate appears empty.');
+  if(!p.exclusions) W('Exclusions field is empty — consider listing what is NOT in scope.');
+
+  if(p.documentType === 'ROM' || p.documentType === 'Budgetary') I(`Document type is ${p.documentType} — signature block hidden, price labeled as ROM.`);
+  if((s.contingencyPct === 0 || !s.contingencyPct) && s.pricingMode !== 'rateCard') I('Contingency is 0% — consider 5–10% for field unknowns.');
+  if(s.otPremiumSell > 0) I(`OT premium modeled: ${fmtMoney(s.otPremiumSell)} sell.`);
+  if(s.isAccelerated) I(`Crew is accelerated: ${s.requiredCrew} required vs ${baseCrew} baseline.`);
+  if(activeMats === 0) I('No active materials in library — material cost from WBS line items only.');
+
+  const errorCount = items.filter(i=>i.level==='ERROR').length;
+  const warnCount  = items.filter(i=>i.level==='WARN').length;
+  const infoCount  = items.filter(i=>i.level==='INFO').length;
+  const pill = (lvl, n) => n < 1 ? '' : `<span style="background:${lvl==='ERROR'?'var(--red)':lvl==='WARN'?'var(--warn)':'var(--accent)'};color:${lvl==='INFO'?'#071522':'#fff'};font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:4px;margin-right:4px">${n} ${lvl}</span>`;
+  const clr = {ERROR:'var(--red)',WARN:'var(--warn)',INFO:'var(--accent)'};
+  const ico = {ERROR:'✗',WARN:'⚠',INFO:'ℹ'};
+  const rows = items.map(it=>`<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border1)"><span style="color:${clr[it.level]};font-family:var(--mono);font-size:10px;min-width:44px;flex-shrink:0">${ico[it.level]} ${it.level}</span><span style="font-size:12px;color:var(--text)">${esc(it.msg)}</span></div>`).join('');
+  const summary = `<div style="margin-bottom:8px">${pill('ERROR',errorCount)}${pill('WARN',warnCount)}${pill('INFO',infoCount)}</div>`;
+  const html = items.length ? summary + rows : '<div style="color:var(--green);font-family:var(--mono);font-size:12px;padding:8px 0">✓ No issues found — estimate looks good.</div>';
+
+  const inlineEl = v('preflight-results');
+  if(inlineEl){ inlineEl.innerHTML = html; inlineEl.style.display=''; }
+  const modalEl = v('preflight-modal-results');
+  if(modalEl) modalEl.innerHTML = html;
+  openModal('preflightModal');
+}
+
 function confirmNew(){
   state = defaultState();
   nextWbsId = 1; nextOdcId = 1; nextMatId = 1; hideEmpty = false; showSectionPricing = false;
@@ -2892,6 +3115,161 @@ function confirmNew(){
 }
 
 // =========================================================================
+// =========================================================================
+// SELF-TEST  (?selftest=1)
+// =========================================================================
+function runSelfTest(){
+  const results = [];
+  const pass = (name) => { results.push({ok:true,  name}); console.log(`PASS  ${name}`); };
+  const fail = (name, msg) => { results.push({ok:false, name, msg}); console.error(`FAIL  ${name}: ${msg}`); };
+  const near = (a, b, tol=0.01) => Math.abs(a-b) <= tol;
+
+  // Build a minimal synthetic state for isolated calc tests
+  // crew.field / crew.mgmt with costRate / sellRate (exact schema)
+  function mkState(overrides){
+    const base = defaultState();
+    base.crew.field = [{id:101,role:'Test Tech',costRate:50,sellRate:100}];
+    base.crew.mgmt  = [];
+    base.crew.vehicleAdder = {description:'Truck',perHour:0};
+    base.schedule.workweek = {hoursPerDay:8,daysPerWeek:5,overtimeMode:'federal',overtimeMultiplier:1.5,doubletimeMultiplier:2.0};
+    base.schedule.targetWorkingDays = 30;
+    base.schedule.baselineCrew = 1;
+    // One WBS section with one item: 100 field labor hours at roleId 101
+    base.wbs.sections = [{id:'100',name:'Horizontal',items:[{
+      id:1,description:'Cable runs',
+      labor:{roleId:101,qty:1,hoursEach:100},
+      materials:{unitCost:0,unitSell:0,qty:0,unit:'ea',markup:0}
+    }]}];
+    Object.assign(base.settings, overrides.settings || {});
+    if(overrides.extraMgmtRole){
+      base.crew.mgmt = [{id:102,role:'Test PM',costRate:80,sellRate:120}];
+      base.wbs.sections[0].items.push({
+        id:2,description:'PM hours',
+        labor:{roleId:102,qty:1,hoursEach:20},
+        materials:{unitCost:0,unitSell:0,qty:0,unit:'ea',markup:0}
+      });
+    }
+    if(overrides.vehicleRate !== undefined) base.crew.vehicleAdder.perHour = overrides.vehicleRate;
+    if(overrides.zeroHours) base.wbs.sections[0].items[0].labor.hoursEach = 0;
+    return base;
+  }
+
+  const savedState = JSON.parse(JSON.stringify(state));
+
+  // T01: rateCard — finalPrice equals directSellSubtotal
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0.15,marginPct:0.20,contingencyPct:0,inflationFactor:1}});
+  let s = calc();
+  // 100 hrs × $100/hr sell = $10,000 direct sell
+  near(s.finalPrice, 10000) ? pass('T01 rateCard finalPrice=directSellSubtotal') : fail('T01', `finalPrice=${s.finalPrice}, expected 10000`);
+
+  // T02: rateCard — overhead and margin NOT applied (finalPrice = directSellSubtotal regardless of settings)
+  near(s.overheadSell, 0) && near(s.marginAmount, 0) ? pass('T02 rateCard no overhead/margin applied') : fail('T02', `overheadSell=${s.overheadSell} marginAmount=${s.marginAmount}`);
+
+  // T03: costPlus — finalPrice = (directCost * 1.15) / 0.80
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0.15,marginPct:0.20,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  // cost=5000, OH=750, costWithOH=5750, finalPrice=5750/0.8=7187.50
+  near(s.finalPrice, 7187.5, 1) ? pass('T03 costPlus single-pass calc') : fail('T03', `finalPrice=${s.finalPrice}, expected 7187.5`);
+
+  // T04: costPlus — effectiveMargin matches marginPct (no double-stacking)
+  near(s.effectiveMargin, 0.20, 0.001) ? pass('T04 costPlus effectiveMargin=marginPct (no double-stack)') : fail('T04', `effectiveMargin=${s.effectiveMargin}, expected 0.20`);
+
+  // T05: legacyV125 — overhead applied to sell side
+  state = mkState({settings:{pricingMode:'legacyV125',overheadPct:0.15,marginPct:0.20,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  // sellWithOH = 10000*1.15 = 11500
+  near(s.sellWithOH, 11500, 1) ? pass('T05 legacyV125 overhead on sell side') : fail('T05', `sellWithOH=${s.sellWithOH}, expected 11500`);
+
+  // T06: legacyV125 — margin on sell+OH → effectiveMargin > marginPct (double-stack visible)
+  s.effectiveMargin > 0.20 ? pass('T06 legacyV125 effectiveMargin > marginPct (double-stack confirmed)') : fail('T06', `effectiveMargin=${s.effectiveMargin} should exceed 0.20`);
+
+  // T07: contingency — added to cost before overhead in costPlus
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,contingencyPct:0.10,inflationFactor:1}});
+  s = calc();
+  // cost=5000, contingency=500, costWithContingency=5500, OH=0, margin=0, finalPrice=5500
+  near(s.finalPrice, 5500, 1) ? pass('T07 contingency added to cost before OH') : fail('T07', `finalPrice=${s.finalPrice}, expected 5500`);
+
+  // T08: contingency amount = directCostSubtotal * contingencyPct
+  near(s.contingencyAmt, 500, 1) ? pass('T08 contingencyAmt = cost * pct') : fail('T08', `contingencyAmt=${s.contingencyAmt}, expected 500`);
+
+  // T09: fieldHours — field role hours counted correctly
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  near(s.fieldHours, 100) ? pass('T09 fieldHours counted from field role') : fail('T09', `fieldHours=${s.fieldHours}, expected 100`);
+
+  // T10: mgmtHours — management role hours counted separately
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}, extraMgmtRole:true});
+  s = calc();
+  near(s.fieldHours, 100) && near(s.mgmtHours, 20) ? pass('T10 mgmtHours separated from fieldHours') : fail('T10', `field=${s.fieldHours} mgmt=${s.mgmtHours}, expected 100/20`);
+
+  // T11: crew sizing — uses fieldHours(100) not totalHours(120); requiredCrew = ceil(100/240) = 1
+  near(s.requiredCrew, 1) ? pass('T11 crew sizing uses fieldHours only') : fail('T11', `requiredCrew=${s.requiredCrew} from fieldHours=100 not totalHours=120`);
+
+  // T12: vehicle adder — multiplied by fieldHours only
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}, vehicleRate:10});
+  s = calc();
+  // vehicleSell = 100 fieldHours × $10 = $1,000
+  near(s.vehicleSell, 1000, 1) ? pass('T12 vehicleSell = fieldHours × rate') : fail('T12', `vehicleSell=${s.vehicleSell}, expected 1000`);
+
+  // T13: OT premium — zero when hrs/crew fit within standard 40hr/wk (100 hrs / 1 crew over 30 days)
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  s.otHoursTotal === 0 ? pass('T13 no OT when hours fit within standard pattern') : fail('T13', `otHoursTotal=${s.otHoursTotal}, expected 0`);
+
+  // T14: zero hours → requiredCrew = 0
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}, zeroHours:true});
+  s = calc();
+  s.requiredCrew === 0 ? pass('T14 zero hours → requiredCrew 0') : fail('T14', `requiredCrew=${s.requiredCrew}, expected 0`);
+
+  // T15: costPlus zero margin — finalPrice = directCostWithContingency + overhead
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0.10,marginPct:0,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  near(s.finalPrice, 5500, 1) ? pass('T15 costPlus zero margin = cost + OH') : fail('T15', `finalPrice=${s.finalPrice}, expected 5500`);
+
+  // T16: costPlus 50% margin — finalPrice = costWithOH / 0.50
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0.50,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  near(s.finalPrice, 10000, 1) ? pass('T16 costPlus 50% margin → finalPrice = cost/0.5') : fail('T16', `finalPrice=${s.finalPrice}, expected 10000`);
+
+  // T17: rateCard with contingency — contingencyAmt still calculated but NOT added to finalPrice
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0.15,marginPct:0.20,contingencyPct:0.10,inflationFactor:1}});
+  s = calc();
+  near(s.finalPrice, 10000, 1) ? pass('T17 rateCard ignores contingency in finalPrice') : fail('T17', `finalPrice=${s.finalPrice}, expected 10000 (directSellSubtotal)`);
+
+  // T18: costPlus zero overhead — finalPrice = directCost / (1 - margin)
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0.25,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  near(s.finalPrice, 5000/0.75, 1) ? pass('T18 costPlus zero OH → finalPrice = cost / (1-margin)') : fail('T18', `finalPrice=${s.finalPrice}, expected ${(5000/0.75).toFixed(2)}`);
+
+  // T19: directSellSubtotal > 0 in rateCard
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  s.directSellSubtotal > 0 ? pass('T19 directSellSubtotal > 0 from WBS sell rates') : fail('T19', `directSellSubtotal=${s.directSellSubtotal}`);
+
+  // T20: effectiveMargin = totalProfit / finalPrice
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0.30,contingencyPct:0,inflationFactor:1}});
+  s = calc();
+  near(s.effectiveMargin, 0.30, 0.001) ? pass('T20 effectiveMargin = totalProfit / finalPrice') : fail('T20', `effectiveMargin=${s.effectiveMargin}, expected 0.30`);
+
+  // Restore
+  state = savedState;
+
+  const passed = results.filter(r=>r.ok).length;
+  const failed = results.filter(r=>!r.ok).length;
+  console.log(`\n=== SELF-TEST: ${passed}/${results.length} passed, ${failed} failed ===`);
+
+  // Render test results to DOM
+  const el = document.createElement('div');
+  el.id = 'selftest-results';
+  el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#0a1520;color:#e2e8f0;font-family:monospace;font-size:13px;padding:24px;overflow:auto;z-index:9999';
+  el.innerHTML = `<h2 style="color:#24C7C8;margin:0 0 12px">THE ESTIMATOR v${EST_VERSION} — SELF-TEST</h2>
+<div style="margin-bottom:16px;font-size:12px;color:#94a3b8">${passed}/${results.length} passed · ${failed} failed</div>
+${results.map(r=>`<div style="padding:3px 0;color:${r.ok?'#4ade80':'#f87171'}">${r.ok?'✓ PASS':'✗ FAIL'}  ${r.name}${r.msg?`<br><span style="color:#fbbf24;padding-left:32px;font-size:11px">→ ${r.msg}</span>`:''}</div>`).join('')}
+<div style="margin-top:20px;color:#64748b;font-size:11px">Remove ?selftest=1 from URL to return to normal mode.</div>`;
+  document.body.appendChild(el);
+  return {passed, failed, total: results.length};
+}
+
 // BOOT
 // =========================================================================
 if(loadLibrary()){
@@ -2907,6 +3285,7 @@ if(!state.project.proposalDate) state.project.proposalDate = new Date().toISOStr
 bindAll();
 render();
 updateSavedIndicator();
+if(new URLSearchParams(window.location.search).get('selftest') === '1') runSelfTest();
 document.addEventListener('click', function(e) {
   var a = e.target.closest('a[href^="mailto:"]');
   if (a) gtag('event', 'email_click', {link_url: a.href});
