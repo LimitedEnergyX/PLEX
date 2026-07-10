@@ -97,7 +97,7 @@ body{background:var(--navy);color:var(--gray-light);font-family:var(--body);min-
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 .panel{background:var(--navy-mid);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
-.panel-label{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.2em;margin-bottom:10px;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:700;}
+.panel-label{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:0.2em;margin-bottom:12px;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:700;}
 .panel-label.teal{color:var(--teal);}
 .panel-label.blue{color:var(--blue);}
 .panel-header{background:none;border:none;width:100%;padding:0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--accent);}
@@ -168,7 +168,7 @@ select option{background:var(--navy);}
 .wbs-item-row2 input{font-size:11px;padding:4px 8px;margin-bottom:0;}
 .wbs-item-row2 .row2-lbl{font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;text-align:right;padding-right:4px;}
 .wbs-add{margin-top:8px;}
-.wbs-empty{text-align:center;color:var(--gray-dark);font-style:italic;font-size:11px;padding:8px 0;}
+.wbs-empty{text-align:center;color:var(--gray-mid);font-style:italic;font-size:11px;padding:8px 0;}
 .section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 10px;}
 .section-divider span{font-family:var(--mono);font-size:10px;color:var(--teal);letter-spacing:0.2em;white-space:nowrap;font-weight:700;}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border2);}
@@ -184,8 +184,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .modal-body strong{color:var(--white);}
 .modal-close{position:absolute;top:12px;right:14px;background:transparent;border:none;color:var(--gray-mid);font-size:20px;cursor:pointer;line-height:1;}
 .modal-close:hover{color:var(--danger);}
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
-.sum-key{color:var(--gray-mid);font-family:var(--label);letter-spacing:0.05em;}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.sum-key{color:var(--gray-light);font-family:var(--label);letter-spacing:0.05em;}
 .sum-val{color:var(--white);font-weight:600;font-family:var(--mono);}
 .sum-val.red{color:var(--warm);}
 .sum-val.accent{color:var(--accent);}
@@ -195,7 +195,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .sum-val.big{font-size:18px;}
 .sum-row-block{display:block;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
 .sum-row-block .sum-key{display:block;margin-bottom:4px;}
-.sum-txt{color:var(--gray-light);font-size:12px;line-height:1.6;white-space:pre-wrap;font-family:var(--body);font-weight:400;}
+.sum-txt{color:var(--white);font-size:14px;line-height:1.6;white-space:pre-wrap;font-family:var(--body);font-weight:400;}
 .summary-header{margin-bottom:20px;display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:14px;}
 .summary-header h1{font-family:var(--display);font-size:28px;color:var(--white);font-weight:700;letter-spacing:0.02em;}
 .sum-meta{font-family:var(--mono);font-size:11px;color:var(--gray-mid);margin-top:6px;}
@@ -248,7 +248,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .mat-row input[type=number]{text-align:right;font-family:var(--mono);}
 .mat-row .mat-eff{font-family:var(--mono);color:var(--gray-light);text-align:right;font-size:11px;}
 .mat-row .mat-total{font-family:var(--mono);color:var(--warm);text-align:right;font-weight:600;}
-.mat-row.empty{padding:14px 0;text-align:center;color:var(--gray-dark);font-style:italic;font-size:11px;border-bottom:none;}
+.mat-row.empty{padding:14px 0;text-align:center;color:var(--gray-mid);font-style:italic;font-size:11px;border-bottom:none;}
 .mat-row-row2{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;padding:2px 4px 8px;}
 .mat-row-row2 input{font-size:11px;padding:4px 8px;margin-bottom:0;}
 .mat-row-row2-lbl{font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;text-transform:uppercase;padding-top:4px;}
@@ -753,7 +753,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 
   <div class="panel" id="sum-acceptance">
     <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
-    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
+    <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--white)">
       <li id="test-copper"><strong>Copper.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits.</li>
       <li id="test-fiber"><strong>Fiber.</strong> All fiber strands shall be certified with results per strand in the closeout package.</li>
       <li><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
@@ -762,7 +762,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 
   <div class="panel" id="sum-commercial">
     <div class="panel-label">COMMERCIAL CLARIFICATIONS</div>
-    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--gray-dark)">
+    <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--white)">
       <li><strong>Working hours.</strong> Work is scheduled during normal business hours (Mon–Fri, 7 AM–5 PM local time). After-hours or weekend work required by Owner will be authorized by written change order prior to performance.</li>
       <li><strong>Site access.</strong> Owner shall provide safe, unobstructed access to all work areas, including above-ceiling pathways and equipment rooms. Delays caused by restricted access may result in a schedule and cost change order.</li>
       <li><strong>Concealed conditions.</strong> Pricing assumes accessible pathways per contract documents. Obstructed or undisclosed field conditions will be documented and resolved by written change order.</li>
@@ -779,7 +779,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 
   <div class="panel" id="sum-signature">
     <div class="panel-label">ACCEPTANCE &amp; AUTHORIZATION</div>
-    <p style="font-size:12px;color:var(--gray-dark);margin:6px 0 18px;line-height:1.5">By signing below, Owner or authorized representative accepts this proposal and authorizes Limited Energy eXperts to proceed with the described scope of work under the terms and conditions stated herein.</p>
+    <p style="font-size:14px;color:var(--white);margin:6px 0 18px;line-height:1.5">By signing below, Owner or authorized representative accepts this proposal and authorizes Limited Energy eXperts to proceed with the described scope of work under the terms and conditions stated herein.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 32px">
       <div>
         <div style="border-bottom:1px solid #888;min-height:32px;margin-bottom:5px"></div>
@@ -2134,7 +2134,7 @@ function renderPickModal(){
   const host = v('pickTable');
   let html = `<div class="pick-row hdr"><span></span><span>Description</span><span>Part #</span><span>Src $</span><span>Hrs</span><span></span></div>`;
   if(filtered.length === 0){
-    html += `<div class="pick-row"><span></span><span style="color:var(--gray-dark);font-style:italic">No matches.</span><span></span><span></span><span></span><span></span></div>`;
+    html += `<div class="pick-row"><span></span><span style="color:var(--gray-mid);font-style:italic">No matches.</span><span></span><span></span><span></span><span></span></div>`;
   } else {
     html += filtered.map(li => {
       const added = inProjLibIds.has(li.id);
@@ -2179,7 +2179,7 @@ function renderLibraryModal(){
   const host = v('libTable');
   let html = `<div class="pick-row hdr" style="grid-template-columns:1fr 90px 70px 60px 80px"><span>Description / Category / Mfr · Model · Part#</span><span>Cost / Markup / Yr</span><span>Hrs</span><span>Unit</span><span></span></div>`;
   if(filtered.length === 0){
-    html += `<div class="pick-row" style="grid-template-columns:1fr"><span style="color:var(--gray-dark);font-style:italic">No matches.</span></div>`;
+    html += `<div class="pick-row" style="grid-template-columns:1fr"><span style="color:var(--gray-mid);font-style:italic">No matches.</span></div>`;
   } else {
     html += filtered.map(li => `<div class="pick-row" style="grid-template-columns:1fr 90px 70px 60px 80px" data-lib-row="${li.id}">
       <span>
@@ -2255,7 +2255,7 @@ function renderSectionBars(s){
   const maxV = Math.max(1, ...rows.map(r => r.val));
   const visible = rows.filter(r => r.val > 0);
   if(visible.length === 0){
-    host.innerHTML = '<div style="color:var(--gray-dark);font-style:italic;font-size:12px">No section spend yet.</div>';
+    host.innerHTML = '<div style="color:var(--gray-mid);font-style:italic;font-size:12px">No section spend yet.</div>';
     return;
   }
   host.innerHTML = visible.sort((a,b)=>b.val-a.val).map(r => {
@@ -2268,7 +2268,7 @@ function renderCategoryBars(s){
   const host = v('sum-category-bars');
   const entries = Object.entries(s.categoryTotals || {});
   if(entries.length === 0){
-    host.innerHTML = '<div style="color:var(--gray-dark);font-style:italic;font-size:12px">No material spend yet.</div>';
+    host.innerHTML = '<div style="color:var(--gray-mid);font-style:italic;font-size:12px">No material spend yet.</div>';
     return;
   }
   const rows = entries.map(([k,v]) => ({label:k, val:v.totalSell}));
@@ -2427,7 +2427,7 @@ function renderSummary(s){
     const profitSpan = isInternal ? ` <span style="color:var(--green);font-size:11px">+${fmtMoney(t.profit)}</span>` : '';
     return `<div class="sum-row"><span class="sum-key">${sec.id} · ${esc(sec.name)} <span style="color:var(--gray-mid);font-size:11px">(${fmtHrs(t.hours)})</span>${profitSpan}</span><span class="sum-val">${fmtMoney(t.totalSell)}</span></div>`;
   }).join('');
-  v('sum-sections').innerHTML = secRows || `<div style="color:var(--gray-dark);font-style:italic">No WBS items yet.</div>`;
+  v('sum-sections').innerHTML = secRows || `<div style="color:var(--gray-mid);font-style:italic">No WBS items yet.</div>`;
 
   // ODC — sell-side rollup
   const odcRows = [];
