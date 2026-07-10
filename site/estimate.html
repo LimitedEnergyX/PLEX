@@ -577,7 +577,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel">
     <div class="panel-label">SCHEDULE &amp; CREW <button class="help-btn" id="schedHelpBtn">?</button></div>
     <div class="grid-3">
-      <div class="field"><div class="field-label">TARGET WORKING DAYS</div><input type="number" id="sched-days" min="1" value="30"></div>
+      <div class="field"><div class="field-label">TARGET DAYS (DEADLINE)</div><input type="number" id="sched-days" min="1" value="30"></div>
       <div class="field"><div class="field-label">WORKWEEK PATTERN</div>
         <select id="sched-pattern">
           <option value="5x8">5 × 8 (40 hrs / wk)</option>
@@ -588,7 +588,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
           <option value="custom">Custom</option>
         </select>
       </div>
-      <div class="field"><div class="field-label">BASELINE CREW (INFO)</div><input type="number" id="sched-baseline" min="1" value="4"></div>
+      <div class="field"><div class="field-label">FIELD CREW (TECHS)</div><input type="number" id="sched-crew" min="1" step="1" value="4"></div>
     </div>
     <div class="grid-3" id="customPatternRow" style="display:none">
       <div class="field"><div class="field-label">HOURS / DAY</div><input type="number" id="sched-hpd" min="1" max="16" value="8"></div>
@@ -607,8 +607,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     </div>
     <div class="stat-row" id="schedStats">
       <div class="stat-line"><span class="lbl">Total scope hours (field + mgmt)</span><span class="val" id="ss-total">0</span></div>
-      <div class="stat-line"><span class="lbl">Required field crew</span><span class="val red" id="ss-crew">—</span></div>
-      <div class="stat-line"><span class="lbl">Target duration</span><span class="val" id="ss-weeks">—</span></div>
+      <div class="stat-line"><span class="lbl">Field crew (planned)</span><span class="val red" id="ss-crew">—</span></div>
+      <div class="stat-line"><span class="lbl">Estimated duration</span><span class="val" id="ss-weeks">—</span></div>
       <div class="stat-line"><span class="lbl">Regular hrs / tech / wk</span><span class="val" id="ss-reg">—</span></div>
       <div class="stat-line"><span class="lbl">OT hrs / tech / wk</span><span class="val warn" id="ss-ot">—</span></div>
       <div class="stat-line"><span class="lbl">DT hrs / tech / wk (CA)</span><span class="val warn" id="ss-dt">—</span></div>
@@ -998,10 +998,10 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <button class="modal-close" id="schedModalClose">×</button>
     <div class="modal-title">SCHEDULE &amp; CREW EXPLAINED</div>
     <div class="modal-body">
-      <p><strong>Total scope hours</strong> are summed from every WBS item across all sections (labor qty &times; hours each).</p><br>
-      <p><strong>Target working days</strong> is your input. The estimator computes the crew size required to hit that target:<br><code>crew = ceil(total_hours / (hours_per_day &times; target_days))</code></p><br>
-      <p><strong>If the required crew exceeds your baseline</strong> (default 4 techs), the schedule is flagged as accelerated. You may also want to bump the workweek pattern to 5&times;10 or 6&times;8, which triggers overtime math automatically.</p><br>
-      <p><strong>Remote jobs</strong> auto-populate per-diem / hotel / travel ODC lines from crew size + target days.</p>
+      <p><strong>Total scope hours</strong> are summed from every WBS item across all sections (labor qty &times; hours each). Only <em>field</em> hours drive the crew/schedule; management hours are excluded.</p><br>
+      <p><strong>Field crew</strong> is your input &mdash; the number of techs you plan to run. The estimated duration is computed from it:<br><code>working_days = field_hours / (crew &times; hours_per_day)</code><br>More crew &rarr; shorter timeline.</p><br>
+      <p><strong>Target days (deadline)</strong> is an advisory check. The estimator shows the minimum crew that would finish within it:<br><code>crew_for_target = ceil(field_hours / (hours_per_day &times; target_days))</code><br>If your planned crew finishes within the target it reads <strong>ON TARGET</strong>; otherwise <strong>BEHIND TARGET</strong> with the crew needed to hit it. Bumping the workweek pattern to 5&times;10 or 6&times;8 triggers overtime math automatically.</p><br>
+      <p><strong>Remote jobs</strong> auto-populate per-diem / hotel / travel ODC lines from crew size + duration.</p>
     </div>
   </div>
 </div>
@@ -1422,7 +1422,7 @@ function defaultState(){
       targetWorkingDays:30,
       workweekPattern:'5x8',
       workweek:{hoursPerDay:8, daysPerWeek:5, overtimeMode:'federal', overtimeMultiplier:1.5, doubletimeMultiplier:2.0},
-      baselineCrew:4
+      crewSize:4
     },
     jobType:{
       mode:'local',
@@ -1504,6 +1504,11 @@ function applySessionMigrations(st, isLegacy){
     if(c.label === undefined) c.label = 'Estimating contingency';
   }
   delete st.settings.contingencyPct;
+  // Schedule is now crew-driven: migrate the old baselineCrew (info-only) to crewSize (the driver).
+  if(st.schedule){
+    if(st.schedule.crewSize === undefined) st.schedule.crewSize = Math.max(1, +st.schedule.baselineCrew || 4);
+    delete st.schedule.baselineCrew;
+  }
   // Job type — normalize; blank/TBD location no longer forced to 'local'
   if(!st.jobType) st.jobType = defaultState().jobType;
   if(!st.jobType.mode) st.jobType.mode = 'local';
@@ -1628,15 +1633,19 @@ function calc(){
   const dpw = Math.max(1, +sched.workweek.daysPerWeek||1);
   const otMult = +sched.workweek.overtimeMultiplier||1.5;
   const dtMult = +sched.workweek.doubletimeMultiplier||2.0;
-  const requiredCrew = fieldHours > 0 ? Math.max(1, Math.ceil(fieldHours / (hpd * target))) : 0;
-  // Duration is derived from the crew actually assigned, not echoed back from the target input —
-  // otherwise "Target Duration" never moves when crew size, workweek pattern, or hours change.
+  // Crew-driven schedule: you set the field crew you plan to run; the duration follows.
+  // More crew -> shorter timeline. "Target Working Days" is an advisory deadline, not the driver.
+  const crewSize = Math.max(1, Math.round(+sched.crewSize || +sched.baselineCrew || 4));
+  const requiredCrew = fieldHours > 0 ? crewSize : 0;               // the crew actually planned
   const workingDaysAtRequiredCrew = requiredCrew > 0 ? fieldHours / (requiredCrew * hpd) : 0;
   const weeksRequired = requiredCrew > 0 ? workingDaysAtRequiredCrew / dpw : 0;
   const plannedWorkweeks = weeksRequired;
   const estimatedCalendarDays = Math.round(plannedWorkweeks * 7);
-  const baselineCrew = Math.max(1, +sched.baselineCrew||4);
-  const isAccelerated = requiredCrew > baselineCrew;
+  // Advisory: the crew that WOULD finish the field hours within the target-days deadline.
+  const crewForTarget = fieldHours > 0 ? Math.max(1, Math.ceil(fieldHours / (hpd * target))) : 0;
+  const meetsTarget = requiredCrew === 0 || workingDaysAtRequiredCrew <= target + 1e-9;
+  const baselineCrew = crewForTarget;                              // kept for back-compat/export
+  const isAccelerated = requiredCrew > crewForTarget;             // fielding more than the deadline needs
 
   // OT/DT per tech per week
   const isCA = sched.workweek.overtimeMode === 'california';
@@ -1794,8 +1803,9 @@ function calc(){
     matActive, matHours, matLaborCost, matLaborSell, matCost, matSell,
     sectionTotals, categoryTotals,
     inflation,
-    // Schedule (field-hours-based)
-    requiredCrew, weeksRequired, targetWorkingDays:target, baselineCrew, isAccelerated,
+    // Schedule (crew-driven)
+    requiredCrew, crewSize, crewForTarget, meetsTarget,
+    weeksRequired, targetWorkingDays:target, baselineCrew, isAccelerated,
     plannedWorkweeks, estimatedCalendarDays, workingDaysAtRequiredCrew,
     weeklyHours, regHrsPerTechPerWk, otHrsPerTechPerWk, dtHrsPerTechPerWk,
     otHoursTotal, dtHoursTotal,
@@ -1867,7 +1877,7 @@ function render(){
   // Schedule
   setIfDiff('sched-days', state.schedule.targetWorkingDays);
   setIfDiff('sched-pattern', state.schedule.workweekPattern);
-  setIfDiff('sched-baseline', state.schedule.baselineCrew);
+  setIfDiff('sched-crew', state.schedule.crewSize);
   setIfDiff('sched-hpd', state.schedule.workweek.hoursPerDay);
   setIfDiff('sched-dpw', state.schedule.workweek.daysPerWeek);
   setIfDiff('sched-otmode', state.schedule.workweek.overtimeMode);
@@ -1877,15 +1887,15 @@ function render(){
 
   // Schedule stats
   v('ss-total').textContent = fmtHrs(s.totalHours) + (s.mgmtHours > 0 ? ` (field: ${fmtHrs(s.fieldHours)}, mgmt: ${fmtHrs(s.mgmtHours)})` : '');
-  v('ss-crew').textContent = s.requiredCrew > 0 ? `${s.requiredCrew} techs (from ${fmtHrs(s.fieldHours)} field hrs)` : '—';
-  v('ss-weeks').textContent = s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks (target) / ~${s.estimatedCalendarDays} calendar days` : '—';
+  v('ss-crew').textContent = s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—';
+  v('ss-weeks').textContent = s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks / ~${s.estimatedCalendarDays} calendar days (${s.workingDaysAtRequiredCrew.toFixed(1)} working days)` : '—';
   v('ss-reg').textContent = s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—';
   v('ss-ot').textContent  = s.requiredCrew > 0 ? s.otHrsPerTechPerWk.toFixed(1) : '—';
   v('ss-dt').textContent  = s.isCA && s.requiredCrew > 0 ? s.dtHrsPerTechPerWk.toFixed(1) : (s.isCA?'0.0':'n/a (federal)');
   const statusEl = v('ss-status');
   if(s.requiredCrew === 0){statusEl.textContent='—';statusEl.className='val';}
-  else if(s.isAccelerated){statusEl.innerHTML=`<span class="pill pill-warn">ACCELERATED · +${s.requiredCrew - s.baselineCrew} above baseline</span>`;}
-  else {statusEl.innerHTML=`<span class="pill pill-ok">BASELINE</span>`;}
+  else if(s.meetsTarget){statusEl.innerHTML=`<span class="pill pill-ok">ON TARGET · ${s.workingDaysAtRequiredCrew.toFixed(0)} ≤ ${s.targetWorkingDays} days</span>`;}
+  else {statusEl.innerHTML=`<span class="pill pill-warn">BEHIND TARGET · add crew (${s.crewForTarget} techs hits ${s.targetWorkingDays} days)</span>`;}
 
   // Job type
   { const jtEl = document.getElementById('jt-' + (state.jobType.mode||'local')); if(jtEl) jtEl.checked = true; }
@@ -2604,11 +2614,13 @@ function renderSummary(s){
   ];
   if(s.mgmtHours > 0) schedParts.push(['Management Hours', fmtHrs(s.mgmtHours)]);
   schedParts.push(['Total Scope Hours', fmtHrs(s.totalHours)]);
-  schedParts.push(['Required Field Crew', s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—']);
-  schedParts.push(['Baseline Crew', `${s.baselineCrew} techs`]);
-  schedParts.push(['Acceleration Flag', s.isAccelerated ? `ACCELERATED (+${s.requiredCrew - s.baselineCrew} above baseline)` : 'Baseline']);
-  schedParts.push(['Target Duration', s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks (~${s.estimatedCalendarDays} calendar days)` : '—']);
+  schedParts.push(['Planned Field Crew', s.requiredCrew > 0 ? `${s.requiredCrew} techs` : '—']);
+  schedParts.push(['Estimated Duration', s.requiredCrew > 0 ? `${s.plannedWorkweeks.toFixed(1)} wks (~${s.estimatedCalendarDays} calendar days)` : '—']);
   schedParts.push(['Working Days (field labor)', s.requiredCrew > 0 ? s.workingDaysAtRequiredCrew.toFixed(1) : '—']);
+  schedParts.push(['Target Deadline', `${s.targetWorkingDays} working days`]);
+  schedParts.push(['Schedule vs Target', s.requiredCrew === 0 ? '—' : (s.meetsTarget
+    ? `On target (${s.crewForTarget} techs is the minimum for ${s.targetWorkingDays} days)`
+    : `<span style="color:var(--warn);font-weight:700">Behind — ${s.crewForTarget} techs needed to hit ${s.targetWorkingDays} days</span>`)]);
   schedParts.push(['Workweek Pattern', `${s.hpd} × ${s.dpw} (${s.weeklyHours} hrs/wk)`]);
   schedParts.push(['OT Mode', s.isCA ? 'California (daily + weekly)' : 'Federal (40 hrs/wk)']);
   schedParts.push(['Regular hrs / tech / wk', s.requiredCrew > 0 ? s.regHrsPerTechPerWk.toFixed(1) : '—']);
@@ -2868,8 +2880,7 @@ function renderSummary(s){
     }
     bhRows.push(sumRow('Labor % of sell price', (s.directLaborSell / s.finalPrice * 100).toFixed(1) + '%'));
     bhRows.push(sumRow('Materials % of sell price', (s.directMaterialsSell / s.finalPrice * 100).toFixed(1) + '%'));
-    const baseCrew = state.schedule.baselineCrew || 1;
-    bhRows.push(sumRow('Required crew vs. baseline', `${s.requiredCrew} required / ${baseCrew} baseline`));
+    bhRows.push(sumRow('Planned crew vs. target', `${s.requiredCrew} planned / ${s.crewForTarget} to hit ${s.targetWorkingDays}-day target`));
     bhRows.push(sumRow('OT premium modeled', s.otPremiumSell > 0 ? fmtMoney(s.otPremiumSell) + ' (in budget)' : 'None'));
     bhRows.push(sumRow('Contingency / ODC', s.directODCSell > 0 ? fmtMoney(s.directODCSell) + ' modeled' : '⚠ Not modeled — recommend 5–10% allowance'));
     v('sum-bid-health').innerHTML = bhRows.join('');
@@ -2888,7 +2899,7 @@ function renderSummary(s){
       flags.push('Camera mounts are Owner-furnished — assumes backing, structure, pathway, and access are available');
       flags.push('Camera commissioning excluded — final aiming, VMS programming, and analytics by Owner\'s security integrator');
     }
-    if(s.requiredCrew > baseCrew) flags.push(`Accelerated crew required (${s.requiredCrew} vs. baseline ${baseCrew}) — verify OT budget`);
+    if(!s.meetsTarget && s.requiredCrew > 0) flags.push(`Behind target — ${s.requiredCrew} techs finish in ${s.workingDaysAtRequiredCrew.toFixed(0)} days vs. ${s.targetWorkingDays}-day target (need ${s.crewForTarget} techs)`);
     if(s.otPremiumSell > 0) flags.push(`OT premium in budget (${fmtMoney(s.otPremiumSell)} sell) — confirm crew schedule assumptions`);
     if(s.directODCSell === 0) flags.push('No contingency or ODC modeled — recommend adding 5–10% allowance');
     if(/conduit/i.test(state.project.exclusions || '')) flags.push('Conduit excluded — confirm GC is providing all raceways per scope boundary');
@@ -2927,7 +2938,7 @@ function bindAll(){
   });
   v('sched-hpd').addEventListener('input', e=>{state.schedule.workweek.hoursPerDay=parseFloat(e.target.value)||1;render();markDirty();});
   v('sched-dpw').addEventListener('input', e=>{state.schedule.workweek.daysPerWeek=parseFloat(e.target.value)||1;render();markDirty();});
-  v('sched-baseline').addEventListener('input', e=>{state.schedule.baselineCrew=parseInt(e.target.value)||1;render();markDirty();});
+  v('sched-crew').addEventListener('input', e=>{state.schedule.crewSize=Math.max(1,parseInt(e.target.value)||1);render();markDirty();});
   v('sched-otmode').addEventListener('change', e=>{state.schedule.workweek.overtimeMode=e.target.value;render();markDirty();});
   v('sched-otmult').addEventListener('input', e=>{state.schedule.workweek.overtimeMultiplier=parseFloat(e.target.value)||1.5;render();markDirty();});
   v('sched-dtmult').addEventListener('input', e=>{state.schedule.workweek.doubletimeMultiplier=parseFloat(e.target.value)||2.0;render();markDirty();});
@@ -3143,7 +3154,9 @@ function exportEstimate(){
       contingencyBasis:s.contingencyBasis,
       contingencyTreatment:s.contingencyTreatment,
       requiredCrew:s.requiredCrew,
-      isAccelerated:s.isAccelerated,
+      crewSize:s.crewSize,
+      crewForTarget:s.crewForTarget,
+      meetsTarget:s.meetsTarget,
       otPremiumCost:Math.round(s.otPremiumCost),
       otPremiumSell:Math.round(s.otPremiumSell),
       dtPremiumCost:Math.round(s.dtPremiumCost),
@@ -3471,8 +3484,7 @@ function runPreflight(){
   if(s.pricingMode === 'legacyV125') W('Legacy v1.25 pricing mode active — overhead/margin may stack on sell-rate profit.');
   if(s.effectiveMargin < 0.10 && s.finalPrice > 0) W(`Effective margin ${fmtPct(s.effectiveMargin)} is below 10%.`);
   if(s.effectiveMargin > 0.65 && s.finalPrice > 0) W(`Effective margin ${fmtPct(s.effectiveMargin)} is unusually high — verify pricing mode.`);
-  const baseCrew = state.schedule.baselineCrew || 1;
-  if(s.requiredCrew > baseCrew * 2) W(`Required crew (${s.requiredCrew}) is more than 2× baseline (${baseCrew}) — verify OT budget.`);
+  if(!s.meetsTarget && s.requiredCrew > 0) W(`Behind target — ${s.requiredCrew} techs finish in ${s.workingDaysAtRequiredCrew.toFixed(0)} working days vs. the ${s.targetWorkingDays}-day target; ${s.crewForTarget} techs would hit it.`);
   if(state.jobType.mode === 'remote' && state.jobType.remote.perDiemPerTechPerDay === 0) W('Remote job with no per-diem modeled.');
   const totalWbsItems = state.wbs.sections.reduce((a,sec)=>a+(sec.items||[]).length,0);
   const activeMats = state.materials.items.filter(m=>(+m.qty||0)>0).length;
@@ -3499,7 +3511,7 @@ function runPreflight(){
     W(`Job Type is ${jtMode==='remote'?'Remote':'Local'} but the location is unresolved — prevailing wage, travel, freight, and tax basis not validated. Confirm the jurisdiction or set Job Type: Unconfirmed. Proposal output requires acknowledgement.`);
   }
   if(s.otPremiumSell > 0) I(`OT premium modeled: ${fmtMoney(s.otPremiumSell)} sell.`);
-  if(s.isAccelerated) I(`Crew is accelerated: ${s.requiredCrew} required vs ${baseCrew} baseline.`);
+  if(s.meetsTarget && s.isAccelerated && s.requiredCrew > 0) I(`Crew is ahead of target: ${s.requiredCrew} techs finish in ${s.workingDaysAtRequiredCrew.toFixed(0)} days (target ${s.targetWorkingDays}).`);
   if(activeMats === 0) I('No active materials in library — material cost from WBS line items only.');
 
   const errorCount = items.filter(i=>i.level==='ERROR').length;
@@ -3545,7 +3557,7 @@ function runSelfTest(){
     base.crew.vehicleAdder = {description:'Truck',perHour:0};
     base.schedule.workweek = {hoursPerDay:8,daysPerWeek:5,overtimeMode:'federal',overtimeMultiplier:1.5,doubletimeMultiplier:2.0};
     base.schedule.targetWorkingDays = 30;
-    base.schedule.baselineCrew = 1;
+    base.schedule.crewSize = 1;
     // One WBS section with one item: 100 field labor hours at roleId 101
     base.wbs.sections = [{id:'100',name:'Horizontal',items:[{
       id:1,description:'Cable runs',
@@ -3554,6 +3566,8 @@ function runSelfTest(){
     }]}];
     Object.assign(base.settings, overrides.settings || {});
     if(overrides.contingency) base.settings.contingency = overrides.contingency;
+    if(overrides.crewSize !== undefined) base.schedule.crewSize = overrides.crewSize;
+    if(overrides.targetDays !== undefined) base.schedule.targetWorkingDays = overrides.targetDays;
     if(overrides.extraMgmtRole){
       base.crew.mgmt = [{id:102,role:'Test PM',costRate:80,sellRate:120}];
       base.wbs.sections[0].items.push({
@@ -3615,8 +3629,15 @@ function runSelfTest(){
   s = calc();
   near(s.fieldHours, 100) && near(s.mgmtHours, 20) ? pass('T10 mgmtHours separated from fieldHours') : fail('T10', `field=${s.fieldHours} mgmt=${s.mgmtHours}, expected 100/20`);
 
-  // T11: crew sizing — uses fieldHours(100) not totalHours(120); requiredCrew = ceil(100/240) = 1
-  near(s.requiredCrew, 1) ? pass('T11 crew sizing uses fieldHours only') : fail('T11', `requiredCrew=${s.requiredCrew} from fieldHours=100 not totalHours=120`);
+  // T11: crew-driven schedule — crew is the input, duration follows; doubling crew halves duration
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,inflationFactor:1}, crewSize:2});
+  const s11a = calc();                       // fieldHours 100, crew 2 → 100/(2*8)=6.25 working days
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,inflationFactor:1}, crewSize:4});
+  const s11b = calc();                       // crew 4 → 3.125 working days (half of s11a)
+  (near(s11a.requiredCrew,2) && near(s11a.workingDaysAtRequiredCrew,6.25,0.01) && near(s11b.workingDaysAtRequiredCrew, s11a.workingDaysAtRequiredCrew/2, 0.01))
+    ? pass('T11 crew-driven: crew is input; 2x crew halves duration')
+    : fail('T11', `crew=${s11a.requiredCrew} wd@2=${s11a.workingDaysAtRequiredCrew} wd@4=${s11b.workingDaysAtRequiredCrew}`);
+  s = calc();
 
   // T12: vehicle adder — multiplied by fieldHours only
   state = mkState({settings:{pricingMode:'rateCard',overheadPct:0,marginPct:0,contingencyPct:0,inflationFactor:1}, vehicleRate:10});
