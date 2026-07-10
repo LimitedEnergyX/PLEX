@@ -295,6 +295,35 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .bar-fill.warm{background:var(--warm);}
 .bar-fill.materials{background:var(--blue);}
 .bar-val{font-family:var(--mono);color:var(--white);text-align:right;font-size:11px;}
+
+/* Proposal hero (customer cover) */
+.proposal-hero{position:relative;background:linear-gradient(135deg,var(--navy-mid) 0%,var(--navy-light) 100%);border:1px solid var(--border2);border-radius:12px;padding:38px 40px 32px;margin-bottom:18px;overflow:hidden;}
+.proposal-hero::after{content:"";position:absolute;top:-40%;right:-10%;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(36,199,200,0.10) 0%,rgba(36,199,200,0) 70%);pointer-events:none;}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;position:relative;}
+.hero-title{font-family:var(--display);font-weight:700;font-size:40px;line-height:1.06;color:var(--white);letter-spacing:0.01em;margin:0 0 16px;position:relative;}
+.hero-accent-line{width:64px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:22px;position:relative;}
+.hero-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px 28px;border-top:1px solid var(--border);padding-top:20px;margin-bottom:20px;position:relative;}
+.hero-meta .m-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:5px;}
+.hero-meta .m-val{font-size:15px;color:var(--white);line-height:1.4;}
+.hero-intro{font-size:16px;line-height:1.7;color:var(--gray-light);max-width:72ch;margin:0;position:relative;white-space:pre-wrap;}
+
+/* Phase timeline (customer-facing schedule visual) */
+.phase-timeline{position:relative;margin-top:4px;}
+.phase-node{position:relative;padding-left:34px;padding-bottom:26px;}
+.phase-node:last-of-type{padding-bottom:0;}
+.phase-node::before{content:"";position:absolute;left:9px;top:22px;bottom:-4px;width:2px;background:var(--border2);}
+.phase-node:last-of-type::before{display:none;}
+.phase-node::after{content:"";position:absolute;left:2px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--navy-mid);border:2px solid var(--accent);}
+.phase-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px;}
+.phase-name{font-family:var(--label);font-size:16px;font-weight:600;color:var(--white);letter-spacing:0.02em;}
+.phase-days{font-family:var(--mono);font-size:11px;color:var(--accent);background:rgba(36,199,200,0.10);border:1px solid rgba(36,199,200,0.25);padding:3px 11px;border-radius:20px;white-space:nowrap;}
+.phase-bar{height:6px;background:var(--navy);border-radius:3px;overflow:hidden;border:1px solid var(--border);margin-bottom:7px;max-width:440px;}
+.phase-bar-fill{height:100%;background:var(--accent-dark);border-radius:3px;}
+.phase-hours{font-family:var(--mono);font-size:11px;color:var(--gray-mid);}
+.phase-total{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--label);font-size:15px;color:var(--white);}
+.phase-total strong{color:var(--accent);font-weight:700;}
+.phase-caveat{font-family:var(--body);font-size:11px;color:var(--gray-mid);font-style:italic;margin-top:8px;}
+
 @media(max-width:880px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.headline-card .breakdown{grid-template-columns:1fr 1fr;}.wbs-item{grid-template-columns:1fr;gap:4px;}.wbs-item.hdr{display:none;}.mat-row,.mat-list-head{grid-template-columns:1fr;}.mat-list-head{display:none;}.pick-row{grid-template-columns:1fr 80px;}.pick-row .cat,.pick-row .meta,.pick-row .price{display:none;}.bar-row{grid-template-columns:1fr;}}
 @media(max-width:600px){
   .header-inner{flex-wrap:wrap;gap:6px;padding:10px 12px;}
@@ -348,6 +377,28 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   #sum-signature{page-break-inside:avoid !important;}
   #sum-signature p{font-size:8pt !important;color:#333 !important;}
   #sum-signature span{color:#555 !important;font-size:7pt !important;}
+  /* Proposal hero — print as clean light cover */
+  .proposal-hero{background:white !important;border:1px solid #128D98 !important;border-radius:6px;padding:14pt 18pt !important;margin-bottom:8pt !important;page-break-inside:avoid !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .proposal-hero::after{display:none !important;}
+  .hero-eyebrow{color:#0E6E76 !important;font-size:8pt !important;margin-bottom:6pt !important;}
+  .hero-title{color:#111 !important;font-size:22pt !important;margin-bottom:8pt !important;}
+  .hero-accent-line{background:#128D98 !important;margin-bottom:10pt !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .hero-meta{gap:8pt 20pt !important;padding-top:10pt !important;margin-bottom:10pt !important;}
+  .hero-meta .m-label{color:#666 !important;font-size:7pt !important;}
+  .hero-meta .m-val{color:#111 !important;font-size:10pt !important;}
+  .hero-intro{color:#333 !important;font-size:10pt !important;line-height:1.5 !important;}
+  /* Phase timeline — print */
+  .phase-node::after{background:white !important;border-color:#128D98 !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .phase-node::before{background:#ccc !important;}
+  .phase-name{color:#111 !important;font-size:10pt !important;}
+  .phase-days{color:#0E6E76 !important;background:#e8f6f6 !important;border-color:#8fcacc !important;font-size:8pt !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .phase-bar{background:#eee !important;border-color:#ccc !important;}
+  .phase-bar-fill{background:#128D98 !important;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .phase-hours{color:#555 !important;font-size:8pt !important;}
+  .phase-total{color:#111 !important;font-size:10pt !important;}
+  .phase-total strong{color:#0E6E76 !important;}
+  .phase-caveat{color:#666 !important;font-size:7pt !important;}
+  #sum-timeline-panel{page-break-inside:avoid !important;}
   @page{margin:0.4in;}
 }
 #print-credit{display:none;}
@@ -713,9 +764,22 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div id="legacy-pricing-banner" style="display:none;border:2px solid var(--red);background:rgba(200,16,46,0.08);color:var(--red);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">⚠ Legacy v1.25 Pricing Mode — Overhead and margin stack on top of sell-rate profit. Switch to Cost-Plus or Rate Card in Settings.</div>
   <div id="preflight-results" style="display:none;margin-bottom:12px"></div>
 
+  <!-- Proposal hero (customer cover) — hidden in internal view -->
+  <div id="sum-hero" class="proposal-hero" style="display:none">
+    <div class="hero-eyebrow" id="hero-eyebrow">PROPOSAL</div>
+    <h1 class="hero-title" id="hero-title">Limited Energy Job Proposal</h1>
+    <div class="hero-accent-line"></div>
+    <div class="hero-meta" id="hero-meta"></div>
+    <p class="hero-intro" id="hero-intro"></p>
+  </div>
+
   <div class="panel"><div class="panel-label">PROJECT INFORMATION</div><div id="sum-project"></div></div>
 
   <div id="rom-banner" style="display:none;border:2px solid #c2410c;background:#fff7ed;color:#9a3412;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-align:center;padding:8px 12px;border-radius:8px;margin-bottom:10px;">&#9888; Budgetary ROM &mdash; order-of-magnitude, not for acceptance or construction. Subject to open RFIs.</div>
+
+  <!-- Visual phase timeline (customer-facing) — hidden in internal view -->
+  <div class="panel" id="sum-timeline-panel" style="display:none"><div class="panel-label">PROJECT TIMELINE</div><div class="phase-timeline" id="phase-timeline"></div></div>
+
   <div class="headline-card">
     <div class="lbl" id="hdl-price-lbl">TOTAL PROPOSAL PRICE</div>
     <div class="price" id="hdl-price">$0</div>
@@ -2288,6 +2352,9 @@ function renderSummary(s){
   if(p.location) sp.push(p.location);
   if(p.proposalDate) sp.push(p.proposalDate);
   v('sum-subtitle').textContent = sp.length ? sp.join(' · ') : 'Enter project info in the Builder tab';
+  // Customer view: the hero cover carries the title, so hide the plain header title
+  v('sum-title').style.display = isInternal ? '' : 'none';
+  v('sum-subtitle').style.display = isInternal ? '' : 'none';
 
   // Headline card
   v('hdl-price').textContent = fmtMoney(s.finalPrice);
@@ -2319,9 +2386,68 @@ function renderSummary(s){
   if(p.openRfiCount > 0) projRows.push(sumRow('Open RFIs', `<span style="color:var(--warn);font-weight:700">${p.openRfiCount} open</span>`));
   projRows.push(sumRowBlock('Scope', esc(p.scope || '—')));
   projRows.push(sumRowBlock('Exclusions', esc(p.exclusions || '—')));
-  if(p.customerNotes) projRows.push(sumRowBlock('Notes', esc(p.customerNotes)));
+  // Customer view surfaces customerNotes in the hero intro; only repeat here for internal
+  if(p.customerNotes && isInternal) projRows.push(sumRowBlock('Notes', esc(p.customerNotes)));
   if(isInternal && p.notes) projRows.push(sumRowBlock('Internal Notes', `<span style="color:var(--warn)">${esc(p.notes)}</span>`));
   v('sum-project').innerHTML = projRows.join('');
+
+  // Proposal hero (customer cover) + visual phase timeline — customer view only
+  {
+    const heroEl = v('sum-hero');
+    const tlPanel = v('sum-timeline-panel');
+    if(heroEl) heroEl.style.display = isInternal ? 'none' : '';
+    if(tlPanel) tlPanel.style.display = isInternal ? 'none' : '';
+
+    if(!isInternal){
+      const dt = (p.documentType || 'Proposal').toUpperCase();
+      v('hero-eyebrow').textContent = dt === 'ROM' ? 'Budgetary ROM · Order-of-Magnitude'
+                                    : dt === 'BUDGETARY' ? 'Budgetary Estimate'
+                                    : 'Project Proposal';
+      v('hero-title').textContent = p.name || 'Limited Energy Job Proposal';
+      const heroMeta = [];
+      const preparedFor = [p.client, p.location].filter(Boolean).join(' · ');
+      heroMeta.push(['Prepared For', esc(preparedFor || '—')]);
+      heroMeta.push(['Prepared By', esc(p.estimator || 'Limited Energy eXperts')]);
+      heroMeta.push(['Date', esc(p.proposalDate || '—')]);
+      if(p.validUntil) heroMeta.push(['Valid Until', esc(p.validUntil)]);
+      v('hero-meta').innerHTML = heroMeta.map(m => `<div><div class="m-label">${m[0]}</div><div class="m-val">${m[1]}</div></div>`).join('');
+      const heroIntro = (p.customerNotes && p.customerNotes.trim()) ? p.customerNotes.trim()
+                      : 'Thank you for the opportunity to provide this proposal. The following outlines the scope of work, the project timeline, and the associated investment for your review.';
+      v('hero-intro').textContent = heroIntro;
+
+      // Phase timeline from WBS sections that carry labor hours
+      const tl = v('phase-timeline');
+      if(tl){
+        const phases = state.wbs.sections
+          .map(sec => ({ id: sec.id, name: sec.name, hours: (s.sectionTotals[sec.id] || {}).hours || 0 }))
+          .filter(ph => ph.hours > 0);
+        if(phases.length === 0){
+          tl.innerHTML = '<div style="color:var(--gray-mid);font-style:italic;font-size:13px">Add scope items in the Builder to generate a project timeline.</div>';
+        } else {
+          const phaseHours = phases.reduce((a,ph)=>a+ph.hours,0);
+          const calDays = s.estimatedCalendarDays || 0;
+          const maxHours = Math.max(...phases.map(ph=>ph.hours));
+          let html = phases.map(ph => {
+            const share = phaseHours > 0 ? ph.hours/phaseHours : 0;
+            const days = calDays > 0 ? Math.max(1, Math.round(share*calDays)) : 0;
+            const barPct = maxHours > 0 ? (ph.hours/maxHours)*100 : 0;
+            const daysLabel = days > 0 ? `~${days} day${days>1?'s':''}` : fmtHrs(ph.hours);
+            return `<div class="phase-node">
+              <div class="phase-head"><span class="phase-name">${esc(ph.id)} · ${esc(ph.name)}</span><span class="phase-days">${daysLabel}</span></div>
+              <div class="phase-bar"><div class="phase-bar-fill" style="width:${barPct.toFixed(0)}%"></div></div>
+              <div class="phase-hours">${fmtHrs(ph.hours)} · ${(share*100).toFixed(0)}% of scope effort</div>
+            </div>`;
+          }).join('');
+          const totalLabel = calDays > 0
+            ? `${s.plannedWorkweeks.toFixed(1)} weeks · ~${calDays} calendar days at ${s.requiredCrew} tech${s.requiredCrew>1?'s':''}`
+            : `${fmtHrs(phaseHours)} of scope effort`;
+          html += `<div class="phase-total">Estimated duration: <strong>${totalLabel}</strong></div>`;
+          html += `<div class="phase-caveat">Phase durations are proportional estimates based on labor hours; final sequencing and overlap are confirmed at scheduling.</div>`;
+          tl.innerHTML = html;
+        }
+      }
+    }
+  }
 
   // Schedule & Crew
   const schedParts = [
