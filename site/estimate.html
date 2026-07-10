@@ -281,6 +281,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .chart-seg.odc{background:var(--teal);}
 .chart-seg.overhead{background:var(--warn);}
 .chart-seg.margin{background:var(--green);}
+.chart-seg.contingency{background:#0EA5A0;}
+.chart-seg.allowance{background:#7C8CF8;}
 .chart-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:var(--mono);font-size:11px;}
 .chart-legend .li{display:flex;align-items:center;gap:6px;color:var(--gray-light);}
 .chart-legend .sw{width:10px;height:10px;border-radius:2px;display:inline-block;}
@@ -289,6 +291,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .chart-legend .sw.odc{background:var(--teal);}
 .chart-legend .sw.overhead{background:var(--warn);}
 .chart-legend .sw.margin{background:var(--green);}
+.chart-legend .sw.contingency{background:#0EA5A0;}
+.chart-legend .sw.allowance{background:#7C8CF8;}
 .chart-legend .pct{color:var(--gray-mid);font-size:10px;}
 .bar-row{display:grid;grid-template-columns:160px 1fr 90px;gap:10px;align-items:center;padding:5px 0;font-family:var(--mono);font-size:11px;}
 .bar-label{color:var(--gray-light);font-size:11px;}
@@ -348,9 +352,11 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   .summary-header{margin-bottom:8pt;}
   .summary-header h1{font-size:18pt !important;}
   .sum-meta{font-size:9pt;}
-  .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:avoid;margin-bottom:4pt;padding:5pt 8pt;}
-  /* Long list-heavy panels may flow across pages; short cards stay together */
-  #sum-commercial{page-break-inside:auto !important;}
+  /* Panels flow naturally (prevents near-blank pages from forced breaks). Small cards
+     stay together via their own rules below; long list panels flow across pages. */
+  .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:auto;margin-bottom:4pt;padding:5pt 8pt;}
+  /* Keep compact, high-value cards intact where they fit */
+  #sum-timeline-panel,#sum-signature{page-break-inside:avoid !important;}
   .headline-card{background:white !important;border:1px solid #128D98 !important;page-break-inside:avoid;margin-bottom:8pt;padding:10pt 14pt;}
   .headline-card .price{font-size:26pt !important;}
   .panel-label{color:#0E6E76 !important;font-weight:700;font-size:8pt;margin-bottom:4pt;}
@@ -611,7 +617,9 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="radio-row">
       <label><input type="radio" name="jobtype" value="local" id="jt-local" checked> Local</label>
       <label><input type="radio" name="jobtype" value="remote" id="jt-remote"> Remote</label>
+      <label><input type="radio" name="jobtype" value="unconfirmed" id="jt-unconfirmed"> Unconfirmed</label>
     </div>
+    <div class="callout" style="margin-top:6px">Set <strong>Unconfirmed</strong> when the jurisdiction is not established — travel, prevailing wage, tax, freight, and permit assumptions stay unresolved. ROM/Budgetary output may proceed; a Proposal requires a confirmed location.</div>
     <div id="remotePanel" style="display:none">
       <div class="callout"><strong>Remote job:</strong> per diem, lodging, and travel costs are auto-computed from crew size and target days. Adjust the per-unit costs below; the auto-computed totals appear in ODC.</div>
       <div class="grid-4">
@@ -666,14 +674,32 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <label style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="pricingMode" id="pm-legacyV125" value="legacyV125"> Legacy v1.25 <span style="font-size:10px;color:var(--red)">(double-stacked)</span></label>
     </div>
     <div id="oh-margin-block">
-      <div class="grid-3">
-        <div class="field"><div class="field-label">CONTINGENCY %</div><input type="number" id="set-contingency" min="0" max="50" step="0.5" value="0"></div>
+      <div class="grid-2">
         <div class="field"><div class="field-label">OVERHEAD %</div><input type="number" id="set-overhead" min="0" max="100" step="0.5" value="15"></div>
         <div class="field"><div class="field-label">MARGIN % (FORM)</div><input type="number" id="set-margin" min="0" max="90" step="0.5" value="20"></div>
       </div>
     </div>
+
+    <!-- Structured contingency -->
+    <div class="section-divider" style="margin-top:14px"><span>CONTINGENCY</span></div>
+    <div class="field" style="margin-bottom:10px">
+      <div class="field-label">CONTINGENCY TYPE</div>
+      <label style="display:inline-flex;align-items:center;gap:6px;margin-right:18px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="cgType" id="cg-none" value="none"> None</label>
+      <label style="display:inline-flex;align-items:center;gap:6px;margin-right:18px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="cgType" id="cg-fixed" value="fixed"> Fixed $</label>
+      <label style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;cursor:pointer"><input type="radio" name="cgType" id="cg-percent" value="percent"> Percentage %</label>
+    </div>
+    <div class="grid-3" id="cg-detail-row">
+      <div class="field" id="cg-fixed-field"><div class="field-label">FIXED AMOUNT ($)</div><input type="number" id="cg-fixed-amount" min="0" step="1" value="0"></div>
+      <div class="field" id="cg-percent-field"><div class="field-label">PERCENT (%)</div><input type="number" id="cg-percent-amount" min="0" max="50" step="0.5" value="0"></div>
+      <div class="field" id="cg-basis-field"><div class="field-label">PERCENT BASIS</div><select id="cg-basis"><option value="directCost">Direct cost (before contingency)</option><option value="burdenedCost">Fully burdened cost (before contingency)</option><option value="sell">Customer sell allowance</option></select></div>
+    </div>
+    <div class="grid-2" id="cg-treatment-row">
+      <div class="field"><div class="field-label">TREATMENT</div><select id="cg-treatment"><option value="inDirectCost">Included in direct cost (before OH &amp; margin)</option><option value="customerAllowance">Separate customer allowance (visible)</option><option value="internalOnly">Internal only (excluded from customer price)</option></select></div>
+      <div class="field"><div class="field-label">LABEL</div><input type="text" id="cg-label" value="Estimating contingency" placeholder="e.g. Estimating contingency"></div>
+    </div>
+
     <div class="field" style="margin-top:8px;max-width:260px"><div class="field-label">INFLATION FACTOR <button class="help-btn" id="inflHelpBtn">?</button></div><input type="number" id="set-inflation" min="0.5" max="3" step="0.01" value="1.10"></div>
-    <div class="callout" style="margin-top:8px"><strong>Rate Card:</strong> sell rates already embed profit — overhead/margin fields not applied. <strong>Cost-Plus:</strong> overhead on cost, then single-pass margin. <strong>Legacy v1.25:</strong> original behavior, stacks overhead and margin on sell side (may inflate margins). <strong>Contingency</strong> adds to direct cost before overhead and margin.</div>
+    <div class="callout" style="margin-top:8px"><strong>Rate Card:</strong> sell rates already embed profit — overhead/margin fields not applied. <strong>Cost-Plus:</strong> overhead on cost, then single-pass margin. <strong>Legacy v1.25:</strong> original behavior, stacks overhead and margin on sell side (may inflate margins).<br><strong>Contingency</strong> is a structured field: <em>Included in direct cost</em> marks it up with overhead and margin; <em>Customer allowance</em> adds it as a separate visible pass-through line; <em>Internal only</em> holds it as reserve outside the customer price.</div>
   </div>
 
   <!-- Materials -->
@@ -1401,7 +1427,10 @@ function defaultState(){
       mgmt:DEFAULT_MGMT_ROLES.map(r=>({...r})),
       vehicleAdder:{perHour:10, description:'Truck / tools'}
     },
-    settings:{overheadPct:0.15, marginPct:0.20, inflationFactor:1.10},
+    settings:{
+      overheadPct:0.15, marginPct:0.20, inflationFactor:1.10,
+      contingency:{ type:'none', fixedAmount:0, percent:0, basis:'directCost', treatment:'inDirectCost', label:'Estimating contingency' }
+    },
     wbs:{sections:BICSI_SECTIONS.map(s=>({...s, items:[], collapsed:false}))},
     odc:{rentals:[], subcontractors:[]},
     materials:{items:[]}
@@ -1449,7 +1478,29 @@ function applySessionMigrations(st, isLegacy){
   if(st.project.documentType === undefined) st.project.documentType = 'Proposal';
   if(st.project.openRfiCount === undefined) st.project.openRfiCount = 0;
   if(!st.settings.pricingMode) st.settings.pricingMode = isLegacy ? 'legacyV125' : 'rateCard';
-  if(st.settings.contingencyPct === undefined) st.settings.contingencyPct = 0;
+  // Structured contingency migration — old files carried a single settings.contingencyPct (decimal).
+  // Also migrate when the structured object is still the default 'none' but a legacy contingencyPct exists
+  // (can happen when import merges defaultState().settings over the imported settings).
+  const legacyPct = +st.settings.contingencyPct || 0;
+  if(!st.settings.contingency || typeof st.settings.contingency !== 'object'
+     || (st.settings.contingency.type === 'none' && legacyPct > 0)){
+    st.settings.contingency = legacyPct > 0
+      ? { type:'percent', fixedAmount:0, percent:legacyPct, basis:'directCost', treatment:'inDirectCost', label:'Estimating contingency' }
+      : { type:'none',    fixedAmount:0, percent:0,        basis:'directCost', treatment:'inDirectCost', label:'Estimating contingency' };
+  } else {
+    // Fill any missing fields on an existing structured object
+    const c = st.settings.contingency;
+    if(!c.type) c.type = 'none';
+    if(c.fixedAmount === undefined) c.fixedAmount = 0;
+    if(c.percent === undefined) c.percent = 0;
+    if(!c.basis) c.basis = 'directCost';
+    if(!c.treatment) c.treatment = 'inDirectCost';
+    if(c.label === undefined) c.label = 'Estimating contingency';
+  }
+  delete st.settings.contingencyPct;
+  // Job type — normalize; blank/TBD location no longer forced to 'local'
+  if(!st.jobType) st.jobType = defaultState().jobType;
+  if(!st.jobType.mode) st.jobType.mode = 'local';
   migrateRoles(st.crew);
   migrateMaterialItems(st.materials.items);
   migrateOdc(st.odc);
@@ -1654,15 +1705,27 @@ function calc(){
   const directODCSell = odcManualSell + remote.total + vehicleSell;
   const directSellSubtotal = directLaborSell + directMaterialsSell + directODCSell;
 
-  // Contingency — % of direct cost, added before overhead and margin
-  const contingencyPct = Math.max(0, +state.settings.contingencyPct||0);
-  const contingencyAmt = directCostSubtotal * contingencyPct;
-  const directCostWithContingency = directCostSubtotal + contingencyAmt;
-
-  // Overhead and margin
   const overheadPct = +state.settings.overheadPct||0;
   const marginPct = Math.min(0.999, Math.max(0, +state.settings.marginPct||0));
   const pricingMode = state.settings.pricingMode || 'rateCard';
+
+  // Structured contingency — computed from the settings.contingency object (never inferred from ODC text).
+  const cg = state.settings.contingency || { type:'none' };
+  const cgType = cg.type || 'none';
+  const cgBasis = cg.basis || 'directCost';
+  const cgTreatment = cgType === 'none' ? 'none' : (cg.treatment || 'inDirectCost');
+  let contingencyAmt = 0;
+  if(cgType === 'fixed'){
+    contingencyAmt = Math.max(0, +cg.fixedAmount || 0);
+  } else if(cgType === 'percent'){
+    const cgPct = Math.max(0, +cg.percent || 0);
+    if(cgBasis === 'burdenedCost')      contingencyAmt = cgPct * (directCostSubtotal * (1 + overheadPct));
+    else if(cgBasis === 'sell')         contingencyAmt = cgPct * directSellSubtotal;
+    else /* directCost */               contingencyAmt = cgPct * directCostSubtotal;
+  }
+  // Only the "in direct cost" treatment folds contingency into the marked-up cost base.
+  const contingencyInCost = (cgTreatment === 'inDirectCost') ? contingencyAmt : 0;
+  const directCostWithContingency = directCostSubtotal + contingencyInCost;
 
   let finalPrice, fullyBurdenedCost, overheadCost, overheadSell, costWithOH, sellWithOH, marginAmount;
 
@@ -1678,11 +1741,11 @@ function calc(){
   } else if(pricingMode === 'rateCard'){
     // Sell rates and markups already embed margin; no additional overhead or margin
     overheadCost = 0; overheadSell = 0;
-    costWithOH = directCostSubtotal;
+    costWithOH = directCostWithContingency;
     sellWithOH = directSellSubtotal;
-    finalPrice = directSellSubtotal;
+    finalPrice = directSellSubtotal;          // rate-card price is the sell subtotal
     marginAmount = 0;
-    fullyBurdenedCost = directCostSubtotal;
+    fullyBurdenedCost = directCostWithContingency; // contingency-in-cost erodes margin, not price
   } else {
     // legacyV125: original behaviour — overhead on sell, then margin on sell (double-stacked)
     overheadCost = directCostWithContingency * overheadPct;
@@ -1694,12 +1757,24 @@ function calc(){
     fullyBurdenedCost = costWithOH;
   }
 
+  // Contingency treatment adjustments to the CUSTOMER price and profit.
+  let contingencyAllowance = 0;   // customer-visible allowance added to the price (pass-through reserve)
+  let contingencyReserve = 0;     // internal reserve carved out of profit; not in customer price
+  if(cgTreatment === 'customerAllowance'){
+    contingencyAllowance = contingencyAmt;
+    finalPrice = finalPrice + contingencyAllowance;
+  } else if(cgTreatment === 'internalOnly'){
+    contingencyReserve = contingencyAmt;
+  }
+  const contingencyCustomerVisible = (cgTreatment === 'customerAllowance');
+
   // Guard against NaN / negative / impossible values
   if(!isFinite(finalPrice) || finalPrice < 0) finalPrice = 0;
   if(!isFinite(fullyBurdenedCost) || fullyBurdenedCost < 0) fullyBurdenedCost = 0;
 
   const totalCost = fullyBurdenedCost;
-  const totalProfit = finalPrice - totalCost;
+  // Allowance and internal reserve are earmarked funds, not profit.
+  const totalProfit = finalPrice - totalCost - contingencyAllowance - contingencyReserve;
   const effectiveMargin = finalPrice > 0 ? totalProfit / finalPrice : 0;
 
   const totalDays = (hpd > 0 && requiredCrew > 0) ? fieldHours / (hpd * requiredCrew) : 0;
@@ -1726,7 +1801,11 @@ function calc(){
     // Subtotals & final
     directLaborCost, directLaborSell, directMaterialsCost, directMaterialsSell,
     directODCCost, directODCSell, directCostSubtotal, directSellSubtotal,
-    contingencyPct, contingencyAmt, directCostWithContingency,
+    contingencyAmt, directCostWithContingency,
+    contingencyType:cgType, contingencyBasis:cgBasis, contingencyTreatment:cgTreatment,
+    contingencyLabel:(cg.label || 'Estimating contingency'),
+    contingencyPercent:(cgType==='percent' ? Math.max(0, +cg.percent||0) : 0),
+    contingencyInCost, contingencyAllowance, contingencyReserve, contingencyCustomerVisible,
     overheadPct, overheadCost, overheadSell, costWithOH, sellWithOH,
     marginPct, marginAmount, finalPrice, pricingMode,
     totalCost, fullyBurdenedCost, totalProfit, effectiveMargin,
@@ -1761,6 +1840,22 @@ function render(){
   const ohBlock = v('oh-margin-block');
   if(ohBlock) ohBlock.style.opacity = pmVal === 'rateCard' ? '0.45' : '1';
 
+  // Structured contingency
+  const cg = state.settings.contingency || {type:'none'};
+  ['none','fixed','percent'].forEach(t=>{const el=v('cg-'+t);if(el)el.checked=(cg.type===t);});
+  setIfDiff('cg-fixed-amount', cg.fixedAmount || 0);
+  setIfDiff('cg-percent-amount', (cg.percent || 0) * 100);
+  setIfDiff('cg-basis', cg.basis || 'directCost');
+  setIfDiff('cg-treatment', cg.treatment || 'inDirectCost');
+  setIfDiff('cg-label', cg.label || 'Estimating contingency');
+  { const ff=v('cg-fixed-field'), pf=v('cg-percent-field'), bf=v('cg-basis-field'), tr=v('cg-treatment-row'), dr=v('cg-detail-row');
+    if(ff) ff.style.display = cg.type==='fixed' ? '' : 'none';
+    if(pf) pf.style.display = cg.type==='percent' ? '' : 'none';
+    if(bf) bf.style.display = cg.type==='percent' ? '' : 'none';
+    if(dr) dr.style.display = cg.type==='none' ? 'none' : '';
+    if(tr) tr.style.display = cg.type==='none' ? 'none' : '';
+  }
+
   // Schedule
   setIfDiff('sched-days', state.schedule.targetWorkingDays);
   setIfDiff('sched-pattern', state.schedule.workweekPattern);
@@ -1785,7 +1880,7 @@ function render(){
   else {statusEl.innerHTML=`<span class="pill pill-ok">BASELINE</span>`;}
 
   // Job type
-  document.getElementById('jt-' + state.jobType.mode).checked = true;
+  { const jtEl = document.getElementById('jt-' + (state.jobType.mode||'local')); if(jtEl) jtEl.checked = true; }
   v('remotePanel').style.display = state.jobType.mode === 'remote' ? 'block' : 'none';
   setIfDiff('rmt-travel-days', state.jobType.remote.travelDaysEachWay);
   setIfDiff('rmt-perdiem', state.jobType.remote.perDiemPerTechPerDay);
@@ -1798,7 +1893,6 @@ function render(){
   setIfDiff('vehicle-rate', state.crew.vehicleAdder.perHour);
 
   // Settings
-  setIfDiff('set-contingency', (state.settings.contingencyPct || 0) * 100);
   setIfDiff('set-overhead', state.settings.overheadPct * 100);
   setIfDiff('set-margin', state.settings.marginPct * 100);
   setIfDiff('set-inflation', state.settings.inflationFactor);
@@ -2311,9 +2405,10 @@ function renderCostChart(s){
       {key:'labor',     label:'Labor',     val: s.directLaborCost},
       {key:'materials', label:'Mat',       val: s.directMaterialsCost},
       {key:'odc',       label:'ODC',       val: s.directODCCost},
-      {key:'overhead',  label:'OH',        val: s.overheadCost},
-      {key:'margin',    label:'Margin',    val: s.marginAmount}
     ];
+    if(s.contingencyInCost > 0) segs.push({key:'contingency', label:'Cont.', val: s.contingencyInCost});
+    segs.push({key:'overhead', label:'OH', val: s.overheadCost});
+    segs.push({key:'margin',   label:'Margin', val: s.marginAmount});
   } else if(pm === 'rateCard'){
     segs = [
       {key:'labor',     label:'Labor',     val: s.directLaborSell},
@@ -2329,6 +2424,8 @@ function renderCostChart(s){
       {key:'margin',    label:'Margin',    val: s.marginAmount}
     ];
   }
+  // A separate customer contingency allowance is part of the final price in any mode.
+  if(s.contingencyAllowance > 0) segs.push({key:'allowance', label:'Cont. allowance', val: s.contingencyAllowance});
   stack.innerHTML = segs.map(seg => {
     const pct = Math.max(0, (seg.val / total) * 100);
     if(pct < 0.5) return '';
@@ -2486,12 +2583,13 @@ function renderSummary(s){
     }
   }
 
-  // Schedule & Crew — flag job type when the jurisdiction/location is not yet confirmed
+  // Schedule & Crew — explicit job type (Local / Remote / Unconfirmed)
+  const jtMode = state.jobType.mode || 'local';
   const locUnconfirmed = !((p.location||'').trim()) || /tbd|unconfirm|undetermin|pending|unknown/i.test(p.location||'');
-  const jobTypeLabel = (state.jobType.mode === 'remote' ? 'Remote' : 'Local')
-    + (locUnconfirmed ? ' — jurisdiction unconfirmed (wage/travel/tax basis not validated)' : '');
+  const jobTypeLabel = jtMode === 'unconfirmed' ? 'Unconfirmed' : jtMode === 'remote' ? 'Remote' : 'Local';
+  const jobTypeFlagged = jtMode === 'unconfirmed' || (locUnconfirmed && jtMode !== 'unconfirmed');
   const schedParts = [
-    ['Job Type', locUnconfirmed ? `<span style="color:var(--warn);font-weight:700">${jobTypeLabel}</span>` : jobTypeLabel],
+    ['Job Type', jobTypeFlagged ? `<span style="color:var(--warn);font-weight:700">${jobTypeLabel}</span>` : jobTypeLabel],
     ['Field Hours', fmtHrs(s.fieldHours)],
   ];
   if(s.mgmtHours > 0) schedParts.push(['Management Hours', fmtHrs(s.mgmtHours)]);
@@ -2528,22 +2626,30 @@ function renderSummary(s){
     v(id).style.display = isInternal ? 'none' : '';
   });
   v('hdl-breakdown').style.gridTemplateColumns = isInternal ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
-  const docType = (state.project.documentType || 'PROPOSAL').toUpperCase();
-  const isROM = docType === 'ROM' || docType === 'BUDGETARY';
-  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE' : (isROM ? 'BUDGETARY ROM \u2014 NOT FOR ACCEPTANCE' : 'TOTAL PROPOSAL PRICE');
+  // Document type \u2014 ROM, Budgetary Estimate, and Proposal are kept distinct.
+  const docType = (state.project.documentType || 'Proposal');
+  const dtU = docType.toUpperCase();
+  const isROM = dtU === 'ROM';
+  const isBudgetary = dtU === 'BUDGETARY';
+  const isBudgetType = isROM || isBudgetary;   // both are non-contractual budgetary outputs
+  v('hdl-price-lbl').textContent = isInternal ? 'TOTAL SELL PRICE'
+    : isROM ? 'BUDGETARY ROM TOTAL \u2014 NOT FOR ACCEPTANCE'
+    : isBudgetary ? 'BUDGETARY ESTIMATE TOTAL'
+    : 'TOTAL PROPOSAL PRICE';
   v('hdl-price-note').style.display = isInternal ? 'none' : '';
-  v('sum-signature').style.display = (isInternal || isROM) ? 'none' : '';
-  { const rb = v('rom-banner'); if(rb) rb.style.display = isROM ? '' : 'none'; }
+  v('sum-signature').style.display = (isInternal || isBudgetType) ? 'none' : '';
+  { const rb = v('rom-banner'); if(rb) rb.style.display = isROM ? '' : 'none'; }  // ROM banner only for ROM
 
   // ROM wording — a budgetary ROM is not an acceptance-ready contract, so strip
   // proposal/payment/authorization language and reword to budget-basis wording.
   const noteBase = 'includes labor, materials, applicable burden, overhead, profit, consumables, tools, warranty allowance, and standard project administration.';
-  v('hdl-price-note').innerHTML = (isROM ? 'Budgetary ROM total ' : 'Proposal total ') + noteBase;
-  { const cp = v('clar-payment'); if(cp) cp.style.display = isROM ? 'none' : ''; }
-  { const cv = v('clar-validity'); if(cv) cv.innerHTML = isROM
+  const totalWord = isROM ? 'Budgetary ROM total ' : isBudgetary ? 'Budgetary Estimate total ' : 'Proposal total ';
+  v('hdl-price-note').innerHTML = totalWord + noteBase;
+  { const cp = v('clar-payment'); if(cp) cp.style.display = isBudgetType ? 'none' : ''; }
+  { const cv = v('clar-validity'); if(cv) cv.innerHTML = isBudgetType
       ? '<strong>Budget validity.</strong> This budgetary figure is valid for 30 days from the date shown. Material cost volatility and RFI resolution may change the figure.'
       : '<strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.'; }
-  { const tcl = v('test-closeout'); if(tcl) tcl.innerHTML = isROM
+  { const tcl = v('test-closeout'); if(tcl) tcl.innerHTML = isBudgetType
       ? '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are anticipated closeout deliverables for the eventual firm scope.'
       : '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.'; }
 
@@ -2555,7 +2661,7 @@ function renderSummary(s){
     if(/cat\s?6a|category\s?6a|cat6a/i.test(txt)) cop.push('Category 6A'); else if(/cat\s?6|category\s?6|cat6/i.test(txt)) cop.push('Category 6');
     const fib=[]; if(/os2|single-?mode|\bsm\b/i.test(txt)) fib.push('OS2 single-mode');
     if(/om4/i.test(txt)) fib.push('OM4 multimode'); if(/om3/i.test(txt)) fib.push('OM3 multimode');
-    const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically ' + (isROM ? 'as part of project closeout.' : 'prior to final payment.'); }
+    const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically ' + (isBudgetType ? 'as part of project closeout.' : 'prior to final payment.'); }
     const tf=v('test-fiber'); if(tf){ tf.style.display = fib.length?'':'none'; if(fib.length) tf.innerHTML = '<strong>Fiber \u2014 '+fib.join(', ')+'.</strong> All strands certified bidirectionally (Tier 1); results per strand in the closeout package.'; }
     const hasCamera = state.materials.items.some(m=>/camera|surveillance|cctv/i.test((m.category||'')+' '+(m.description||''))) || state.wbs.sections.some(sec=>(sec.items||[]).some(it=>/camera|cctv|surveillance|vms/i.test(it.description||'')));
     const cl=v('clar-camera'); if(cl) cl.style.display = hasCamera?'':'none';
@@ -2630,23 +2736,36 @@ function renderSummary(s){
   const fhdr = txt => `<div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);padding:10px 0 3px;border-top:1px solid var(--border2);margin-top:4px">${txt}</div>`;
   const bigTotal = (label, val) => sumRow(label, `<span style="color:var(--warm);font-size:18px;font-weight:700">${fmtMoney(val)}</span>`);
   const pm = s.pricingMode || 'rateCard';
+  // Structured-contingency descriptors
+  const cgBasisLbl = s.contingencyBasis === 'burdenedCost' ? 'burdened cost' : s.contingencyBasis === 'sell' ? 'customer sell' : 'direct cost';
+  const cgDescr = s.contingencyType === 'fixed' ? `${esc(s.contingencyLabel)} (fixed)`
+    : s.contingencyType === 'percent' ? `${esc(s.contingencyLabel)} (${fmtPct(s.contingencyPercent)} of ${cgBasisLbl})`
+    : esc(s.contingencyLabel);
+  const cgTreatLbl = s.contingencyTreatment === 'customerAllowance' ? 'separate customer allowance'
+    : s.contingencyTreatment === 'internalOnly' ? 'internal reserve'
+    : s.contingencyType === 'none' ? 'none' : 'included in direct cost';
+  const allowanceRows = s.contingencyAllowance > 0 ? [
+    sumRow('Priced subtotal', fmtMoney(s.finalPrice - s.contingencyAllowance)),
+    sumRow(cgDescr + ' — customer allowance', fmtMoney(s.contingencyAllowance)),
+  ] : [];
+  const reserveRow = s.contingencyReserve > 0 ? [sumRow(cgDescr + ' — internal reserve (excluded from price)', `<span style="color:var(--warm)">${fmtMoney(s.contingencyReserve)}</span>`)] : [];
+
   let finParts;
   if(pm === 'costPlus'){
-    // Build-up is COST-based: direct cost + overhead(cost) + margin = total.
+    // Build-up is COST-based: labor + material + ODC + contingency = direct cost subtotal → OH → margin → total.
     finParts = [
       fhdr('Price Build-Up — Cost-Plus (reconciles to total)'),
       sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
       sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
       sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
-      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
-      ...(s.contingencyAmt > 0 ? [
-        sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt)),
-        sumRow('Cost + contingency', fmtMoney(s.directCostWithContingency)),
-      ] : []),
+      ...(s.contingencyInCost > 0 ? [sumRow(cgDescr, fmtMoney(s.contingencyInCost))] : []),
+      sumRow('Direct cost subtotal' + (s.contingencyInCost > 0 ? ' (incl. contingency)' : ''), fmtMoney(s.directCostWithContingency)),
       sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (on cost)`, fmtMoney(s.overheadCost)),
-      sumRow('Cost + overhead', fmtMoney(s.fullyBurdenedCost)),
+      sumRow('Fully burdened cost', fmtMoney(s.fullyBurdenedCost)),
       sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
+      ...allowanceRows,
       bigTotal('Total price', s.finalPrice),
+      ...reserveRow,
       fhdr('Rate-Card Sell (reference only — not additive)'),
       sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
       sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
@@ -2654,19 +2773,21 @@ function renderSummary(s){
       sumRow('Direct sell subtotal', fmtMoney(s.directSellSubtotal)),
     ];
   } else if(pm === 'rateCard'){
-    // Build-up IS the sell subtotal; profit already embedded in sell rates.
     finParts = [
       fhdr('Price Build-Up — Rate Card (reconciles to total)'),
       sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
       sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
       sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
+      ...(s.contingencyInCost > 0 ? [sumRow(cgDescr + ' (raises cost floor)', fmtMoney(s.contingencyInCost))] : []),
+      ...allowanceRows,
       bigTotal('Total sell price', s.finalPrice),
+      ...reserveRow,
       sumRow('Basis', '<span style="font-style:italic;color:var(--gray-mid)">Profit embedded in sell rates; overhead & margin not added.</span>'),
       fhdr('Cost Basis (internal)'),
       sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
       sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
       sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
-      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
+      sumRow('Direct cost subtotal' + (s.contingencyInCost > 0 ? ' (incl. contingency)' : ''), fmtMoney(s.directCostWithContingency)),
     ];
   } else { // legacyV125 — sell-side, overhead & margin stacked on sell.
     finParts = [
@@ -2675,16 +2796,18 @@ function renderSummary(s){
       sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
       sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
       sumRow('Direct sell subtotal', fmtMoney(s.directSellSubtotal)),
-      ...(s.contingencyAmt > 0 ? [sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt))] : []),
       sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (on sell)`, fmtMoney(s.overheadSell)),
       sumRow('Sell + overhead', fmtMoney(s.sellWithOH)),
       sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
+      ...allowanceRows,
       bigTotal('Total sell price', s.finalPrice),
+      ...reserveRow,
       fhdr('Cost Basis (internal)'),
       sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
       sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
       sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
-      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
+      ...(s.contingencyInCost > 0 ? [sumRow(cgDescr + ' (in cost)', fmtMoney(s.contingencyInCost))] : []),
+      sumRow('Direct cost subtotal' + (s.contingencyInCost > 0 ? ' (incl. contingency)' : ''), fmtMoney(s.directCostWithContingency)),
     ];
   }
   finParts.push(
@@ -2692,6 +2815,7 @@ function renderSummary(s){
     sumRow('Fully burdened cost', fmtMoney(s.fullyBurdenedCost)),
     sumRow('Total project profit', `<span style="color:var(--green);font-size:16px">${fmtMoney(s.totalProfit)}</span>`),
     sumRow('Effective margin', `<span style="color:var(--green);font-size:16px">${fmtPct(s.effectiveMargin)}</span>`),
+    sumRow('Contingency', s.contingencyType === 'none' ? 'None' : `${cgDescr} · ${cgTreatLbl} · ${fmtMoney(s.contingencyAmt)}`),
     sumRow('Pricing mode', pm === 'costPlus' ? 'Cost-Plus' : pm === 'rateCard' ? 'Rate Card' : 'Legacy v1.25')
   );
   v('sum-financial').innerHTML = finParts.join('');
@@ -2785,6 +2909,7 @@ function bindAll(){
   // Job type
   v('jt-local').addEventListener('change', ()=>{state.jobType.mode='local';render();markDirty();});
   v('jt-remote').addEventListener('change', ()=>{state.jobType.mode='remote';render();markDirty();});
+  v('jt-unconfirmed').addEventListener('change', ()=>{state.jobType.mode='unconfirmed';render();markDirty();});
   v('rmt-travel-days').addEventListener('input', e=>{state.jobType.remote.travelDaysEachWay=parseFloat(e.target.value)||0;render();markDirty();});
   v('rmt-perdiem').addEventListener('input', e=>{state.jobType.remote.perDiemPerTechPerDay=parseFloat(e.target.value)||0;render();markDirty();});
   v('rmt-hotel').addEventListener('input', e=>{state.jobType.remote.hotelPerTechPerNight=parseFloat(e.target.value)||0;render();markDirty();});
@@ -2799,7 +2924,17 @@ function bindAll(){
     const el = v('pm-'+m);
     if(el) el.addEventListener('change', ()=>{state.settings.pricingMode=m;render();markDirty();});
   });
-  v('set-contingency').addEventListener('input', e=>{state.settings.contingencyPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
+  // Structured contingency
+  const cgObj = () => (state.settings.contingency = state.settings.contingency || {type:'none', fixedAmount:0, percent:0, basis:'directCost', treatment:'inDirectCost', label:'Estimating contingency'});
+  ['none','fixed','percent'].forEach(t => {
+    const el = v('cg-'+t);
+    if(el) el.addEventListener('change', ()=>{cgObj().type=t;render();markDirty();});
+  });
+  v('cg-fixed-amount').addEventListener('input', e=>{cgObj().fixedAmount=parseFloat(e.target.value)||0;render();markDirty();});
+  v('cg-percent-amount').addEventListener('input', e=>{cgObj().percent=(parseFloat(e.target.value)||0)/100;render();markDirty();});
+  v('cg-basis').addEventListener('change', e=>{cgObj().basis=e.target.value;render();markDirty();});
+  v('cg-treatment').addEventListener('change', e=>{cgObj().treatment=e.target.value;render();markDirty();});
+  v('cg-label').addEventListener('input', e=>{cgObj().label=e.target.value;render();markDirty();});
   v('set-overhead').addEventListener('input', e=>{state.settings.overheadPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
   v('set-margin').addEventListener('input', e=>{state.settings.marginPct=(parseFloat(e.target.value)||0)/100;render();markDirty();});
   v('set-inflation').addEventListener('input', e=>{state.settings.inflationFactor=parseFloat(e.target.value)||1.0;render();markDirty();});
@@ -2899,6 +3034,14 @@ function bindAll(){
 
   // Print — customer
   v('printBtn').addEventListener('click', () => {
+    // Proposal output requires a confirmed jurisdiction; ROM/Budgetary may proceed unconfirmed.
+    const dt = (state.project.documentType || 'Proposal').toUpperCase();
+    const jt = state.jobType.mode || 'local';
+    const locUnres = !((state.project.location||'').trim()) || /tbd|unconfirm|undetermin|pending|unknown/i.test(state.project.location||'');
+    if(dt === 'PROPOSAL' && (jt === 'unconfirmed' || locUnres)){
+      const ok = window.confirm('This is a PROPOSAL but the job jurisdiction is unresolved (Job Type Unconfirmed or location TBD). Prevailing wage, travel, freight, and tax are not validated. Proceed with Proposal output anyway?');
+      if(!ok) return;
+    }
     gtag('event', 'tool_run', {tool_name: 'estimator', action: 'print_customer'});
     summaryView = 'customer';
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -2969,8 +3112,10 @@ function exportEstimate(){
       mgmtHours:Math.round(s.mgmtHours*10)/10,
       totalDays:Math.round(s.totalDays*10)/10,
       pricingMode:s.pricingMode,
-      contingencyPct:s.contingencyPct,
+      contingencyType:s.contingencyType,
       contingencyAmt:Math.round(s.contingencyAmt),
+      contingencyBasis:s.contingencyBasis,
+      contingencyTreatment:s.contingencyTreatment,
       requiredCrew:s.requiredCrew,
       isAccelerated:s.isAccelerated,
       otPremiumCost:Math.round(s.otPremiumCost),
@@ -3308,19 +3453,25 @@ function runPreflight(){
   if(totalWbsItems === 0 && activeMats === 0) W('No WBS items and no active materials — estimate appears empty.');
   if(!p.exclusions) W('Exclusions field is empty — consider listing what is NOT in scope.');
 
-  if(p.documentType === 'ROM' || p.documentType === 'Budgetary') I(`Document type is ${p.documentType} — signature block hidden, price labeled as ROM.`);
-  // Contingency: recognize a contingency carried as an ODC line so we don't falsely report 0%
-  const odcContingency = [...(state.odc.rentals||[]), ...(state.odc.subcontractors||[])]
-    .filter(x => /conting/i.test(x.description||''))
-    .reduce((a,x) => a + (+x.cost||0) * (+x.markup||1), 0);
-  if(s.contingencyPct > 0){
-    I(`Contingency field: ${fmtPct(s.contingencyPct)} of direct cost (${fmtMoney(s.contingencyAmt)}).`);
-  } else if(odcContingency > 0){
-    W(`Contingency carried as an ODC line (${fmtMoney(odcContingency)}); the structured contingency field reads 0%. Confirm the basis (% of cost / % of sell / fixed) is disclosed.`);
-  } else if(s.pricingMode !== 'rateCard'){
-    I('No contingency modeled — consider 5–10% for field unknowns.');
+  const dt = p.documentType || 'Proposal';
+  if(dt === 'ROM') I('Document type ROM — Budgetary ROM wording; signature and payment terms hidden.');
+  else if(dt === 'Budgetary') I('Document type Budgetary Estimate — no ROM wording; signature and payment terms hidden by default.');
+  // Contingency — read ONLY the structured field (never inferred from ODC descriptions)
+  if(s.contingencyType === 'none' || s.contingencyAmt <= 0){
+    if(s.pricingMode !== 'rateCard') I('No structured contingency set — consider 5–10% for field unknowns.');
+  } else {
+    const basisLbl = s.contingencyBasis === 'burdenedCost' ? 'burdened cost' : s.contingencyBasis === 'sell' ? 'customer sell' : 'direct cost';
+    const typeLbl = s.contingencyType === 'fixed' ? 'fixed' : `${fmtPct(s.contingencyPercent)} of ${basisLbl}`;
+    const treatLbl = s.contingencyTreatment === 'customerAllowance' ? 'separate customer allowance' : s.contingencyTreatment === 'internalOnly' ? 'internal reserve' : 'included in direct cost';
+    I(`Contingency: ${fmtMoney(s.contingencyAmt)} (${typeLbl}) — ${treatLbl}.`);
   }
-  if(locUnconfirmed_pf) W('Location/jurisdiction unconfirmed — Local/Remote basis, prevailing wage, travel, freight, and tax not validated.');
+  // Job type / location
+  const jtMode = state.jobType.mode || 'local';
+  if(jtMode === 'unconfirmed'){
+    I('Job Type: Unconfirmed — travel, wage, tax, freight, and permit assumptions remain unresolved until the jurisdiction is confirmed. ROM/Budgetary output may proceed.');
+  } else if(locUnconfirmed_pf){
+    W(`Job Type is ${jtMode==='remote'?'Remote':'Local'} but the location is unresolved — prevailing wage, travel, freight, and tax basis not validated. Confirm the jurisdiction or set Job Type: Unconfirmed. Proposal output requires acknowledgement.`);
+  }
   if(s.otPremiumSell > 0) I(`OT premium modeled: ${fmtMoney(s.otPremiumSell)} sell.`);
   if(s.isAccelerated) I(`Crew is accelerated: ${s.requiredCrew} required vs ${baseCrew} baseline.`);
   if(activeMats === 0) I('No active materials in library — material cost from WBS line items only.');
@@ -3376,6 +3527,7 @@ function runSelfTest(){
       materials:{unitCost:0,unitSell:0,qty:0,unit:'ea',markup:0}
     }]}];
     Object.assign(base.settings, overrides.settings || {});
+    if(overrides.contingency) base.settings.contingency = overrides.contingency;
     if(overrides.extraMgmtRole){
       base.crew.mgmt = [{id:102,role:'Test PM',costRate:80,sellRate:120}];
       base.wbs.sections[0].items.push({
@@ -3418,13 +3570,13 @@ function runSelfTest(){
   // T06: legacyV125 — margin on sell+OH → effectiveMargin > marginPct (double-stack visible)
   s.effectiveMargin > 0.20 ? pass('T06 legacyV125 effectiveMargin > marginPct (double-stack confirmed)') : fail('T06', `effectiveMargin=${s.effectiveMargin} should exceed 0.20`);
 
-  // T07: contingency — added to cost before overhead in costPlus
-  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,contingencyPct:0.10,inflationFactor:1}});
+  // T07: structured % contingency (in direct cost) — added to cost before overhead in costPlus
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,inflationFactor:1}, contingency:{type:'percent',percent:0.10,basis:'directCost',treatment:'inDirectCost',fixedAmount:0}});
   s = calc();
   // cost=5000, contingency=500, costWithContingency=5500, OH=0, margin=0, finalPrice=5500
-  near(s.finalPrice, 5500, 1) ? pass('T07 contingency added to cost before OH') : fail('T07', `finalPrice=${s.finalPrice}, expected 5500`);
+  near(s.finalPrice, 5500, 1) ? pass('T07 % contingency (in direct cost) before OH') : fail('T07', `finalPrice=${s.finalPrice}, expected 5500`);
 
-  // T08: contingency amount = directCostSubtotal * contingencyPct
+  // T08: contingency amount = directCostSubtotal * percent
   near(s.contingencyAmt, 500, 1) ? pass('T08 contingencyAmt = cost * pct') : fail('T08', `contingencyAmt=${s.contingencyAmt}, expected 500`);
 
   // T09: fieldHours — field role hours counted correctly
@@ -3466,10 +3618,10 @@ function runSelfTest(){
   s = calc();
   near(s.finalPrice, 10000, 1) ? pass('T16 costPlus 50% margin → finalPrice = cost/0.5') : fail('T16', `finalPrice=${s.finalPrice}, expected 10000`);
 
-  // T17: rateCard with contingency — contingencyAmt still calculated but NOT added to finalPrice
-  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0.15,marginPct:0.20,contingencyPct:0.10,inflationFactor:1}});
+  // T17: rateCard with in-cost contingency — price stays at sell subtotal; contingency erodes margin
+  state = mkState({settings:{pricingMode:'rateCard',overheadPct:0.15,marginPct:0.20,inflationFactor:1}, contingency:{type:'percent',percent:0.10,basis:'directCost',treatment:'inDirectCost',fixedAmount:0}});
   s = calc();
-  near(s.finalPrice, 10000, 1) ? pass('T17 rateCard ignores contingency in finalPrice') : fail('T17', `finalPrice=${s.finalPrice}, expected 10000 (directSellSubtotal)`);
+  near(s.finalPrice, 10000, 1) && s.fullyBurdenedCost > s.directCostSubtotal ? pass('T17 rateCard price unchanged; contingency erodes margin') : fail('T17', `finalPrice=${s.finalPrice} fbc=${s.fullyBurdenedCost} directCost=${s.directCostSubtotal}`);
 
   // T18: costPlus zero overhead — finalPrice = directCost / (1 - margin)
   state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0.25,contingencyPct:0,inflationFactor:1}});
@@ -3485,6 +3637,33 @@ function runSelfTest(){
   state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0.30,contingencyPct:0,inflationFactor:1}});
   s = calc();
   near(s.effectiveMargin, 0.30, 0.001) ? pass('T20 effectiveMargin = totalProfit / finalPrice') : fail('T20', `effectiveMargin=${s.effectiveMargin}, expected 0.30`);
+
+  // T21: Cost-Plus with FIXED contingency (in direct cost) — folds into marked-up base
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,inflationFactor:1}, contingency:{type:'fixed',fixedAmount:1000,treatment:'inDirectCost',percent:0,basis:'directCost'}});
+  s = calc();
+  // cost 5000 + fixed 1000 = 6000, OH 0, margin 0 → 6000
+  near(s.finalPrice, 6000, 1) && near(s.contingencyAmt, 1000, 1) && near(s.contingencyInCost, 1000, 1) ? pass('T21 costPlus fixed contingency in direct cost') : fail('T21', `finalPrice=${s.finalPrice} amt=${s.contingencyAmt} inCost=${s.contingencyInCost}`);
+
+  // T22: Cost-Plus with PERCENT contingency on BURDENED-cost basis
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0.10,marginPct:0,inflationFactor:1}, contingency:{type:'percent',percent:0.10,basis:'burdenedCost',treatment:'inDirectCost',fixedAmount:0}});
+  s = calc();
+  // contingency = 0.10 × (5000 × 1.10) = 550
+  near(s.contingencyAmt, 550, 1) ? pass('T22 percent contingency on burdened-cost basis') : fail('T22', `contingencyAmt=${s.contingencyAmt}, expected 550`);
+
+  // T23: Customer ALLOWANCE contingency — added to price as pass-through, not in cost, not profit
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,inflationFactor:1}, contingency:{type:'fixed',fixedAmount:1000,treatment:'customerAllowance',percent:0,basis:'directCost'}});
+  s = calc();
+  near(s.finalPrice, 6000, 1) && near(s.contingencyAllowance, 1000, 1) && near(s.contingencyInCost, 0, 1) && near(s.totalProfit, 0, 1) ? pass('T23 customer allowance added to price, excluded from profit') : fail('T23', `finalPrice=${s.finalPrice} allow=${s.contingencyAllowance} inCost=${s.contingencyInCost} profit=${s.totalProfit}`);
+
+  // T24: INTERNAL-ONLY contingency — excluded from customer price, carved from profit as reserve
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0,marginPct:0,inflationFactor:1}, contingency:{type:'fixed',fixedAmount:1000,treatment:'internalOnly',percent:0,basis:'directCost'}});
+  s = calc();
+  near(s.finalPrice, 5000, 1) && near(s.contingencyReserve, 1000, 1) && near(s.totalProfit, -1000, 1) ? pass('T24 internal-only reserve excluded from price, carved from profit') : fail('T24', `finalPrice=${s.finalPrice} reserve=${s.contingencyReserve} profit=${s.totalProfit}`);
+
+  // T25: NONE contingency — zero everywhere
+  state = mkState({settings:{pricingMode:'costPlus',overheadPct:0.15,marginPct:0.20,inflationFactor:1}, contingency:{type:'none',fixedAmount:0,percent:0,basis:'directCost',treatment:'inDirectCost'}});
+  s = calc();
+  near(s.contingencyAmt, 0) && near(s.contingencyInCost, 0) && near(s.contingencyAllowance, 0) && near(s.contingencyReserve, 0) ? pass('T25 no contingency → all contingency values zero') : fail('T25', `amt=${s.contingencyAmt} inCost=${s.contingencyInCost} allow=${s.contingencyAllowance} reserve=${s.contingencyReserve}`);
 
   // Restore
   state = savedState;
