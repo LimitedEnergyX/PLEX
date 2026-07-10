@@ -97,9 +97,9 @@ body{background:var(--navy);color:var(--gray-light);font-family:var(--body);min-
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 .panel{background:var(--navy-mid);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:14px;}
-.panel-label{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:0.2em;margin-bottom:12px;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:700;}
-.panel-label.teal{color:var(--teal);}
-.panel-label.blue{color:var(--blue);}
+.panel-label{font-family:var(--display);font-size:18px;color:var(--white);letter-spacing:0.04em;margin-bottom:12px;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:600;}
+.panel-label.teal{color:var(--white);}
+.panel-label.blue{color:var(--white);}
 .panel-header{background:none;border:none;width:100%;padding:0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--accent);}
 .caret{transition:transform 0.2s;font-size:10px;}
 .collapsible.collapsed .caret{transform:rotate(-90deg);}
@@ -816,7 +816,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   <div class="panel" id="sum-odc-panel"><div class="panel-label teal">OTHER DIRECT COSTS</div><div id="sum-odc"></div></div>
   <div class="panel" id="sum-financial-panel"><div class="panel-label">FINANCIAL ROLL-UP</div><div id="sum-financial"></div></div>
   <div class="panel" id="sum-bid-health-panel"><div class="panel-label teal">BID HEALTH INDICATORS</div><div id="sum-bid-health"></div></div>
-  <div class="panel" id="sum-risk-flags-panel"><div class="panel-label" style="color:var(--warn)">RISK FLAGS</div><div id="sum-risk-flags"></div></div>
+  <div class="panel" id="sum-risk-flags-panel"><div class="panel-label">RISK FLAGS</div><div id="sum-risk-flags"></div></div>
 
   <div class="panel" id="sum-acceptance">
     <div class="panel-label">TESTING &amp; ACCEPTANCE CRITERIA</div>
