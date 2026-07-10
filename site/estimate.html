@@ -276,7 +276,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .chart-stack{display:flex;height:36px;border-radius:4px;overflow:hidden;border:1px solid var(--border2);background:var(--navy);}
 .chart-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--white);font-weight:700;letter-spacing:0.05em;border-right:1px solid rgba(0,0,0,0.25);min-width:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 4px;}
 .chart-seg:last-child{border-right:none;}
-.chart-seg.labor{background:var(--red);}
+.chart-seg.labor{background:#6366F1;}
 .chart-seg.materials{background:var(--blue);}
 .chart-seg.odc{background:var(--teal);}
 .chart-seg.overhead{background:var(--warn);}
@@ -284,7 +284,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
 .chart-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:var(--mono);font-size:11px;}
 .chart-legend .li{display:flex;align-items:center;gap:6px;color:var(--gray-light);}
 .chart-legend .sw{width:10px;height:10px;border-radius:2px;display:inline-block;}
-.chart-legend .sw.labor{background:var(--red);}
+.chart-legend .sw.labor{background:#6366F1;}
 .chart-legend .sw.materials{background:var(--blue);}
 .chart-legend .sw.odc{background:var(--teal);}
 .chart-legend .sw.overhead{background:var(--warn);}
@@ -348,7 +348,9 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
   .summary-header{margin-bottom:8pt;}
   .summary-header h1{font-size:18pt !important;}
   .sum-meta{font-size:9pt;}
-  .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:auto;margin-bottom:4pt;padding:5pt 8pt;}
+  .panel{background:white !important;border:1px solid #ccc !important;page-break-inside:avoid;margin-bottom:4pt;padding:5pt 8pt;}
+  /* Long list-heavy panels may flow across pages; short cards stay together */
+  #sum-commercial{page-break-inside:auto !important;}
   .headline-card{background:white !important;border:1px solid #128D98 !important;page-break-inside:avoid;margin-bottom:8pt;padding:10pt 14pt;}
   .headline-card .price{font-size:26pt !important;}
   .panel-label{color:#0E6E76 !important;font-weight:700;font-size:8pt;margin-bottom:4pt;}
@@ -755,6 +757,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
         <button class="hbtn" id="printInternalBtn">🖨 Print Internal</button>
       </div>
       <div style="font-family:var(--body);font-size:10px;color:var(--gray-mid);line-height:1.4;max-width:260px;text-align:right">Customer proposal hides cost and margin data. Internal bid report includes confidential cost, markup, margin, bid health, and risk data.</div>
+      <div style="font-family:var(--body);font-size:10px;color:var(--warm);line-height:1.4;max-width:260px;text-align:right">For a clean PDF: in the print dialog set <strong>Margins: Default</strong> and <strong>uncheck &ldquo;Headers and footers&rdquo;</strong> to remove the date, URL, and page numbers.</div>
       <a href="/plex" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);text-decoration:none;transition:color 0.2s;text-align:right;" onmouseover="this.style.color='#24C7C8'" onmouseout="this.style.color='var(--gray-mid)'">← Size the loads with PLEX</a>
     </div>
   </div>
@@ -789,7 +792,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <div class="breakdown" id="hdl-breakdown">
       <div id="hdl-bd-labor">LABOR<span class="v" id="hdl-labor">$0</span></div>
       <div id="hdl-bd-mat">MATERIALS<span class="v" id="hdl-mat">$0</span></div>
-      <div id="hdl-bd-direct">DIRECT SELL<span class="v" id="hdl-direct">$0</span></div>
+      <div id="hdl-bd-direct"><span id="hdl-direct-lbl">DIRECT SELL</span><span class="v" id="hdl-direct">$0</span></div>
       <div id="hdl-bd-oh">OVERHEAD<span class="v" id="hdl-oh">$0</span></div>
       <div id="hdl-bd-margin">MARGIN<span class="v" id="hdl-margin">$0</span></div>
       <div>TOTAL HOURS / DAYS<span class="v" id="hdl-hours">0 hrs / 0 days</span></div>
@@ -823,7 +826,7 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
     <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:var(--white)">
       <li id="test-copper"><strong>Copper.</strong> All horizontal links shall be certified to TIA-568 permanent-link limits.</li>
       <li id="test-fiber"><strong>Fiber.</strong> All fiber strands shall be certified with results per strand in the closeout package.</li>
-      <li><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
+      <li id="test-closeout"><strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.</li>
     </ul>
   </div>
 
@@ -836,8 +839,8 @@ input[type=checkbox],input[type=radio]{width:auto;cursor:pointer;accent-color:va
       <li><strong>Change orders.</strong> All work outside agreed scope requires written authorization prior to performance. Verbal direction does not constitute a change order.</li>
       <li id="clar-camera"><strong>Camera scope.</strong> Camera infrastructure — cable installation, termination, PoE link verification, and installation of Owner-furnished standard mounts where backing, structure, pathway, and access are available. Final aiming, VMS programming, analytics configuration, and commissioning are by Owner's security integrator unless explicitly included in writing.</li>
       <li><strong>Permit &amp; tax.</strong> Proposal price excludes applicable sales tax and permit fees, which will be added as direct pass-through costs if required.</li>
-      <li><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
-      <li><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
+      <li id="clar-validity"><strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.</li>
+      <li id="clar-payment"><strong>Payment terms.</strong> Net 30 days from invoice date. Progress billing submitted monthly for work-in-place. Final payment due upon punch-list completion and closeout document delivery.</li>
       <li><strong>Basis of proposal.</strong> Proposal is based on quantities, assumptions, and scope information available as of the proposal date. Cable quantities by type are drawn from the estimate worksheet and shall be confirmed against final drawings prior to procurement. Final pricing may be revised if drawings, counts, site conditions, or Owner requirements change.</li>
       <li><strong>Sealed design.</strong> This proposal is not a sealed design document and does not replace engineered drawings, specifications, code review, or AHJ requirements.</li>
       <li><strong>Warranty.</strong> One-year workmanship warranty from date of substantial completion. Manufacturer warranties pass through to Owner.</li>
@@ -2297,13 +2300,35 @@ function bindLibInput(el){
 function renderCostChart(s){
   const stack = v('chart-stack');
   const total = s.finalPrice || 1;
-  const segs = [
-    {key:'labor',     label:'Labor',     val: s.directLaborSell},
-    {key:'materials', label:'Mat',       val: s.directMaterialsSell},
-    {key:'odc',       label:'ODC',       val: s.directODCSell},
-    {key:'overhead',  label:'OH',        val: s.overheadSell},
-    {key:'margin',    label:'Margin',    val: s.marginAmount}
-  ];
+  const pm = s.pricingMode || 'rateCard';
+  // Segments must be an additive build-up to the final price for the mode:
+  //  costPlus  -> cost basis + overhead(cost) + margin
+  //  rateCard  -> sell basis only (profit embedded in sell rates)
+  //  legacy    -> sell basis + overhead(sell) + margin (double-stacked)
+  let segs;
+  if(pm === 'costPlus'){
+    segs = [
+      {key:'labor',     label:'Labor',     val: s.directLaborCost},
+      {key:'materials', label:'Mat',       val: s.directMaterialsCost},
+      {key:'odc',       label:'ODC',       val: s.directODCCost},
+      {key:'overhead',  label:'OH',        val: s.overheadCost},
+      {key:'margin',    label:'Margin',    val: s.marginAmount}
+    ];
+  } else if(pm === 'rateCard'){
+    segs = [
+      {key:'labor',     label:'Labor',     val: s.directLaborSell},
+      {key:'materials', label:'Mat',       val: s.directMaterialsSell},
+      {key:'odc',       label:'ODC',       val: s.directODCSell}
+    ];
+  } else { // legacyV125
+    segs = [
+      {key:'labor',     label:'Labor',     val: s.directLaborSell},
+      {key:'materials', label:'Mat',       val: s.directMaterialsSell},
+      {key:'odc',       label:'ODC',       val: s.directODCSell},
+      {key:'overhead',  label:'OH',        val: s.overheadSell},
+      {key:'margin',    label:'Margin',    val: s.marginAmount}
+    ];
+  }
   stack.innerHTML = segs.map(seg => {
     const pct = Math.max(0, (seg.val / total) * 100);
     if(pct < 0.5) return '';
@@ -2359,10 +2384,19 @@ function renderSummary(s){
   v('sum-title').style.display = isInternal ? '' : 'none';
   v('sum-subtitle').style.display = isInternal ? '' : 'none';
 
-  // Headline card
+  // Headline card — internal breakdown must be an additive build-up to the total.
+  // costPlus builds on COST (direct cost + overhead + margin); rateCard/legacy build on SELL.
+  const pmHdl = s.pricingMode || 'rateCard';
   v('hdl-price').textContent = fmtMoney(s.finalPrice);
-  v('hdl-direct').textContent = fmtMoney(s.directSellSubtotal);
-  v('hdl-oh').textContent = fmtMoney(s.overheadSell);
+  if(pmHdl === 'costPlus'){
+    v('hdl-direct-lbl').textContent = 'DIRECT COST';
+    v('hdl-direct').textContent = fmtMoney(s.directCostSubtotal);
+    v('hdl-oh').textContent = fmtMoney(s.overheadCost);
+  } else {
+    v('hdl-direct-lbl').textContent = 'DIRECT SELL';
+    v('hdl-direct').textContent = fmtMoney(s.directSellSubtotal);
+    v('hdl-oh').textContent = fmtMoney(s.overheadSell);
+  }
   v('hdl-margin').textContent = fmtMoney(s.marginAmount);
   v('hdl-hours').textContent = `${fmtHrs(s.totalHours)} / ${s.totalDays.toFixed(1)} days`;
 
@@ -2452,9 +2486,12 @@ function renderSummary(s){
     }
   }
 
-  // Schedule & Crew
+  // Schedule & Crew — flag job type when the jurisdiction/location is not yet confirmed
+  const locUnconfirmed = !((p.location||'').trim()) || /tbd|unconfirm|undetermin|pending|unknown/i.test(p.location||'');
+  const jobTypeLabel = (state.jobType.mode === 'remote' ? 'Remote' : 'Local')
+    + (locUnconfirmed ? ' — jurisdiction unconfirmed (wage/travel/tax basis not validated)' : '');
   const schedParts = [
-    ['Job Type', state.jobType.mode === 'remote' ? 'Remote' : 'Local'],
+    ['Job Type', locUnconfirmed ? `<span style="color:var(--warn);font-weight:700">${jobTypeLabel}</span>` : jobTypeLabel],
     ['Field Hours', fmtHrs(s.fieldHours)],
   ];
   if(s.mgmtHours > 0) schedParts.push(['Management Hours', fmtHrs(s.mgmtHours)]);
@@ -2497,6 +2534,19 @@ function renderSummary(s){
   v('hdl-price-note').style.display = isInternal ? 'none' : '';
   v('sum-signature').style.display = (isInternal || isROM) ? 'none' : '';
   { const rb = v('rom-banner'); if(rb) rb.style.display = isROM ? '' : 'none'; }
+
+  // ROM wording — a budgetary ROM is not an acceptance-ready contract, so strip
+  // proposal/payment/authorization language and reword to budget-basis wording.
+  const noteBase = 'includes labor, materials, applicable burden, overhead, profit, consumables, tools, warranty allowance, and standard project administration.';
+  v('hdl-price-note').innerHTML = (isROM ? 'Budgetary ROM total ' : 'Proposal total ') + noteBase;
+  { const cp = v('clar-payment'); if(cp) cp.style.display = isROM ? 'none' : ''; }
+  { const cv = v('clar-validity'); if(cv) cv.innerHTML = isROM
+      ? '<strong>Budget validity.</strong> This budgetary figure is valid for 30 days from the date shown. Material cost volatility and RFI resolution may change the figure.'
+      : '<strong>Proposal validity.</strong> Pricing is valid for 30 days from the proposal date. Material cost volatility may require adjustment after expiration.'; }
+  { const tcl = v('test-closeout'); if(tcl) tcl.innerHTML = isROM
+      ? '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are anticipated closeout deliverables for the eventual firm scope.'
+      : '<strong>Closeout documentation.</strong> Test reports, as-built drawings, outlet schedule, and system documentation are a condition of project acceptance and final payment release.'; }
+
   // Dynamic testing categories derived from the BOM (reusable)
   (function(){
     const txt = state.materials.items.filter(m=>(+m.qty||0)>0).map(m=>(m.category||'')+' '+(m.description||'')).join(' ');
@@ -2505,7 +2555,7 @@ function renderSummary(s){
     if(/cat\s?6a|category\s?6a|cat6a/i.test(txt)) cop.push('Category 6A'); else if(/cat\s?6|category\s?6|cat6/i.test(txt)) cop.push('Category 6');
     const fib=[]; if(/os2|single-?mode|\bsm\b/i.test(txt)) fib.push('OS2 single-mode');
     if(/om4/i.test(txt)) fib.push('OM4 multimode'); if(/om3/i.test(txt)) fib.push('OM3 multimode');
-    const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically prior to final payment.'; }
+    const tc=v('test-copper'); if(tc){ tc.style.display = cop.length?'':'none'; if(cop.length) tc.innerHTML = '<strong>Copper \u2014 '+cop.join(' and ')+'.</strong> Each category shall be certified separately to its TIA-568 permanent-link limits. Test reports (pass/fail per link) delivered electronically ' + (isROM ? 'as part of project closeout.' : 'prior to final payment.'); }
     const tf=v('test-fiber'); if(tf){ tf.style.display = fib.length?'':'none'; if(fib.length) tf.innerHTML = '<strong>Fiber \u2014 '+fib.join(', ')+'.</strong> All strands certified bidirectionally (Tier 1); results per strand in the closeout package.'; }
     const hasCamera = state.materials.items.some(m=>/camera|surveillance|cctv/i.test((m.category||'')+' '+(m.description||''))) || state.wbs.sections.some(sec=>(sec.items||[]).some(it=>/camera|cctv|surveillance|vms/i.test(it.description||'')));
     const cl=v('clar-camera'); if(cl) cl.style.display = hasCamera?'':'none';
@@ -2576,37 +2626,74 @@ function renderSummary(s){
   }
   v('sum-odc').innerHTML = odcRows.map(r => sumRow(r[0], r[1])).join('');
 
-  // Financial roll-up — three visually separated sections in internal view
-  const fhdr = txt => `<div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);padding:10px 0 3px;border-top:1px solid var(--border2);margin-top:4px">${txt}</div>`;
+  // Financial roll-up (internal only) — an additive build-up that reconciles to the total for the active mode.
+  const fhdr = txt => `<div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);padding:10px 0 3px;border-top:1px solid var(--border2);margin-top:4px">${txt}</div>`;
+  const bigTotal = (label, val) => sumRow(label, `<span style="color:var(--warm);font-size:18px;font-weight:700">${fmtMoney(val)}</span>`);
   const pm = s.pricingMode || 'rateCard';
-  const finParts = [
-    fhdr('Customer-Facing Sell Summary'),
-    sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
-    sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
-    sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
-    sumRow('Direct subtotal (sell)', fmtMoney(s.directSellSubtotal)),
-    ...(pm === 'rateCard' ? [sumRow('Pricing mode', 'Rate Card — profit embedded in sell rates')] : [
-      ...(s.contingencyAmt > 0 ? [sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt))] : []),
-      sumRow(`Overhead @ ${fmtPct(s.overheadPct)}`, fmtMoney(s.overheadSell)),
-      sumRow('Subtotal with overhead', fmtMoney(s.sellWithOH)),
-      sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
-    ]),
-    sumRow('Total sell price', `<span style="color:var(--warm);font-size:18px;font-weight:700">${fmtMoney(s.finalPrice)}</span>`),
-    ...(isInternal ? [
-      fhdr('Internal Cost Basis'),
+  let finParts;
+  if(pm === 'costPlus'){
+    // Build-up is COST-based: direct cost + overhead(cost) + margin = total.
+    finParts = [
+      fhdr('Price Build-Up — Cost-Plus (reconciles to total)'),
       sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
       sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
       sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
-      sumRow('Direct subtotal (cost)', fmtMoney(s.directCostSubtotal)),
+      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
+      ...(s.contingencyAmt > 0 ? [
+        sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt)),
+        sumRow('Cost + contingency', fmtMoney(s.directCostWithContingency)),
+      ] : []),
+      sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (on cost)`, fmtMoney(s.overheadCost)),
+      sumRow('Cost + overhead', fmtMoney(s.fullyBurdenedCost)),
+      sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
+      bigTotal('Total price', s.finalPrice),
+      fhdr('Rate-Card Sell (reference only — not additive)'),
+      sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
+      sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
+      sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
+      sumRow('Direct sell subtotal', fmtMoney(s.directSellSubtotal)),
+    ];
+  } else if(pm === 'rateCard'){
+    // Build-up IS the sell subtotal; profit already embedded in sell rates.
+    finParts = [
+      fhdr('Price Build-Up — Rate Card (reconciles to total)'),
+      sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
+      sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
+      sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
+      bigTotal('Total sell price', s.finalPrice),
+      sumRow('Basis', '<span style="font-style:italic;color:var(--gray-mid)">Profit embedded in sell rates; overhead & margin not added.</span>'),
+      fhdr('Cost Basis (internal)'),
+      sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
+      sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
+      sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
+      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
+    ];
+  } else { // legacyV125 — sell-side, overhead & margin stacked on sell.
+    finParts = [
+      fhdr('Price Build-Up — Legacy v1.25 (sell-side, stacked)'),
+      sumRow('Direct labor (sell)', fmtMoney(s.directLaborSell)),
+      sumRow('Direct materials (sell)', fmtMoney(s.directMaterialsSell)),
+      sumRow('Direct ODC (sell)', fmtMoney(s.directODCSell)),
+      sumRow('Direct sell subtotal', fmtMoney(s.directSellSubtotal)),
       ...(s.contingencyAmt > 0 ? [sumRow(`Contingency @ ${fmtPct(s.contingencyPct)}`, fmtMoney(s.contingencyAmt))] : []),
-      sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (cost)`, fmtMoney(s.overheadCost)),
-      sumRow('Fully burdened cost', fmtMoney(s.totalCost)),
-      fhdr('Internal Profit Analysis'),
-      sumRow('Pricing mode', pm),
-      sumRow('Total project profit', `<span style="color:var(--green);font-size:16px">${fmtMoney(s.totalProfit)}</span>`),
-      sumRow('Effective margin', `<span style="color:var(--green);font-size:16px">${fmtPct(s.effectiveMargin)}</span>`)
-    ] : [])
-  ];
+      sumRow(`Overhead @ ${fmtPct(s.overheadPct)} (on sell)`, fmtMoney(s.overheadSell)),
+      sumRow('Sell + overhead', fmtMoney(s.sellWithOH)),
+      sumRow(`Margin @ ${fmtPct(s.marginPct)}`, fmtMoney(s.marginAmount)),
+      bigTotal('Total sell price', s.finalPrice),
+      fhdr('Cost Basis (internal)'),
+      sumRow('Direct labor (cost)', fmtMoney(s.directLaborCost)),
+      sumRow('Direct materials (cost)', fmtMoney(s.directMaterialsCost)),
+      sumRow('Direct ODC (cost)', fmtMoney(s.directODCCost)),
+      sumRow('Direct cost subtotal', fmtMoney(s.directCostSubtotal)),
+    ];
+  }
+  finParts.push(
+    fhdr('Profit Analysis'),
+    sumRow('Fully burdened cost', fmtMoney(s.fullyBurdenedCost)),
+    sumRow('Total project profit', `<span style="color:var(--green);font-size:16px">${fmtMoney(s.totalProfit)}</span>`),
+    sumRow('Effective margin', `<span style="color:var(--green);font-size:16px">${fmtPct(s.effectiveMargin)}</span>`),
+    sumRow('Pricing mode', pm === 'costPlus' ? 'Cost-Plus' : pm === 'rateCard' ? 'Rate Card' : 'Legacy v1.25')
+  );
   v('sum-financial').innerHTML = finParts.join('');
 
   // Bid health indicators (internal only)
@@ -3198,6 +3285,7 @@ function runPreflight(){
   const E = msg => items.push({level:'ERROR', msg});
   const W = msg => items.push({level:'WARN',  msg});
   const I = msg => items.push({level:'INFO',  msg});
+  const locUnconfirmed_pf = !((p.location||'').trim()) || /tbd|unconfirm|undetermin|pending|unknown/i.test(p.location||'');
 
   if(!p.name)          E('No project name — required on proposal.');
   if(!p.client)        E('No client name — required on proposal.');
@@ -3221,7 +3309,18 @@ function runPreflight(){
   if(!p.exclusions) W('Exclusions field is empty — consider listing what is NOT in scope.');
 
   if(p.documentType === 'ROM' || p.documentType === 'Budgetary') I(`Document type is ${p.documentType} — signature block hidden, price labeled as ROM.`);
-  if((s.contingencyPct === 0 || !s.contingencyPct) && s.pricingMode !== 'rateCard') I('Contingency is 0% — consider 5–10% for field unknowns.');
+  // Contingency: recognize a contingency carried as an ODC line so we don't falsely report 0%
+  const odcContingency = [...(state.odc.rentals||[]), ...(state.odc.subcontractors||[])]
+    .filter(x => /conting/i.test(x.description||''))
+    .reduce((a,x) => a + (+x.cost||0) * (+x.markup||1), 0);
+  if(s.contingencyPct > 0){
+    I(`Contingency field: ${fmtPct(s.contingencyPct)} of direct cost (${fmtMoney(s.contingencyAmt)}).`);
+  } else if(odcContingency > 0){
+    W(`Contingency carried as an ODC line (${fmtMoney(odcContingency)}); the structured contingency field reads 0%. Confirm the basis (% of cost / % of sell / fixed) is disclosed.`);
+  } else if(s.pricingMode !== 'rateCard'){
+    I('No contingency modeled — consider 5–10% for field unknowns.');
+  }
+  if(locUnconfirmed_pf) W('Location/jurisdiction unconfirmed — Local/Remote basis, prevailing wage, travel, freight, and tax not validated.');
   if(s.otPremiumSell > 0) I(`OT premium modeled: ${fmtMoney(s.otPremiumSell)} sell.`);
   if(s.isAccelerated) I(`Crew is accelerated: ${s.requiredCrew} required vs ${baseCrew} baseline.`);
   if(activeMats === 0) I('No active materials in library — material cost from WBS line items only.');
